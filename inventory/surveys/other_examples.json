@@ -1,0 +1,16 @@
+
+Other survey examples:
+
+
+        {
+          "required": true,
+          "min": null,
+          "default": "click\ncolorama\nrequests\nsix\nPyYAML",
+          "max": null,
+          "question_description": "which package requirements would you like to install/check",
+          "choices": "click\ncolorama\nrequests\nsix\nPyYAML",
+          "new_question": true,
+          "variable": "packages",
+          "question_name": "Package requirements",
+          "type": "multiselect"
+        }

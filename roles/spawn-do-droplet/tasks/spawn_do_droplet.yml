@@ -1,0 +1,98 @@
+
+# Need section to convert do_droplet_region_long to a valid shortcode:
+# New York City (USA) = nyc1, nyc2, nyc3
+# San Francisco (USA) = sfo1, sfo2, sfo3
+# Amsterdam (NLD) = ams2, ams3
+# Frankfurt (DEU) = fra1
+# Singapore (SGP) = sgp1
+
+- name: Set valid digitalocean area code for New York City.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "nyc1"
+  when: do_droplet_region_long == "New York City (USA)"
+
+- name: Set valid digitalocean area code for San Francisco.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "sfo1"
+  when: do_droplet_region_long == "San Francisco (USA)"
+
+- name: Set valid digitalocean area code for Amsterdam.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "ams2"
+  when: do_droplet_region_long == "Amsterdam (NLD)"
+
+- name: Set valid digitalocean area code for Frankfurt.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "fra1"
+  when: do_droplet_region_long == "Frankfurt (DEU)"
+
+- name: Set valid digitalocean area code for Singapore.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "sgp1"
+  when: do_droplet_region_long == "Singapore (SGP)"
+
+- name: Add slug_size line to do_droplet.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    line: 'do_droplet_region: {{ do_droplet_region }}'
+    mode: '0600'
+    state: present
+
+- name: 
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_sshkey_info:
+    oauth_token: '{{ do_api_token }}'
+  register: ssh_keys
+
+- debug:
+    msg: "{{ ssh_keys }}"
+
+- name: Build an array of all the ssh key ids
+  delegate_to: 127.0.0.1
+  set_fact:
+    ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
+  with_items: "{{ ssh_keys.data }}"
+
+- debug:
+    msg: "{{ ssh_key_id_array }}"
+
+- name: Spawn a new Digital Ocean Droplet
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: present
+    name: '{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+    size: '{{ slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
+    ipv6: yes
+    wait: yes
+    unique_name: yes
+  register: new_server_info
+
+- debug:
+    msg: "{{ new_server_info }}"
+
+- debug:
+    msg: "{{ new_server_info.data.droplet }}"
+
+- name: Assign server IPs to variables
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ipv4: "{{ new_server_info.data.ip_address }}"
+    server_ipv6: "{{ new_server_info.data.ipv6_address }}"
+
+- debug:
+    msg: "{{ server_ipv4 }}"
+
+- debug:
+    msg: "{{ server_ipv6 }}"
+
+

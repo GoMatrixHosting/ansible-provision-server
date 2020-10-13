@@ -1,0 +1,51 @@
+
+- name: Load vars from organisation.yml
+  include_vars:
+    file: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+
+- name: Load vars from droplet_vars.yml
+  include_vars:
+    file: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/droplet_vars.yml'
+
+- name: Update repositories and all packages on target machine
+  delegate_to: "{{ server_ipv4 }}"
+  apt:
+    name: "*"
+    update_cache: yes
+
+- name: Install necessary utils on target machine
+  delegate_to: "{{ server_ipv4 }}"
+  apt:
+    pkg:
+     - git
+     - openssl
+     - ansible
+     - s3fs
+
+- name: Create swapfile with the right permissions
+  delegate_to: "{{ server_ipv4 }}"
+  command: 'fallocate -l {{ swap_size }} /swapfile && chmod 600 /swapfile'
+  register: swapfile_new
+  with_first_found:
+    - files:
+        - /swapfile
+      skip: true
+
+# Would be better to examine the amount of RAM on target machine and make SWAP the same size
+# Use: https://docs.ansible.com/ansible/latest/user_guide/playbooks_vars_facts.html
+
+- name: Enable swapfile
+  delegate_to: "{{ server_ipv4 }}"
+  command: mkswap /swapfile && swapon /swapfile
+  when: swapfile_new.delta is defined
+
+- name: Make swapfile permanent in /etc/fstab
+  delegate_to: "{{ server_ipv4 }}"
+  mount: name=none
+    src=/swapfile
+    fstype=swap
+    opts=sw
+    passno=0
+    dump=0
+    state=present
+

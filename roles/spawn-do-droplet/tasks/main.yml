@@ -1,0 +1,12 @@
+
+# Load hosting and droplet variables from AWX file
+- import_tasks: "{{ role_path }}/tasks/load_variables.yml"
+
+# Spawn a Server
+- import_tasks: "{{ role_path }}/tasks/spawn_do_droplet.yml"
+
+# Spawn a 'Space'
+- import_tasks: "{{ role_path }}/tasks/spawn_do_space.yml"
+
+# Create initial variable files
+- import_tasks: "{{ role_path }}/tasks/generate_initial_variables.yml"

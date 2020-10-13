@@ -1,0 +1,420 @@
+
+
+- name: Load vars from organisation.yml
+  include_vars:
+    file: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+
+# ^ Might be redundant
+
+- name: Install tower dep
+  delegate_to: 127.0.0.1
+  pip:
+      name: ansible-tower-cli
+
+- name: Add tower host to organisations inventory
+  delegate_to: 127.0.0.1
+  tower_host:
+    name: "{{ matrix_domain }}"
+    description: "{{ matrix_domain }} Server"
+    inventory: "{{ client_email }} Inventory"
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Delete 'Provision a New Server' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ subscription_id }} - 00 - Provision a New Server"
+    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
+#    become_enabled: yes
+    state: absent
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Re-create 'Provision a New Server' job template without survey
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 00 - Provision a New Server"
+    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+    survey_enabled: false
+    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
+#    become_enabled: yes
+    state: absent
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Provision a New Server job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 00 - Provision a New Server"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Deploy a New Server' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 0 - Deploy a New Server"
+    description: "Creates a new matrix service with Spantaleev's playbooks"
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "setup-all,start"
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+# ^ 'project' hasn't completed initial update by the time this runs.
+
+- name: Allow user account to use 'Deploy a New Server' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 0 - Deploy a New Server"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Start/Restart all Services' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
+    description: "Starts or restarts all services on the server."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: start
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Start/Restart all Services' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Stop all Services' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 0 - Stop all Services"
+    description: "Stops all services on the server."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: stop
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Stop all Services' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 0 - Stop all Services"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Save initial 'Configure Element' survey.json to the AWX tower
+  delegate_to: 127.0.0.1
+  copy:
+    src: ./inventory/surveys/configure_element.json
+    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json'
+    mode: 0644
+    force: no
+
+- name: Copy 'Configure Element' survey.json to target machine
+  delegate_to: "{{ server_ipv4 }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json'
+    dest:  '/matrix/awx/configure_element.json'
+    mode: 0644
+
+- name: Create 'Configure Element' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Element"
+    description: "Configure Element client via survey."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "start,setup-client-element"
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json') }}"
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Configure Element' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Element"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Save initial 'Configure Synapse' survey.json to the AWX tower
+  delegate_to: 127.0.0.1
+  copy:
+    src: ./inventory/surveys/configure_synapse.json
+    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json'
+    mode: 0644
+    force: no
+
+- name: Copy 'Configure Synapse' survey.json to target machine
+  delegate_to: "{{ server_ipv4 }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json'
+    dest:  '/matrix/awx/configure_synapse.json'
+    mode: 0644
+
+- name: Create 'Configure Synapse' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Synapse"
+    description: "Configure Synapse (homeserver) settings."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "start,setup-synapse"
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ client_email }} - ChatOasis testing SSH"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json') }}"
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Configure Synapse' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Create User' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Create User"
+    description: "Configure Synapse (homeserver) settings."
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - AWX Playbooks"
+    playbook: create_user.yml
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Create User' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 2 - Create User"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Deactivate User' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Deactivate User"
+    description: "Deactivates a users account."
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - AWX Playbooks"
+    playbook: deactivate_user.yml
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Deactivate User' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 2 - Deactivate User"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Query User' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Query User"
+    description: "Provide client/IP information about a specific user."
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - AWX Playbooks"
+    playbook: query_user.yml
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Query User' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 2 - Query User"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Remove Room From Directory' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Remove Room From Directory"
+    description: "Remove a room from the homeservers public directory."
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - AWX Playbooks"
+    playbook: remove_room_from_directory.yml
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Remove Room From Directory' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 2 - Remove Room From Directory"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create 'Reset Password' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Reset Password"
+    description: "Resets a users password."
+    job_type: run
+    inventory: "{{ client_email }} Inventory"
+    project: "{{ client_email }} - AWX Playbooks"
+    playbook: reset_password.yml
+#    become_enabled: yes
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Reset Password' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ matrix_domain }} - 2 - Reset Password"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
