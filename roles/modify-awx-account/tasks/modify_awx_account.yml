@@ -23,26 +23,31 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Delete 'Provision a New Server' job template
-  delegate_to: 127.0.0.1
-  tower_job_template:
-    name: "{{ subscription_id }} - 00 - Provision a New Server"
-    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
-    job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
-    playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
-    survey_enabled: true
-#    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
-#    become_enabled: yes
-    state: absent
-    verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
-    validate_certs: yes
+#- name: Delete 'Provision a New Server' job template
+#  delegate_to: 127.0.0.1
+#  tower_job_template:
+#    name: "{{ subscription_id }} - 00 - Provision a New Server"
+#    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+#    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+#    job_type: run
+#    inventory: "{{ client_email }} Inventory"
+#    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+#    playbook: setup.yml
+#    credential: "{{ client_email }} - ChatOasis testing SSH"
+#    survey_enabled: true
+##    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
+##    become_enabled: yes
+#    state: absent
+#    verbosity: 1
+#    tower_host: "{{ tower_host }}"
+#    tower_username: "{{ tower_username }}"
+#    tower_password: "{{ tower_password }}"
+#    validate_certs: yes
+
+# Cant do this! could try:
+# - editing existing template, disabling survey.
+# - edit survey file.
+# - workflow of job templates.
 
 - name: Re-create 'Provision a New Server' job template without survey
   delegate_to: 127.0.0.1
