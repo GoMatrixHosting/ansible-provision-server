@@ -47,9 +47,22 @@
 # Cant do this! could try:
 # - editing existing template, disabling survey.
 # - edit survey file.
+# - revoke useers permission to template.
 # - workflow of job templates.
 
-- name: Re-create 'Provision a New Server' job template without survey
+- name: Disallow user account to use the current 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ client_email }}"
+    job_template: "{{ subscription_id }} - 00 - Provision a New Server"
+    role: execute
+    state: absent
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Create a 'Provision a New Server' job_template without the survey
   delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 00 - Provision a New Server"
@@ -63,14 +76,14 @@
     survey_enabled: false
 #    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
 #    become_enabled: yes
-    state: absent
+    state: present
     verbosity: 1
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Provision a New Server job template
+- name: Allow user account to use the new 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   tower_role:
     user: "{{ client_email }}"
@@ -101,8 +114,6 @@
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
-
-# ^ 'project' hasn't completed initial update by the time this runs.
 
 - name: Allow user account to use 'Deploy a New Server' job template
   delegate_to: 127.0.0.1
