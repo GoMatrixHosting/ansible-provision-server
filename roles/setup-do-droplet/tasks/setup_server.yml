@@ -1,11 +1,4 @@
 
-- name: Load vars from organisation.yml
-  include_vars:
-    file: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
-
-- name: Load vars from droplet_vars.yml
-  include_vars:
-    file: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/droplet_vars.yml'
 
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ipv4 }}"
