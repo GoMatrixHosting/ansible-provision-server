@@ -35,7 +35,7 @@
     playbook: setup.yml
     credential: "{{ client_email }} - ChatOasis testing SSH"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
+#    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
 #    become_enabled: yes
     state: absent
     verbosity: 1
@@ -56,7 +56,7 @@
     playbook: setup.yml
     credential: "{{ client_email }} - ChatOasis testing SSH"
     survey_enabled: false
-    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
+#    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
 #    become_enabled: yes
     state: absent
     verbosity: 1
