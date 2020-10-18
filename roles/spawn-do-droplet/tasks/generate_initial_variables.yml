@@ -5,7 +5,7 @@
 - name: Add do_droplet_region line to do_droplet.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
     line: 'do_droplet_region: {{ do_droplet_region }}'
     mode: '0600'
     state: present
@@ -14,7 +14,7 @@
 - name: Add do_droplet_id line to do_droplet.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
     line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
     mode: '0600'
     state: present
@@ -22,7 +22,7 @@
 - name: Add server_ipv4 line to do_droplet.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
     line: 'server_ipv4: {{ server_ipv4 }}'
     mode: '0600'
     state: present
@@ -30,7 +30,7 @@
 - name: Add server_ipv6 line to do_droplet.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
     line: 'server_ipv6: {{ server_ipv6 }}'
     mode: '0600'
     state: present
@@ -50,7 +50,7 @@
 - name: Copy the new do_droplet.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
     dest: /matrix/awx/
     mode: '0600'
 
@@ -59,7 +59,7 @@
 - name: Add do_droplet_region line to extra_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'target: "{{ matrix_domain }}"'
     mode: '0600'
     state: present
@@ -67,7 +67,7 @@
 - name: Copy the new extra_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     dest: /matrix/awx/
     mode: '0600'
 
@@ -76,7 +76,7 @@
 - name: Copy the new target.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     dest: /matrix/awx/
     mode: '0600'
 
@@ -92,18 +92,18 @@
 - name: Check if matrix_vars.yml file already exists on AWX
   delegate_to: 127.0.0.1
   stat: 
-    path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
   register: varsfile
 
 - name: Generate initial matrix_vars.yml on AWX if it does not exist
   delegate_to: 127.0.0.1
-  command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/matrix_vars.yml"
+  command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
 
 - name: Add client_password line to organisation.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     insertafter: '# Base Domain Settings'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
     mode: '0600'
@@ -113,7 +113,7 @@
 - name: Add client_password line to organisation.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     insertafter: '# Base Domain Settings'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
     mode: '0600'
@@ -123,7 +123,7 @@
 - name: Copy the new matrix_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/matrix_vars.yml'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     dest: /matrix/awx/
     mode: '0600'
 

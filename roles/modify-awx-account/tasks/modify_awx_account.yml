@@ -2,7 +2,7 @@
 
 - name: Load vars from organisation.yml
   include_vars:
-    file: '/var/lib/awx/projects/clients/{{ client_email }}/organisation.yml'
+    file: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
 
 # ^ Might be redundant
 
@@ -16,7 +16,7 @@
   tower_host:
     name: "{{ matrix_domain }}"
     description: "{{ matrix_domain }} Server"
-    inventory: "{{ client_email }} Inventory"
+    inventory: "{{ member_id }} Inventory"
     state: present
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
@@ -26,7 +26,7 @@
 - name: Disallow user account to use the current 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
     role: execute
     state: absent
@@ -40,12 +40,12 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
     survey_enabled: false
 #    survey_spec: "{{ lookup('file', './inventory/surveys/provision_survey.json') }}"
 #    become_enabled: yes
@@ -59,7 +59,7 @@
 - name: Allow user account to use the new 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 00 - Provision a New Server"
     role: execute
     state: present
@@ -73,13 +73,13 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Deploy a New Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "setup-all,start"
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
 #    become_enabled: yes
     state: present
     verbosity: 1
@@ -91,7 +91,7 @@
 - name: Allow user account to use 'Deploy a New Server' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy a New Server"
     role: execute
     state: present
@@ -105,13 +105,13 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     description: "Starts or restarts all services on the server."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: start
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
 #    become_enabled: yes
     state: present
     verbosity: 1
@@ -123,7 +123,7 @@
 - name: Allow user account to use 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     role: execute
     state: present
@@ -137,13 +137,13 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Stop all Services"
     description: "Stops all services on the server."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: stop
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
 #    become_enabled: yes
     state: present
     verbosity: 1
@@ -155,7 +155,7 @@
 - name: Allow user account to use 'Stop all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
     role: execute
     state: present
@@ -168,14 +168,14 @@
   delegate_to: 127.0.0.1
   copy:
     src: ./inventory/surveys/configure_element.json
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
     mode: 0644
     force: no
 
 - name: Copy 'Configure Element' survey.json to target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
     dest:  '/matrix/awx/configure_element.json'
     mode: 0644
 
@@ -184,15 +184,15 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
     description: "Configure Element client via survey."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-client-element"
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_element.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json') }}"
 #    become_enabled: yes
     state: present
     verbosity: 1
@@ -204,7 +204,7 @@
 - name: Allow user account to use 'Configure Element' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
     role: execute
     state: present
@@ -217,14 +217,14 @@
   delegate_to: 127.0.0.1
   copy:
     src: ./inventory/surveys/configure_synapse.json
-    dest: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
     mode: 0644
     force: no
 
 - name: Copy 'Configure Synapse' survey.json to target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
     dest:  '/matrix/awx/configure_synapse.json'
     mode: 0644
 
@@ -233,15 +233,15 @@
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
     description: "Configure Synapse (homeserver) settings."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-synapse"
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - Matrix Docker Ansible Deploy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ client_email }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - ChatOasis testing SSH"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/configure_synapse.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json') }}"
 #    become_enabled: yes
     state: present
     verbosity: 1
@@ -253,7 +253,7 @@
 - name: Allow user account to use 'Configure Synapse' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
     role: execute
     state: present
@@ -268,8 +268,8 @@
     name: "{{ matrix_domain }} - 2 - Create User"
     description: "Configure Synapse (homeserver) settings."
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - AWX Playbooks"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - AWX Playbooks"
     playbook: create_user.yml
 #    become_enabled: yes
     state: present
@@ -282,7 +282,7 @@
 - name: Allow user account to use 'Create User' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
     role: execute
     state: present
@@ -297,8 +297,8 @@
     name: "{{ matrix_domain }} - 2 - Deactivate User"
     description: "Deactivates a users account."
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - AWX Playbooks"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - AWX Playbooks"
     playbook: deactivate_user.yml
 #    become_enabled: yes
     state: present
@@ -311,7 +311,7 @@
 - name: Allow user account to use 'Deactivate User' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Deactivate User"
     role: execute
     state: present
@@ -326,8 +326,8 @@
     name: "{{ matrix_domain }} - 2 - Query User"
     description: "Provide client/IP information about a specific user."
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - AWX Playbooks"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - AWX Playbooks"
     playbook: query_user.yml
 #    become_enabled: yes
     state: present
@@ -340,7 +340,7 @@
 - name: Allow user account to use 'Query User' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Query User"
     role: execute
     state: present
@@ -355,8 +355,8 @@
     name: "{{ matrix_domain }} - 2 - Remove Room From Directory"
     description: "Remove a room from the homeservers public directory."
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - AWX Playbooks"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - AWX Playbooks"
     playbook: remove_room_from_directory.yml
 #    become_enabled: yes
     state: present
@@ -369,7 +369,7 @@
 - name: Allow user account to use 'Remove Room From Directory' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Remove Room From Directory"
     role: execute
     state: present
@@ -384,8 +384,8 @@
     name: "{{ matrix_domain }} - 2 - Reset Password"
     description: "Resets a users password."
     job_type: run
-    inventory: "{{ client_email }} Inventory"
-    project: "{{ client_email }} - AWX Playbooks"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - AWX Playbooks"
     playbook: reset_password.yml
 #    become_enabled: yes
     state: present
@@ -398,7 +398,7 @@
 - name: Allow user account to use 'Reset Password' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Reset Password"
     role: execute
     state: present

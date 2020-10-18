@@ -5,6 +5,6 @@
 
 - name: Include droplet variables from do_droplet.yml
   include_vars:
-    file: /var/lib/awx/projects/clients/{{ client_email }}/{{ subscription_id }}/do_droplet.yml
+    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml
 
-# ^ These are fed in from extra_vars.yml: {{ client_email }} {{ subscription_id }}
+# ^ These are fed in from extra_vars.yml: {{ member_id }} {{ subscription_id }}
