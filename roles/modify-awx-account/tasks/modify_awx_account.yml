@@ -45,6 +45,10 @@
   delegate_to: 127.0.0.1
   shell: awx-cli config password "{{ tower_password }}"
 
+- name: Configure awx-cli 3
+  delegate_to: 127.0.0.1
+  shell: awx-cli config host "{{ tower_host }}"
+
 - name: Associate host group
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
