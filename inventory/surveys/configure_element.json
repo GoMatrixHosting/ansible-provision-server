@@ -21,6 +21,7 @@
       "min": 0,
       "max": 256,
       "default": "Element",
+      "choices": "",
       "new_question": true,
       "variable": "matrix_client_element_brand",
       "type": "text"
@@ -44,6 +45,7 @@
       "min": 0,
       "max": 1024,
       "default": "https://i.imgur.com/Y4SPBdZ.jpg",
+      "choices": "",
       "new_question": true,
       "variable": "matrix_client_element_branding_welcomeBackgroundUrl",
       "type": "text"
