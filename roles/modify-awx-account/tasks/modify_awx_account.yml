@@ -22,6 +22,24 @@
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
+  register: fs_host
+
+- name: Create 'matrix_servers' group
+  delegate_to: 127.0.0.1
+  tower_group:
+    name: matrix_servers
+    description: "Matrix servers to deploy/configure."
+    inventory: "{{ client_email }} Inventory"
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+  register: fs_group
+
+- name: Associate host group
+  delegate_to: 127.0.0.1
+  shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
 - name: Disallow user account to use the current 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
