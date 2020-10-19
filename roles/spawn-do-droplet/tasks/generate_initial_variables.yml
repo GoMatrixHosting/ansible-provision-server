@@ -56,13 +56,28 @@
 
 # Create target.yml variable file for launching deploy scripts
 
-- name: Add do_droplet_region line to extra_vars.yml file locally on AWX
+- name: Add target line to extra_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'target: "{{ matrix_domain }}"'
     mode: '0600'
     state: present
+
+- name: Add matrix_domain line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    line: 'matrix_domain: "{{ matrix_domain }}"'
+    mode: '0600'
+    state: present
+
+- name: Copy the new extra_vars.yml file to the target machine
+  delegate_to: "{{ server_ipv4 }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    dest: /matrix/awx/
+    mode: '0600'
 
 - name: Copy the new extra_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
