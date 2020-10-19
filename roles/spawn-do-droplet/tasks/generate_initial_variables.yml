@@ -35,6 +35,14 @@
     mode: '0600'
     state: present
 
+- name: Add matrix_domain line to do_droplet.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    line: 'matrix_domain: {{ matrix_domain }}'
+    mode: '0600'
+    state: present
+
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ipv4 }}"
   wait_for_connection:
@@ -61,14 +69,6 @@
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'target: "{{ matrix_domain }}"'
-    mode: '0600'
-    state: present
-
-- name: Add matrix_domain line to extra_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    line: 'matrix_domain: "{{ matrix_domain }}"'
     mode: '0600'
     state: present
 
