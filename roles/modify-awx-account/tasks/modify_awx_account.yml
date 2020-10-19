@@ -29,7 +29,7 @@
   tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
-    inventory: "{{ client_email }} Inventory"
+    inventory: "{{ member_id }} Inventory"
     state: present
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
