@@ -37,6 +37,14 @@
     validate_certs: yes
   register: fs_group
 
+- name: Configure awx-cli 1
+  delegate_to: 127.0.0.1
+  shell: awx-cli config username "{{ tower_username }}"
+
+- name: Configure awx-cli 2
+  delegate_to: 127.0.0.1
+  shell: awx-cli config password "{{ tower_password }}"
+
 - name: Associate host group
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
