@@ -200,7 +200,7 @@
     src: ./inventory/surveys/configure_element.json
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
     mode: 0644
-    force: no
+    force: yes
 
 - name: Copy 'Configure Element' survey.json to target machine
   delegate_to: "{{ server_ipv4 }}"
