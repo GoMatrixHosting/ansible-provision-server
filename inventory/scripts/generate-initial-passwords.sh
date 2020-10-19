@@ -48,6 +48,9 @@ matrix_synapse_configuration_extension_yaml: |
   mau_stats_only: true
 # End Synapse Extension
 # PostgreSQL Settings
+matrix_postgres_connection_hostname: 127.0.0.1
+matrix_postgres_db_name: synapse
+matrix_postgres_connection_username: synapse
 matrix_postgres_connection_password: $(generatePassword)
 # Base Domain Settings
 matrix_nginx_proxy_base_domain_homepage_enabled: false

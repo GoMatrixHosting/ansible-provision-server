@@ -1,0 +1,9 @@
+
+
+- debug:
+    msg: "{{ server_ipv4 }}"
+
+- debug:
+    msg: "{{ server_ipv6 }}"
+
+
