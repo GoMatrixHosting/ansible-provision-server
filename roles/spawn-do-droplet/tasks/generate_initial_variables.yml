@@ -72,6 +72,14 @@
     mode: '0600'
     state: present
 
+- name: Add target line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    line: 'matrix_domain: "{{ matrix_domain }}"'
+    mode: '0600'
+    state: present
+
 - name: Copy the new extra_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
