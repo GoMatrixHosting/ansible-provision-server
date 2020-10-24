@@ -1,5 +1,8 @@
 
 # Load hosting and droplet variables from AWX file
+- import_tasks: "{{ role_path }}/tasks/imposter_check.yml"
+
+# Load hosting and droplet variables from AWX file
 - import_tasks: "{{ role_path }}/tasks/load_variables.yml"
 
 # Spawn a Server
