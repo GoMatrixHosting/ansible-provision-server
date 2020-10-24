@@ -37,7 +37,7 @@ matrix_jitsi_jvb_auth_password: $(generatePassword)
 matrix_jitsi_jibri_recorder_password: $(generatePassword)
 matrix_jitsi_jibri_xmpp_password: $(generatePassword)
 # Synapse Settings
-matrix_synapse_container_metrics_api_host_bind_port: '9000'
+matrix_synapse_container_metrics_api_host_bind_port: 9000
 matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
 matrix_synapse_allow_public_rooms_over_federation: true
