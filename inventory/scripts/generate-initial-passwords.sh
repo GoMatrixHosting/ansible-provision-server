@@ -44,8 +44,9 @@ matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
 # Synapse Extension
 matrix_synapse_configuration_extension_yaml: |
-  admin_contact: 'mailto:chatoasis@protonmail.com'
+  autocreate_auto_join_rooms: true
   mau_stats_only: true
+  admin_contact: 'mailto:chatoasis@protonmail.com'
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_hostname: matrix-postgres
