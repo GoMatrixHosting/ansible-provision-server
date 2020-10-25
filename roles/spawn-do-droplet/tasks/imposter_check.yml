@@ -9,15 +9,15 @@
 - name: Run imposter-check script and collect output
   delegate_to: 127.0.0.1
   command: /usr/bin/python3 /var/lib/awx/projects/hosting/imposter-check.py "{{ matrix_domain }}"
-  register: imposter-check
+  register: impostercheck
 
-- debug: msg="{{ imposter-check.stdout }}"
+- debug: msg="{{ impostercheck.stdout }}"
 
 - debug: msg="This address is already in use by another member, please enter your own domain address. Contact the administrator if you believe this is an error."
-  when: imposter-check.stdout == "True"
+  when: impostercheck.stdout == "True"
 
 - meta: end_play
-  when: imposter-check.stdout == "True"
+  when: impostercheck.stdout == "True"
 
 
 
