@@ -116,25 +116,35 @@
   command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
 
-- name: Add client_password line to organisation.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
     mode: '0600'
     state: present
   when: base_domain_used == true
 
-- name: Add client_password line to organisation.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
     mode: '0600'
     state: present
   when: base_domain_used == false
+
+- name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Jitsi Settings'
+    line: 'matrix_jitsi_timezone: "{{ matrix_jitsi_timezone }}"'
+    mode: '0600'
+    state: present
+  when: matrix_jitsi_timezone is defined
 
 - name: Copy the new matrix_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
