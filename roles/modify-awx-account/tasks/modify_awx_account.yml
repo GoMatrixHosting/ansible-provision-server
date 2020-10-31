@@ -194,13 +194,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save initial 'Configure Element' survey.json to the AWX tower
+- name: Save new 'Configure Element' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
-  copy:
-    src: ./inventory/surveys/configure_element.json
+  template:
+    src: 'inventory/surveys/configure_element.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
-    mode: 0644
-    force: yes
 
 - name: Copy 'Configure Element' survey.json to target machine
   delegate_to: "{{ server_ipv4 }}"
