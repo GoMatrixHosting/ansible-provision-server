@@ -31,3 +31,5 @@
     - spawn-do-droplet
     - modify-awx-account
     - setup-do-droplet
+    - print-dns-setup
+

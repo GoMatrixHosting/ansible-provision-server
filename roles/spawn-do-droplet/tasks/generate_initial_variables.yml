@@ -113,7 +113,7 @@
 
 - name: Generate initial matrix_vars.yml on AWX if it does not exist
   delegate_to: 127.0.0.1
-  command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
+  command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "{{ element_subdomain }}" "{{ client_email }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX

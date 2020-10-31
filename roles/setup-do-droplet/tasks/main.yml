@@ -2,5 +2,3 @@
 # Spawn a Server
 - import_tasks: "{{ role_path }}/tasks/setup_server.yml"
 
-# Issue DNS advice:
-- import_tasks: "{{ role_path }}/tasks/dns_advice.yml"

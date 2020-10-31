@@ -7,10 +7,14 @@ generatePassword() {
 }
 
 usage() {
-  echo "Usage: $0 matrix_domain output_file output_repo_file"
+  echo "Usage: $0 matrix_domain element_subdomain client_email output_file"
 }
 DOMAIN="$1"; shift
 if [ "" = "$DOMAIN" ]; then usage 2>&1; exit 1; fi
+ELEMENT_SUBDOMAIN="$1"; shift
+if [ "" = "$ELEMENT_SUBDOMAIN" ]; then usage 2>&1; exit 1; fi
+CLIENT_EMAIL="$1"; shift
+if [ "" = "$CLIENT_EMAIL" ]; then usage 2>&1; exit 1; fi
 VARFILE="$1"; shift
 if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 
@@ -22,6 +26,7 @@ matrix_coturn_turn_static_auth_secret: $(generatePassword)
 matrix_synapse_macaroon_secret_key: $(generatePassword)
 # Element Settings
 matrix_client_element_enabled: true
+matrix_server_fqn_element: $ELEMENT_SUBDOMAIN.$DOMAIN
 matrix_client_element_jitsi_preferredDomain: jitsi.$DOMAIN
 # Element Extension
 matrix_client_element_configuration_extension_json: |
@@ -48,7 +53,7 @@ matrix_synapse_enable_registration: false
 matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
-  admin_contact: 'mailto:chatoasis@protonmail.com'
+  admin_contact: mailto:$CLIENT_EMAIL
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_hostname: matrix-postgres
@@ -57,7 +62,6 @@ matrix_postgres_connection_username: synapse
 matrix_postgres_connection_password: $(generatePassword)
 # Base Domain Settings
 matrix_nginx_proxy_base_domain_homepage_enabled: false
-matrix_well_known_matrix_server_enabled: false
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND

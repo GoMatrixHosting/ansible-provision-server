@@ -1,0 +1,29 @@
+
+- debug:
+    msg: "You're server has been created! You now need to configure your DNS to have the following records:
+
+Type	Host			Priority	Weight	Port	Target
+A 	matrix 			- 		- 	- 	{{ server_ipv4 }}
+A 	matrix 			- 		- 	- 	{{ server_ipv6 }}
+CNAME 	element 		- 		- 	- 	matrix.{{ matrix_domain }}
+CNAME 	jitsi	 		-		- 	- 	matrix.{{ matrix_domain }}
+SRV 	_matrix-identity._tcp 	10 		0 	443 	matrix.{{ matrix_domain }}
+
+Defining the IPv6 record is optional. If you need assistance doing this please contact us."
+  when: base_domain_used is 'true'
+
+- debug:
+    msg: "You're server has been created! You now need to configure your DNS to have the following records:
+
+Type	Host			Priority	Weight	Port	Target
+A 	 			- 		- 	- 	{{ server_ipv4 }}
+A 	 			- 		- 	- 	{{ server_ipv6 }}
+A 	matrix 			- 		- 	- 	{{ server_ipv4 }}
+A 	matrix 			- 		- 	- 	{{ server_ipv6 }}
+CNAME 	element 		- 		- 	- 	matrix.{{ matrix_domain }}
+CNAME 	jitsi	 		-		- 	- 	matrix.{{ matrix_domain }}
+SRV 	_matrix-identity._tcp 	10 		0 	443 	matrix.{{ matrix_domain }}
+
+Defining the IPv6 records is optional. If you need assistance doing this please contact us."
+  when: base_domain_used is 'false'
+
