@@ -104,7 +104,7 @@
       gpg_command = /usr/bin/gpg
       gpg_decrypt = %(gpg_command)s -d --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
       gpg_encrypt = %(gpg_command)s -c --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
-      gpg_passphrase =
+      gpg_passphrase = 
       guess_mime_type = True
       host_base = {{ do_spaces_region }}.digitaloceanspaces.com
       host_bucket = %(bucket)s.{{ do_spaces_region }}.digitaloceanspaces.com
