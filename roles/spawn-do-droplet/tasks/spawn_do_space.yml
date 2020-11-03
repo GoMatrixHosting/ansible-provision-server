@@ -14,7 +14,7 @@
 - name: Set spaces region for sgp
   set_fact:
     do_spaces_region: "sgp1"
-  when: do_droplet_region=="spg1"
+  when: do_droplet_region=="sgp1"
 
 - name: Set spaces region for sfo
   set_fact:
