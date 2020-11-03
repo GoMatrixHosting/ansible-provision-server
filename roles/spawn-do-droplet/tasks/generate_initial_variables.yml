@@ -43,6 +43,24 @@
     mode: '0600'
     state: present
 
+#- name: Add base_domain_used line to do_droplet.yml file locally on AWX
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+#    line: 'base_domain_used: {{ base_domain_used }}'
+#    mode: '0600'
+#    state: present
+#
+#- name: Add element_subdomain line to do_droplet.yml file locally on AWX
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+#    line: 'element_subdomain: {{ element_subdomain }}'
+#    mode: '0600'
+#    state: present
+#
+# ^ Pretty sure these aren't needed!
+
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ipv4 }}"
   wait_for_connection:
