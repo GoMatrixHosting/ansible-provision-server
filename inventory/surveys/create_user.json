@@ -1,0 +1,42 @@
+{
+  "name": "",
+  "description": "",
+  "spec": [
+    {
+      "question_name": "Username",
+      "question_description": "Sets the username of the newly created account.",
+      "required": false,
+      "min": 0,
+      "max": 1024,
+      "default": "",
+      "choices": "",
+      "new_question": true,
+      "variable": "new_username",
+      "type": "text"
+    },
+    {
+      "question_name": "Password",
+      "question_description": "Sets the password of the newly created account.",
+      "required": false,
+      "min": 0,
+      "max": 1024,
+      "default": "",
+      "choices": "",
+      "new_question": true,
+      "variable": "new_password",
+      "type": "text"
+    },
+    {
+      "question_name": "Administrator Access",
+      "question_description": "Sets whether this user account will be a server admin. Server admins can use their access tokens to run administration/moderation commands on the homeserver.",
+      "required": false,
+      "min": null,
+      "max": null,
+      "default": "false",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "admin_access",
+      "type": "multiplechoice"
+    },
+  ]
+}
