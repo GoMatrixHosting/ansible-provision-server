@@ -7,7 +7,8 @@
 
 - debug:
     msg: 
-    - "You're server has been created! You now need to configure your DNS to have the following records:"
+    - Your server has been created! You now need to configure your DNS to have the 
+    - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
     - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
@@ -24,7 +25,8 @@
 
 - debug:
     msg: 
-    - "You're server has been created! You now need to configure your DNS to have the following records:"
+    - Your server has been created! You now need to configure your DNS to have the 
+    - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
     - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
