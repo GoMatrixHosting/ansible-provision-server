@@ -11,17 +11,13 @@
   command: /usr/bin/python3 /var/lib/awx/projects/hosting/imposter-check.py "{{ matrix_domain }}"
   register: impostercheck
 
-- name:  Set impostercheck_out from scripts output
-  set_fact:
-    impostercheck_out: "{{ impostercheck.stdout }}"
-
-- debug: msg="{{ impostercheck_out }}"
+- debug: msg="{{ impostercheck.stdout }}"
 
 - debug: msg="This address is already in use by another member, please enter your own domain address. Contact the administrator if you believe this is an error."
-  when: impostercheck_out == True
+  when: impostercheck.stdout == True
 
 - meta: end_play
-  when: impostercheck_out == True
+  when: impostercheck.stdout == True
 
 
 
