@@ -400,6 +400,21 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Save initial 'Create User' survey.json to the AWX tower
+  delegate_to: 127.0.0.1
+  copy:
+    src: ./inventory/surveys/create_user.json
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json'
+    mode: 0644
+    force: no
+
+- name: Copy 'Create User' survey.json to target machine
+  delegate_to: "{{ server_ipv4 }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json'
+    dest:  '/matrix/awx/create_user.json'
+    mode: 0644
+
 - name: Create 'Create User' job template
   delegate_to: 127.0.0.1
   tower_job_template:
