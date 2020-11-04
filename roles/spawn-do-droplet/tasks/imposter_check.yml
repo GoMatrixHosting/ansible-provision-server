@@ -14,10 +14,10 @@
 - debug: msg="{{ impostercheck.stdout }}"
 
 - debug: msg="This address is already in use by another member, please enter your own domain address. Contact the administrator if you believe this is an error."
-  when: impostercheck.stdout == "True"
+  when: impostercheck.stdout == True
 
 - meta: end_play
-  when: impostercheck.stdout == "True"
+  when: impostercheck.stdout == True
 
 
 
