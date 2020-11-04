@@ -10,6 +10,7 @@
 
 # Spawn a 'Space'
 - import_tasks: "{{ role_path }}/tasks/spawn_do_space.yml"
+  tags: digitalocean-space
 
 # Create initial variable files
 - import_tasks: "{{ role_path }}/tasks/generate_initial_variables.yml"
