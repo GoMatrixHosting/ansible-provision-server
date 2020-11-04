@@ -12,7 +12,7 @@ SRV 	_matrix-identity._tcp 	10 		0 	443 	matrix.{{ matrix_domain }}
 Defining the IPv6 record is optional. If you need assistance doing this please contact us.
 
 You also decided that your base domain was already in use, you'll need to configure a .well-known/matrix/server entry for your existing web service. See here for instructions on how to configure this: https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-well-known.md"
-  when: base_domain_used == true
+  when: base_domain_used == 'true'
 
 - debug:
     msg: "You're server has been created! You now need to configure your DNS to have the following records:
@@ -27,5 +27,5 @@ CNAME 	jitsi	 		-		- 	- 	matrix.{{ matrix_domain }}
 SRV 	_matrix-identity._tcp 	10 		0 	443 	matrix.{{ matrix_domain }}
 
 Defining the IPv6 records is optional. If you need assistance doing this please contact us."
-  when: base_domain_used == false
+  when: base_domain_used == 'false'
 
