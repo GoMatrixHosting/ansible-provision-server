@@ -65,6 +65,18 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Allow user account to audit the current 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ member_id }}"
+    job_template: "{{ subscription_id }} - 00 - Provision a New Server"
+    role: read
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
 #- name: Create a 'Provision a New Server' job_template without the survey
 #  delegate_to: 127.0.0.1
 #  tower_job_template:
