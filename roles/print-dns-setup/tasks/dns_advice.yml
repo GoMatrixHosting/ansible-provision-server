@@ -21,13 +21,15 @@
     - You also decided that your base domain was already in use, you'll need to configure
     - "a .well-known entry for your existing web service before you proceed:" 
     - https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-well-known.md
-  when: base_domain_used == 'true'
+  when: base_domain_used == 'true' 
 
 - debug:
     msg: 
     - Your server has been created! You now need to configure your DNS to have the 
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
+    - A       -                       -         -       -      {{ server_ipv4 }}
+    - A       -                       -         -       -      {{ server_ipv6 }}
     - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}

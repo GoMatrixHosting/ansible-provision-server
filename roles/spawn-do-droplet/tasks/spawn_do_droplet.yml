@@ -9,14 +9,14 @@
 - name: Set valid digitalocean area code for New York City.
   delegate_to: 127.0.0.1
   set_fact:
-    do_droplet_region: "nyc1"
+    do_droplet_region: "nyc3"
     matrix_jitsi_timezone: "America/New_York"
   when: do_droplet_region_long == "New York City (USA)"
 
 - name: Set valid digitalocean area code for San Francisco.
   delegate_to: 127.0.0.1
   set_fact:
-    do_droplet_region: "sfo1"
+    do_droplet_region: "sfo3"
     matrix_jitsi_timezone: "America/Los_Angeles"
   when: do_droplet_region_long == "San Francisco (USA)"
 
