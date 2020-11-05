@@ -34,10 +34,10 @@
 - debug:
     msg: "{{ do_spaces_region }}"
 
-- name: do_spaces_region line to do_droplet.yml file locally on AWX
+- name: do_spaces_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_spaces_region: {{ do_spaces_region }}'
     mode: '0600'
     state: present

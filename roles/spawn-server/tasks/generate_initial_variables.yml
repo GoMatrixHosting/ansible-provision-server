@@ -1,44 +1,48 @@
 
 
-# Append to do_droplet.yml variable file
+# Append to server_vars.yml variable file
 
-- name: Add do_droplet_region line to do_droplet.yml file locally on AWX
+- name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_region: {{ do_droplet_region }}'
     mode: '0600'
     state: present
     create: yes
+  when: do_droplet_region is defined
 
-- name: Add do_droplet_id line to do_droplet.yml file locally on AWX
+- name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
     mode: '0600'
     state: present
+  when: new_server_info is defined
 
-- name: Add server_ipv4 line to do_droplet.yml file locally on AWX
+- name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'server_ipv4: {{ server_ipv4 }}'
     mode: '0600'
     state: present
+  when: server_ipv4 is defined
 
-- name: Add server_ipv6 line to do_droplet.yml file locally on AWX
+- name: Add server_ipv6 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'server_ipv6: {{ server_ipv6 }}'
     mode: '0600'
     state: present
+  when: server_ipv6 is defined
 
-- name: Add matrix_domain line to do_droplet.yml file locally on AWX
+- name: Add matrix_domain line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'matrix_domain: {{ matrix_domain }}'
     mode: '0600'
     state: present
@@ -55,10 +59,10 @@
     state: directory
     mode: '0700'
 
-- name: Copy the new do_droplet.yml file to the target machine
+- name: Copy the new server_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     dest: /matrix/awx/
     mode: '0600'
 

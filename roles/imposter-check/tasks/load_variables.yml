@@ -3,8 +3,8 @@
   include_vars:
     file: /var/lib/awx/projects/hosting/hosting_vars.yml
 
-- name: Include droplet variables from do_droplet.yml
+- name: Include droplet variables from server_vars.yml
   include_vars:
-    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/do_droplet.yml
+    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml
 
 # ^ These are fed in from extra_vars.yml: {{ member_id }} {{ subscription_id }}

@@ -28,8 +28,9 @@
   gather_facts: false
 
   roles:
-    - spawn-do-droplet
+    - imposter-check
+    - spawn-server
     - modify-awx-account
-    - setup-do-droplet
+    - setup-server
     - print-dns-setup
 

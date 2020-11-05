@@ -26,7 +26,7 @@ for member_id in member_ids:
 #  print(subscription_ids)
   for subscription_id in subscription_ids:
   # collect those matrix_domains into a list
-    file_path = '/var/lib/awx/projects/clients/' + member_id + '/' + subscription_id + '/do_droplet.yml'
+    file_path = '/var/lib/awx/projects/clients/' + member_id + '/' + subscription_id + '/server_vars.yml'
     droplet_data = open(file_path,'r')
     #print(droplet_data.read())
     droplet_data_lines = droplet_data.readlines()
