@@ -23,7 +23,7 @@
 - name: Set valid digitalocean area code for Amsterdam.
   delegate_to: 127.0.0.1
   set_fact:
-    do_droplet_region: "ams2"
+    do_droplet_region: "ams3"
     matrix_jitsi_timezone: "Europe/Amsterdam"
   when: do_droplet_region_long == "Amsterdam (NLD)"
 
