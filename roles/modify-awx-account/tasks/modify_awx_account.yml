@@ -346,6 +346,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - AWX Playbooks"
     playbook: create_user.yml
+    credential: "{{ member_id }} - ChatOasis testing SSH"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json') }}"
     state: present
