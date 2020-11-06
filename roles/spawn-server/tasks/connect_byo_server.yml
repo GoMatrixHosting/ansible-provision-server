@@ -1,33 +1,12 @@
 
-- name: Assign variable to server_ipv4
-  delegate_to: 127.0.0.1
-  command: |
-    host matrix.{{ matrix_domain }} | awk '/has address/ { print $4 ; exit }'
-  register: server_ipv4_raw
-
-- name: Assign variable to server_ipv6
-  delegate_to: 127.0.0.1
-  command: |
-    host -t AAAA matrix.{{ matrix_domain }} | awk 'NF>1{print $NF}' | sed s:record::
-  register: server_ipv6_raw
-
-- name: Save variable server_ipv4
-  delegate_to: 127.0.0.1
-  set_fact:
-    server_ipv4: "{{ server_ipv4_raw.stdout }}"
-
-- name: Save variable server_ipv6
-  delegate_to: 127.0.0.1
-  set_fact:
-    server_ipv6: "{{ server_ipv6_raw.stdout }}"
-
 - debug:
     msg: "{{ server_ipv4 }}"
 
 - debug:
     msg: "{{ server_ipv6 }}"
+  when: server_ipv6 is defined
 
-- name: Test if SSH is possible
+- name: Test if SSH is possible with ipv4
   delegate_to: 127.0.0.1
   command: ssh root@{{ server_ipv4 }} "echo success"
   register: echo_output
@@ -35,10 +14,10 @@
 - debug:
     msg: "{{ echo_output.stdout }}"
 
-- name: If connection fails transfer public key with ssh-copy-id.
+- name: If ipv4 connection fails transfer public key with ssh-copy-id.
   delegate_to: 127.0.0.1
   command: 'sshpass -p {{ root_password }} ssh-copy-id -i /var/lib/awx/projects/hosting/matrixtesting_ed25519.pub -o StrictHostKeyChecking=no root@{{ server_ipv4 }}'
-  when: echo_output.stdout == "success"
+  when: echo_output.stdout != "success"
 
 - name: Disable password authentication
   delegate_to: "{{ server_ipv4 }}"
