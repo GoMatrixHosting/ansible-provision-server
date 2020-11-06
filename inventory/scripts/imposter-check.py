@@ -27,15 +27,16 @@ for member_id in member_ids:
   for subscription_id in subscription_ids:
   # collect those matrix_domains into a list
     file_path = '/var/lib/awx/projects/clients/' + member_id + '/' + subscription_id + '/server_vars.yml'
-    droplet_data = open(file_path,'r')
-    #print(droplet_data.read())
-    droplet_data_lines = droplet_data.readlines()
+    if os.path.isfile(file_path):
+      droplet_data = open(file_path,'r')
+      #print(droplet_data.read())
+      droplet_data_lines = droplet_data.readlines()
 #    print(droplet_data_lines)
-    for line in droplet_data_lines:
-      if 'matrix_domain: ' in line:
-        line = line.replace("\n", "")
-        line = line.replace("matrix_domain: ", "")
-        used_domains.append(line)
+      for line in droplet_data_lines:
+        if 'matrix_domain: ' in line:
+          line = line.replace("\n", "")
+          line = line.replace("matrix_domain: ", "")
+          used_domains.append(line)
 
 #print(used_domains)
 
