@@ -15,7 +15,8 @@
     msg: "{{ echo_output.stdout }}"
 
 - name: accept new ssh fingerprints (Not safe against MITM)                                      
-    shell: ssh-keyscan -H {{ server_ipv4 }} >> ~/.ssh/known_hosts    
+    shell: |
+      ssh-keyscan -H "{{ server_ipv4 }}" >> ~/.ssh/known_hosts    
 
 - name: If ipv4 connection fails transfer public key with ssh-copy-id.
   delegate_to: 127.0.0.1
