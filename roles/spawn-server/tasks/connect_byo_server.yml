@@ -6,6 +6,11 @@
     msg: "{{ server_ipv6 }}"
   when: server_ipv6 is defined
 
+- name: accept new ssh fingerprints (Not safe against MITM) 
+  delegate_to: 127.0.0.1                                     
+  command: |
+    ssh-keyscan -H "{{ server_ipv4 }}" >> ~/.ssh/known_hosts    
+
 - name: Test if SSH is possible with ipv4
   delegate_to: 127.0.0.1
   command: ssh root@{{ server_ipv4 }} "echo success"
@@ -13,11 +18,6 @@
 
 - debug:
     msg: "{{ echo_output.stdout }}"
-
-- name: accept new ssh fingerprints (Not safe against MITM) 
-  delegate_to: 127.0.0.1                                     
-  command: |
-    ssh-keyscan -H "{{ server_ipv4 }}" >> ~/.ssh/known_hosts    
 
 - name: If ipv4 connection fails transfer public key with ssh-copy-id.
   delegate_to: 127.0.0.1
