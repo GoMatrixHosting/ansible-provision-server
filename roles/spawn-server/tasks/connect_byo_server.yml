@@ -12,17 +12,12 @@
     ssh-keyscan -H "{{ server_ipv4 }}" >> ~/.ssh/known_hosts    
 
 - name: Test if SSH is possible with ipv4
-  delegate_to: 127.0.0.1
-  command: ssh root@{{ server_ipv4 }} "echo success"
+  delegate_to: "{{ server_ipv4 }}"
+  command: echo success
   register: echo_output
 
 - debug:
     msg: "{{ echo_output.stdout }}"
-
-- name: If ipv4 connection fails transfer public key with ssh-copy-id.
-  delegate_to: 127.0.0.1
-  command: 'sshpass -p {{ root_password }} ssh-copy-id -i /var/lib/awx/projects/hosting/matrixtesting_ed25519.pub -o StrictHostKeyChecking=no root@{{ server_ipv4 }}'
-  when: echo_output.stdout != "success"
 
 - name: Disable password authentication
   delegate_to: "{{ server_ipv4 }}"
