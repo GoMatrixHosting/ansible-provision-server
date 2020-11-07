@@ -1,4 +1,4 @@
 
 # Issue DNS advice:
 - import_tasks: "{{ role_path }}/tasks/dns_advice.yml"
-  tags: digitalocean-droplet
+  tags: always
