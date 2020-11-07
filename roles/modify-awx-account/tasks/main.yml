@@ -1,4 +1,5 @@
 
 # Modified existing AWX organisation
 - import_tasks: "{{ role_path }}/tasks/modify_awx_account.yml"
+  tags: always
 

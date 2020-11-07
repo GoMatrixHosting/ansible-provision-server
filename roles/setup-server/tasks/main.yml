@@ -1,4 +1,5 @@
 
 # Spawn a Server
 - import_tasks: "{{ role_path }}/tasks/setup_server.yml"
+  tags: always
 
