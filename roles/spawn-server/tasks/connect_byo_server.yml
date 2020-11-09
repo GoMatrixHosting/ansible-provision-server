@@ -31,3 +31,12 @@
     name: ssh
     state: restarted
 
+- name: Collect timezone of connected server (Debian and derivatives only) 
+  delegate_to: "{{ server_ipv4 }}"
+  command: cat /etc/timezone
+  register: timezone_output
+
+- name: Set valid timezone for Jitsi instance
+  delegate_to: 127.0.0.1
+  set_fact:
+    matrix_jitsi_timezone: "{{ timezone_output.stdout }}"
