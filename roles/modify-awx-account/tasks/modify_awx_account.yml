@@ -111,7 +111,7 @@
 - name: Create an rrule string for a schedule for every Monday
   delegate_to: 127.0.0.1
   set_fact:
-    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
+    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
 
 - name: Build a schedule for 'Deploy a New Server' job template
   delegate_to: 127.0.0.1
