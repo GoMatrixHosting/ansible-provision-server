@@ -110,17 +110,17 @@
 
 - name: Create an rrule string for a schedule for every Monday
   delegate_to: 127.0.0.1
-  debug:
-    msg: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
-  register: rrule_line
+  set_fact:
+    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
 
 - name: Build a schedule for 'Deploy a New Server' job template
+  delegate_to: 127.0.0.1
   awx.awx.tower_schedule:
     name: "{{ matrix_domain }} - 0 - Deploy a New Server Schedule"
     enabled: yes
     state: present
     unified_job_template: "{{ matrix_domain }} - 0 - Deploy a New Server"
-    rrule: "{{ rrule_line.stdout }}"
+    rrule: "{{ rrule_line }}"
 
 - name: Create 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
