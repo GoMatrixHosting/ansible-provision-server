@@ -115,7 +115,7 @@
   register: rrule_line
 
 - name: Build a schedule for 'Deploy a New Server' job template
-  tower_schedule:
+  awx.awx.tower_schedule:
     name: "{{ matrix_domain }} - 0 - Deploy a New Server Schedule"
     enabled: yes
     state: present
