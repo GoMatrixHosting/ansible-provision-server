@@ -4,12 +4,7 @@
 
 - debug:
     msg: "{{ server_ipv6 }}"
-  when: server_ipv6 is defined
-
-#- name: accept new ssh fingerprints (Not safe against MITM) 
-#  delegate_to: 127.0.0.1                                     
-#  command: |
-#    ssh-keyscan -H "{{ server_ipv4 }}" >> ~/.ssh/known_hosts    
+  when: server_ipv6 is defined   
 
 - name: Test if SSH is possible with ipv4
   delegate_to: "{{ server_ipv4 }}"
