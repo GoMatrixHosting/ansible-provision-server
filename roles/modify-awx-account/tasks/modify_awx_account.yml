@@ -11,7 +11,7 @@
   pip:
       name: ansible-tower-cli
 
-- name: Add tower host to organisations inventory
+- name: Add new host to organisations inventory
   delegate_to: 127.0.0.1
   tower_host:
     name: "matrix.{{ matrix_domain }}"
