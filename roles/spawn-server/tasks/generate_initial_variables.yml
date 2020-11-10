@@ -2,6 +2,23 @@
 
 # Append to server_vars.yml variable file
 
+- name: Add slug_size line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/server_vars.yml'
+    line: 'slug_size: {{ slug_size }}'
+    mode: '0600'
+    state: present
+  when: slug_size is defined
+
+- name: Add swap_size line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/server_vars.yml'
+    line: 'swap_size: {{ swap_size }}'
+    mode: '0600'
+    state: present
+
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
@@ -45,6 +62,15 @@
     line: 'matrix_domain: {{ matrix_domain }}'
     mode: '0600'
     state: present
+
+- name: Add plan_title line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/server_vars.yml'
+    line: 'plan_title: {{ plan_title }}'
+    mode: '0600'
+    state: present
+  when: plan_title is defined
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ipv4 }}"

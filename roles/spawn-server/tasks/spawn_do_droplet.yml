@@ -44,30 +44,40 @@
 - name: Set MAU limit for Micro Server
   delegate_to: 127.0.0.1
   set_fact:
+    slug_size: "s-1vcpu-1gb"
+    swap_size: "2G"
     mau_limit: 5
   when: plan_title=="Micro Server"
 
 - name: Set MAU limit for Small Server
   delegate_to: 127.0.0.1
   set_fact:
+    slug_size: "s-1vcpu-2gb"
+    swap_size: "2G"
     mau_limit: 25
   when: plan_title=="Small Server"
 
 - name: Set MAU limit for Medium Server
   delegate_to: 127.0.0.1
   set_fact:
+    slug_size: "s-2vcpu-4gb"
+    swap_size: "4G"
     mau_limit: 50
   when: plan_title=="Medium Server"
 
 - name: Set MAU limit for Large Server
   delegate_to: 127.0.0.1
   set_fact:
+    slug_size: "s-4vcpu-8gb"
+    swap_size: "8G"
     mau_limit: 100
   when: plan_title=="Large Server"
 
 - name: Set MAU limit for Jumbo Server
   delegate_to: 127.0.0.1
   set_fact:
+    slug_size: "s-8vcpu-32gb"
+    swap_size: "32G"
     mau_limit: 1000
   when: plan_title=="Jumbo Server"
 
