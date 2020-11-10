@@ -53,7 +53,7 @@ matrix_synapse_enable_registration: false
 matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
-  admin_contact: mailto:$CLIENT_EMAIL
+  admin_contact: 'mailto:$CLIENT_EMAIL'
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_hostname: matrix-postgres
