@@ -149,6 +149,26 @@
     state: present
   when: matrix_jitsi_timezone is defined
 
+- name: Add limit_usage_by_mau line to matrix_vars.yml file if mau_limit is defined
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertbefore: '# End Synapse Extension'
+    line: '  limit_usage_by_mau: True'
+    mode: '0600'
+    state: present
+  when: mau_limit is defined
+
+- name: Add mau_max_value line to matrix_vars.yml file if mau_limit is defined
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertbefore: '# End Synapse Extension'
+    line: '  max_mau_value: "{{ mau_limit }}"'
+    mode: '0600'
+    state: present
+  when: mau_limit is defined
+
 - name: Copy the new matrix_vars.yml file to the target machine
   delegate_to: "{{ server_ipv4 }}"
   copy:
