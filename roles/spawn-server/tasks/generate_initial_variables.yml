@@ -5,7 +5,7 @@
 - name: Add slug_size line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/server_vars.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'slug_size: {{ slug_size }}'
     mode: '0600'
     state: present
@@ -14,7 +14,7 @@
 - name: Add swap_size line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/server_vars.yml'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'swap_size: {{ swap_size }}'
     mode: '0600'
     state: present
