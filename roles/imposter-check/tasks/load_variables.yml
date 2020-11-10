@@ -8,3 +8,7 @@
     file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml
 
 # ^ These are fed in from extra_vars.yml: {{ member_id }} {{ subscription_id }}
+
+- name: Include organisation variables from organisation.yml
+  include_vars:
+    file: /var/lib/awx/projects/clients/{{ member_id }}/organisation.yml
