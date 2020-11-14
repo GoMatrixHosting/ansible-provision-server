@@ -170,7 +170,7 @@
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
-    line: 'matrix_nginx_proxy_base_domain_homepage_enabled: false'
+    line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
     mode: '0600'
     state: present
   when: base_domain_used == false
