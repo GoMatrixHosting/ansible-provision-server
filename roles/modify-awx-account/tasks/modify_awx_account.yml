@@ -84,7 +84,7 @@
     description: "Creates a new matrix service with Spantaleev's playbooks"
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "setup-all,start"
+    job_tags: "setup-all,awx,start"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -129,7 +129,7 @@
     description: "Starts or restarts all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: start
+    job_tags: "start,awx"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -160,7 +160,7 @@
     description: "Stops all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: stop
+    job_tags: "stop,awx"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -197,7 +197,7 @@
     description: "Configure Element client via survey."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "start,setup-client-element"
+    job_tags: "start,awx,setup-client-element"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -237,7 +237,7 @@
     description: "Configure Synapse (homeserver) settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "start,setup-synapse"
+    job_tags: "start,awx,setup-synapse"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -277,7 +277,7 @@
     description: "Configure Jitsi conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "start,setup-jitsi"
+    job_tags: "start,awx,setup-jitsi"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -317,7 +317,7 @@
     description: "Configure Ma1sd conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "start,setup-ma1sd"
+    job_tags: "start,awx,setup-ma1sd"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -357,7 +357,7 @@
     description: "Configure base domain website settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    job_tags: "start,setup-nginx-proxy"
+    job_tags: "start,awx,setup-nginx-proxy"
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
