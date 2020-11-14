@@ -61,7 +61,6 @@ matrix_postgres_db_name: synapse
 matrix_postgres_connection_username: synapse
 matrix_postgres_connection_password: $(generatePassword)
 # Base Domain Settings
-matrix_nginx_proxy_base_domain_homepage_enabled: false
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND

@@ -165,6 +165,26 @@
     state: present
   when: base_domain_used == false
 
+- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Base Domain Settings'
+    line: 'matrix_nginx_proxy_base_domain_homepage_enabled: false'
+    mode: '0600'
+    state: present
+  when: base_domain_used == true
+
+- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Base Domain Settings'
+    line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
+    mode: '0600'
+    state: present
+  when: base_domain_used == false
+
 - name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
