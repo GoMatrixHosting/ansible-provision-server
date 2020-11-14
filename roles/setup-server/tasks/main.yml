@@ -3,4 +3,6 @@
 - import_tasks: "{{ role_path }}/tasks/setup_server.yml"
   tags: always
 
-
+# Create sshd_sftp.service
+- import_tasks: "{{ role_path }}/tasks/create_sshd_sftp_service.yml"
+  tags: always

@@ -37,6 +37,6 @@
       "new_question": true,
       "variable": "admin_access",
       "type": "multiplechoice"
-    },
+    }
   ]
 }

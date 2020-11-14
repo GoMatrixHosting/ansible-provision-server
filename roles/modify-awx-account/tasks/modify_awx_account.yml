@@ -343,6 +343,46 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Save initial 'Configure Base Domain Website' survey.json to the AWX tower
+  delegate_to: 127.0.0.1
+  copy:
+    src: ./inventory/surveys/configure_base_domain_website.json
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json'
+    mode: 0644
+
+- name: Create 'Configure Base Domain Website' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Base Domain Website"
+    description: "Configure base domain website settings."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "start,setup-nginx-proxy"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - ChatOasis testing SSH"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Configure Base Domain Website' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Base Domain Website"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
 - name: Save initial 'Create User' survey.json to the AWX tower
   delegate_to: 127.0.0.1
   copy:
