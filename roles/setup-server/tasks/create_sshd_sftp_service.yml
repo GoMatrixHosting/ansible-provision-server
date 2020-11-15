@@ -25,6 +25,12 @@
   shell: pwgen -s 20 1
   register: website_password
 
+- name: Ensure group "website" exists
+  delegate_to: '{{ server_ipv4 }}'
+  group:
+    name: website
+    state: present
+
 - name: Add the SFTP user 'website' with a primary group of 'website', and a shell of /bin/false
   delegate_to: '{{ server_ipv4 }}'
   user:
