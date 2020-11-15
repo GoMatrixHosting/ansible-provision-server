@@ -52,6 +52,7 @@
     dest: /home/website/base/
     owner: root
     group: root
+    force: yes
     state: link
 
 - name: Enable service ssh_sftp.service
