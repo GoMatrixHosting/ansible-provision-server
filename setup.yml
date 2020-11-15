@@ -30,7 +30,7 @@
   roles:
     - imposter-check
     - spawn-server
-    - modify-awx-account
     - setup-server
+    - modify-awx-account
     - print-dns-setup
 
