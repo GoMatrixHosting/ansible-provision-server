@@ -1,13 +1,11 @@
 
 - name: Copy ssh_sftp.service file
-  delegate: '{{ server_ipv4 }}'
   copy:
     src: './inventory/templates/ssh_sftp.service'
     dest: '/lib/systemd/system/ssh_sftp.service'
     mode: 0644
 
 - name: Copy sshd config file
-  delegate: '{{ server_ipv4 }}'
   copy:
     src: './inventory/templates/sshd_sftp_config'
     dest: '/etc/ssh/sshd_sftp_config'
