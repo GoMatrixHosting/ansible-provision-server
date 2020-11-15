@@ -1,11 +1,13 @@
 
 - name: Copy ssh_sftp.service file
+  delegate_to: '{{ server_ipv4 }}'
   copy:
     src: './inventory/templates/ssh_sftp.service'
     dest: '/lib/systemd/system/ssh_sftp.service'
     mode: 0644
 
 - name: Copy sshd config file
+  delegate_to: '{{ server_ipv4 }}'
   copy:
     src: './inventory/templates/sshd_sftp_config'
     dest: '/etc/ssh/sshd_sftp_config'
@@ -19,7 +21,7 @@
     mode: '0666'
 
 - name: Generate SFTP users password
-  delegate: '{{ server_ipv4 }}'
+  delegate_to: 127.0.0.1
   shell: pwgen -s 20 1
   register: website_password
 
@@ -47,11 +49,13 @@
     state: link
 
 - name: Enable service ssh_sftp.service
+  delegate_to: '{{ server_ipv4 }}'
   service:
     name: ssh_sftp.service
     enabled: yes
 
 - name: Enable service ssh_sftp.service
+  delegate_to: '{{ server_ipv4 }}'
   service:
     name: ssh_sftp.service
     start: started
