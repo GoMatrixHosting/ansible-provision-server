@@ -19,5 +19,5 @@ RuntimeDirectoryMode=0755
 
 [Install]
 WantedBy=multi-user.target
-Alias=sshd.service
+Alias=sshd_sftp.service
 
