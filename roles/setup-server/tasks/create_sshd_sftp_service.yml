@@ -61,9 +61,9 @@
     name: ssh_sftp.service
     enabled: yes
 
-- name: Enable service ssh_sftp.service
+- name: Start service ssh_sftp.service
   delegate_to: '{{ server_ipv4 }}'
   service:
     name: ssh_sftp.service
-    start: started
+    state: started
 
