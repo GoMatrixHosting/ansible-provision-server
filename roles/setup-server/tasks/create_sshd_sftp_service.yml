@@ -49,7 +49,7 @@
   delegate_to: '{{ server_ipv4 }}'
   file:
     src: /matrix/nginx-proxy/data/matrix-domain/
-    dest: /home/website/base/
+    dest: /home/website/base
     owner: root
     group: root
     force: yes
