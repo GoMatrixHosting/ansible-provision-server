@@ -12,7 +12,7 @@
     mode: 0644
 
 - name: Create the base domain website directory if it doesn't exist
-  delegate: '{{ server_ipv4 }}'
+  delegate_to: '{{ server_ipv4 }}'
   file:
     path: /matrix/nginx-proxy/data/matrix-domain/
     state: directory
@@ -24,7 +24,7 @@
   register: website_password
 
 - name: Add the SFTP user 'website' with a primary group of 'website', and a shell of /bin/false
-  delegate: '{{ server_ipv4 }}'
+  delegate_to: '{{ server_ipv4 }}'
   user:
     name: website
     comment: SFTP user to set custom web files
@@ -34,11 +34,11 @@
     group: website
 
 - name: Setup SFTP users default root path
-  delegate: '{{ server_ipv4 }}'
+  delegate_to: '{{ server_ipv4 }}'
   shell: sudo usermod -d / website
 
 - name: Create a symbolic link
-  delegate: '{{ server_ipv4 }}'
+  delegate_to: '{{ server_ipv4 }}'
   file:
     src: /matrix/nginx-proxy/data/matrix-domain/
     dest: /home/website/
