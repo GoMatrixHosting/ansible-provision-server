@@ -24,7 +24,7 @@ AcceptEnv LANG LC_*
 Subsystem sftp internal-sftp
 
 Match User website
-    ChrootDirectory /home/website
+    ChrootDirectory /home/website/base
     PermitTunnel no
     X11Forwarding no
     AllowTcpForwarding no
