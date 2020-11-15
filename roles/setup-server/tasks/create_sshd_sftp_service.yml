@@ -1,60 +1,17 @@
 
-- name: Copy sshd service file
+- name: Copy ssh_sftp.service file
   delegate: '{{ server_ipv4 }}'
-  shell: cp /lib/systemd/system/ssh.service /lib/systemd/system/ssh_sftp.service
+  copy:
+    src: './inventory/templates/ssh_sftp.service'
+    dest: '/lib/systemd/system/ssh_sftp.service'
+    mode: 0644
 
 - name: Copy sshd config file
   delegate: '{{ server_ipv4 }}'
-  shell: cp /etc/ssh/sshd_config /etc/ssh/sshd_sftp_config
-
-- name: Remove ExecStart line from ssh_sftp.service
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /lib/systemd/system/ssh_sftp.service
-    state: absent
-    line: 'ExecStart=/usr/sbin/sshd -D $SSHD_OPTS'
-
-- name: Add new ExecStart line to ssh_sftp.service
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /lib/systemd/system/ssh_sftp.service
-    state: present
-    line: 'ExecStart=/usr/sbin/sshd -D -f /etc/ssh/sshd_sftp_config $SSHD_OPTS'
-
-- name: Add Port line to /etc/ssh/sshd_sftp_config
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /etc/ssh/sshd_sftp_config
-    state: present
-    line: 'Port 2222'
-
-- name: Remove PasswordAuthentication line from /etc/ssh/sshd_sftp_config
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /etc/ssh/sshd_sftp_config
-    state: absent
-    line: 'PasswordAuthentication no'
-
-- name: Add PasswordAuthentication line to /etc/ssh/sshd_sftp_config
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /etc/ssh/sshd_sftp_config
-    state: present
-    line: 'PasswordAuthentication yes'
-
-- name: Remove sftp-server line from sshd_config
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /etc/ssh/sshd_sftp_config
-    state: absent
-    line: 'Subsystem sftp /usr/lib/openssh/sftp-server'
-
-- name: Add internal-sftp line to sshd_config
-  delegate: '{{ server_ipv4 }}'
-  lineinfile:
-    path: /etc/ssh/sshd_sftp_config
-    state: present
-    line: 'Subsystem sftp internal-sftp'
+  copy:
+    src: './inventory/templates/sshd_sftp_config'
+    dest: '/etc/ssh/sshd_sftp_config'
+    mode: 0644
 
 - name: Create the base domain website directory if it doesn't exist
   delegate: '{{ server_ipv4 }}'
@@ -90,17 +47,6 @@
     owner: root
     group: root
     state: link
-
-- name: Create a limited account for STFP website user
-  blockinfile:
-    path: /etc/ssh/sshd_sftp_config
-    block: |
-      Match User website
-          ChrootDirectory /home/website
-          PermitTunnel no
-          X11Forwarding no
-          AllowTcpForwarding no
-          ForceCommand internal-sftp
 
 - name: Enable service ssh_sftp.service
   service:
