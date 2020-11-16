@@ -84,13 +84,6 @@
     state: directory
     mode: '0700'
 
-- name: Copy the new server_vars.yml file to the target machine
-  delegate_to: "{{ server_ipv4 }}"
-  copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    dest: /matrix/awx/
-    mode: '0600'
-
 # Create target.yml variable file for launching deploy scripts
 
 - name: Add target line to extra_vars.yml file locally on AWX
@@ -108,22 +101,6 @@
     line: 'matrix_domain: "{{ matrix_domain }}"'
     mode: '0600'
     state: present
-
-- name: Copy the new extra_vars.yml file to the target machine
-  delegate_to: "{{ server_ipv4 }}"
-  copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    dest: /matrix/awx/
-    mode: '0600'
-
-# Copy over organisation.yml variable file
-
-- name: Copy the new target.yml file to the target machine
-  delegate_to: "{{ server_ipv4 }}"
-  copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
-    dest: /matrix/awx/
-    mode: '0600'
 
 # Create matrix_vars.yml variable file
 
@@ -153,7 +130,7 @@
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
     mode: '0600'
     state: present
-  when: base_domain_used == true
+  when: base_domain_used|bool == true
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -163,7 +140,7 @@
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
     mode: '0600'
     state: present
-  when: base_domain_used == false
+  when: base_domain_used|bool == false
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -173,7 +150,7 @@
     line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
     mode: '0600'
     state: present
-  when: base_domain_used == false
+  when: base_domain_used|bool == false
 
 - name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -205,10 +182,4 @@
     state: present
   when: mau_limit is defined
 
-- name: Copy the new matrix_vars.yml file to the target machine
-  delegate_to: "{{ server_ipv4 }}"
-  copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    dest: /matrix/awx/
-    mode: '0600'
 
