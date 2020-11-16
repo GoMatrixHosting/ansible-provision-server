@@ -2,7 +2,7 @@
 - name: Install imposter-check script
   delegate_to: 127.0.0.1
   copy:
-    src: ./inventory/scripts/imposter-check.py
+    src: ./roles/imposter-check/scripts/imposter-check.py
     dest: /var/lib/awx/projects/hosting/imposter-check.py
     mode: '0700'
 

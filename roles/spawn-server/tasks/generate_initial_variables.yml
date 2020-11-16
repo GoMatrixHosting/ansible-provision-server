@@ -115,7 +115,7 @@
 - name: Install password generation script
   delegate_to: 127.0.0.1
   copy:
-    src: ./inventory/scripts/generate-initial-passwords.sh
+    src: ./roles/spawn-server/scripts/generate-initial-passwords.sh
     dest: /var/lib/awx/projects/hosting/generate-initial-passwords.sh
     mode: '0700'
 
