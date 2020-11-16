@@ -102,6 +102,14 @@
     mode: '0600'
     state: present
 
+- name: Add matrix_awx_enabled line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    line: 'matrix_awx_enabled: true'
+    mode: '0600'
+    state: present
+
 # Create matrix_vars.yml variable file
 
 - name: Install password generation script
