@@ -13,12 +13,23 @@
     dest: '/etc/ssh/sshd_sftp_config'
     mode: 0644
 
-- name: Create the base domain website directory if it doesn't exist
+- name: Create the ro /chroot directory if it doesn't exist. (/chroot/website has website:website permissions and is mounted to nginx container)
   delegate_to: '{{ server_ipv4 }}'
   file:
-    path: /matrix/nginx-proxy/data/matrix-domain/
+    path: /chroot
     state: directory
-    mode: '0666'
+    owner: root
+    group: root
+    mode: '0744'
+
+- name: Create the rw /chroot/website directory if it doesn't exist.
+  delegate_to: '{{ server_ipv4 }}'
+  file:
+    path: /chroot/website
+    state: directory
+    owner: website
+    group: website
+    mode: '0766'
 
 - name: Generate SFTP users password
   delegate_to: 127.0.0.1
@@ -45,15 +56,15 @@
   delegate_to: '{{ server_ipv4 }}'
   shell: sudo usermod -d / website
 
-- name: Create a symbolic link
-  delegate_to: '{{ server_ipv4 }}'
-  file:
-    src: /matrix/nginx-proxy/data/matrix-domain/
-    dest: /home/website/base
-    owner: root
-    group: root
-    force: yes
-    state: link
+#- name: Create a symbolic link
+#  delegate_to: '{{ server_ipv4 }}'
+#  file:
+#    src: /matrix/nginx-proxy/data/matrix-domain/
+#    dest: /home/website/base
+#    owner: root
+#    group: root
+#    force: yes
+#    state: link
 
 - name: Enable service ssh_sftp.service
   delegate_to: '{{ server_ipv4 }}'
