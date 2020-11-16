@@ -1,6 +1,6 @@
 
 #
-# INPUT: matrix_domain (via cli)
+# INPUT: matrix_domain, current_subscription_id (via cli)
 # PROCESSING: Check if this domain is already in use, return true if it has.
 # OUTPUT: Boolean (True if imposter)
 #
@@ -9,6 +9,7 @@ import sys
 import os
 
 matrix_domain = sys.argv[1]
+current_subscription_id = sys.argv[2]
 
 used_domains = []
 
@@ -23,6 +24,9 @@ for member_id in member_ids:
 #    print(os.path.isdir('/var/lib/awx/projects/clients/' + member_id + '/' + subscription_id))
     if os.path.isdir('/var/lib/awx/projects/clients/' + member_id + '/' + subscription_id) == False:
       subscription_ids.remove(subscription_id)
+# If current subscription_id is here, disregard it! (idempotent)
+    if current_subscription_id in subscription_ids:
+      subscription_ids.remove(current_subscription_id)
 #  print(subscription_ids)
   for subscription_id in subscription_ids:
   # collect those matrix_domains into a list
