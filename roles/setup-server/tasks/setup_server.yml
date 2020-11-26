@@ -1,5 +1,3 @@
-
-
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ipv4 }}"
   apt:
@@ -10,11 +8,12 @@
   delegate_to: "{{ server_ipv4 }}"
   apt:
     pkg:
+     - ansible
+     - etckeeper
      - git
      - openssl
-     - ansible
+     - prometheus-node-exporter
      - s3fs
-     - pwgen
 
 - name: Create swapfile with the right permissions
   delegate_to: "{{ server_ipv4 }}"
