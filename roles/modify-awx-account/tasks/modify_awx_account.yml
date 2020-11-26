@@ -88,7 +88,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
     tower_host: "{{ tower_host }}"
@@ -133,7 +133,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
     tower_host: "{{ tower_host }}"
@@ -164,7 +164,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
     tower_host: "{{ tower_host }}"
@@ -201,7 +201,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json') }}"
     state: present
@@ -241,7 +241,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json') }}"
     state: present
@@ -281,7 +281,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json') }}"
     state: present
@@ -321,7 +321,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json') }}"
     state: present
@@ -361,7 +361,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json') }}"
     state: present
@@ -400,7 +400,7 @@
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - AWX Playbooks"
     playbook: create_user.yml
-    credential: "{{ member_id }} - ChatOasis testing SSH"
+    credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json') }}"
     state: present
