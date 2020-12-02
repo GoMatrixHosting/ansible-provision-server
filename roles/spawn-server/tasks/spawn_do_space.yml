@@ -167,6 +167,6 @@
 
 - name: Run a command to create DigitalOcean 'space' if it doesn't exist
   delegate_to: 127.0.0.1
-  command: 's3cmd mb s3://{{ matrix_domain }} --config=/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
+  command: 's3cmd mb s3://{{ subscription_id }} --config=/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
   when: matrix_domain not in list_of_spaces.stdout
 
