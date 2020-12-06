@@ -1,27 +1,23 @@
 
-#- name: Include hosting vars of hosting_vars.yml
-#  include_vars:
-#    file: /var/lib/awx/projects/hosting/hosting_vars.yml
-#  no_log: True
+- name: Include hosting vars of hosting_vars.yml
+  include_vars:
+    file: /var/lib/awx/projects/hosting/hosting_vars.yml
+  no_log: True
 
-#- name: Include droplet variables from server_vars.yml
-#  include_vars:
-#    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml
-#  no_log: True
+- name: Include droplet variables from server_vars.yml
+  include_vars:
+    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml
+  no_log: True
 
-
-- name: Include matrix server variables from hosting_vars.yml, server_vars.yml, matrix_vars.yml, organisation.yml
+- name: Include matrix server variables from matrix_vars.yml
   include_vars: "{{ item }}"
   with_first_found:
     - files:
-        - /var/lib/awx/projects/hosting/hosting_vars.yml
-        - /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml
         - /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
-        - /var/lib/awx/projects/clients/{{ member_id }}/organisation.yml
       skip: true
-#  no_log: True
+  no_log: True
 
-#- name: Include organisation variables from organisation.yml
-#  include_vars:
-#    file: /var/lib/awx/projects/clients/{{ member_id }}/organisation.yml
-#  no_log: True
+- name: Include organisation variables from organisation.yml
+  include_vars:
+    file: /var/lib/awx/projects/clients/{{ member_id }}/organisation.yml
+  no_log: True
