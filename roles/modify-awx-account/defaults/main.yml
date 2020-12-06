@@ -1,14 +1,34 @@
 
-#vars:
-#ssh_key_id_array: []
-
-#user_email: dummyvalue@protonmail.com
-awx_password: !vault |
-          $ANSIBLE_VAULT;1.2;AES256;deploy
-          34346362333737616263633331663863653564383762343362633434363162383438663333666366
-          3962653938343063363262363530366634646231336136650a386261663966383234633633326130
-          35613238343435613034653436333031663831393432656236613832623432383333633436343535
-          3732626466313462370a356236313232393938366533393065643132346639613033343233346462
-          31616261396265316263636163346361653239396464306238663464643737376565
-
 target: localhost
+
+# Configure Base Domain Website
+customise_base_domain_website: false
+sftp_password: ""
+
+# Configure Element
+matrix_client_element_enabled: true
+matrix_client_element_brand: 'Element'
+matrix_client_element_default_theme: 'light'
+matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/Y4SPBdZ.jpg'
+matrix_client_element_registration_enabled: 'true'
+element_subdomain: 'element'
+
+# Configure Jitsi
+matrix_jitsi_enabled: true
+matrix_jitsi_web_config_defaultLanguage: 'en'
+
+# Configure Ma1sd
+matrix_ma1sd_enabled: true
+
+# Configure Synapse
+matrix_synapse_enable_registration: false
+matrix_synapse_federation_enabled: false
+matrix_synapse_allow_public_rooms_over_federation: false
+matrix_synapse_enable_group_creation: false
+matrix_synapse_auto_join_rooms: ""
+matrix_synapse_use_presence: false
+matrix_synapse_max_upload_size_mb: 10
+ext_enable_registration_captcha: false
+ext_recaptcha_public_key: public-key
+ext_recaptcha_private_key: private-key
+
