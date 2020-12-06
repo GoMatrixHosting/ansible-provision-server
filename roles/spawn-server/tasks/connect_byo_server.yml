@@ -39,10 +39,34 @@
 
 - debug:
     msg: "{{ server_ipv6 }}"
-  when: server_ipv6 is defined   
+  when: server_ipv6 is defined  
+
+- debug: msg="No IP address is defined, please enter the IP address of your server."
+  when: server_ipv4|length == 0 and server_ipv6|length == 0
+
+- meta: end_play
+  when: server_ipv4|length == 0 and server_ipv6|length == 0
+
+- name: Set server_ip_final if both IPv4 and IPv6 are defined.
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ip_final: '{{ server_ipv4 }}'
+  when: server_ipv4|length > 0 and server_ipv6|length > 0
+
+- name: Set server_ip_final if only IPv4 is defined.
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ip_final: '{{ server_ipv4 }}'
+  when: server_ipv4|length > 0 and server_ipv6|length == 0
+
+- name: Set server_ip_final if only IPv6 is defined.
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ip_final: '{{ server_ipv6 }}'
+  when: server_ipv4|length == 0 and server_ipv6|length > 0
 
 - name: Test if SSH is possible with ipv4
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   command: echo success
   register: echo_output
 
@@ -50,19 +74,19 @@
     msg: "{{ echo_output.stdout }}"
 
 - name: Disable password authentication
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   lineinfile:
     path: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
 
 - name: Restart SSH
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   service:
     name: ssh
     state: restarted
 
 - name: Collect timezone of connected server (Debian and derivatives only) 
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   command: cat /etc/timezone
   register: timezone_output
 

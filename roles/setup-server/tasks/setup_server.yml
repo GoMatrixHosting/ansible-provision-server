@@ -1,11 +1,11 @@
 - name: Update repositories and all packages on target machine
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     name: "*"
     update_cache: yes
 
 - name: Install necessary utils on target machine
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     pkg:
      - ansible
@@ -16,7 +16,7 @@
      - s3fs
 
 - name: Create swapfile with the right permissions
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   command: 'fallocate -l {{ swap_size }} /swapfile && chmod 600 /swapfile'
   register: swapfile_new
   with_first_found:
@@ -28,12 +28,12 @@
 # Use: https://docs.ansible.com/ansible/latest/user_guide/playbooks_vars_facts.html
 
 - name: Enable swapfile
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   command: mkswap /swapfile && swapon /swapfile
   when: swapfile_new.delta is defined
 
 - name: Make swapfile permanent in /etc/fstab
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   mount: name=none
     src=/swapfile
     fstype=swap

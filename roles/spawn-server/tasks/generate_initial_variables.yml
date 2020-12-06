@@ -45,6 +45,7 @@
     line: 'server_ipv4: {{ server_ipv4 }}'
     mode: '0600'
     state: present
+  when: server_ipv4|length > 0
 
 - name: Add server_ipv6 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -53,7 +54,7 @@
     line: 'server_ipv6: {{ server_ipv6 }}'
     mode: '0600'
     state: present
-  when: server_ipv6 is defined
+  when: server_ipv6|length > 0
 
 - name: Add matrix_domain line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -73,12 +74,12 @@
   when: plan_title is defined
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   wait_for_connection:
     sleep: 5
 
 - name: create /matrix/awx config directory
-  delegate_to: "{{ server_ipv4 }}"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /matrix/awx
     state: directory
