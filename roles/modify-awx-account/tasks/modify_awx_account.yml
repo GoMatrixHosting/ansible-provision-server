@@ -82,7 +82,7 @@
   tower_job_template:
     name: "{{ subscription_id_final }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Ansible Provision Server"
@@ -104,7 +104,7 @@
   tower_job_template:
     name: "{{ subscription_id_final }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/extra_vars.yml'
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     inventory: "{{ member_id }} Inventory"
     project: "{{ member_id }} - Ansible Provision Server"
