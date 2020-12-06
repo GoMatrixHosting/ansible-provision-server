@@ -77,6 +77,51 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Re-create 'Provision a New Server' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ subscription_id_final }} - 00 - Provision a New Server"
+    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/extra_vars.yml'
+    job_type: run
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Ansible Provision Server"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', './roles/modify-awx-account/surveys/provision_survey_mp.json') }}"
+    state: present
+    verbosity: 1
+    job_tags: imposter-check, digitalocean-droplet, digitalocean-space
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+  when: byo_bool|bool == false
+
+- name: Re-create 'Provision a New Server' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ subscription_id_final }} - 00 - Provision a New Server"
+    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id_final }}/extra_vars.yml'
+    job_type: run
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Ansible Provision Server"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', './roles/modify-awx-account/surveys/provision_survey_byo.json') }}"
+    state: present
+    verbosity: 1
+    job_tags: imposter-check, byo-server
+    skip_tags: digitalocean-space, digitalocean-droplet
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+  when: byo_bool|bool == true
+
 - name: Create 'Update/Deploy a Server' job template
   delegate_to: 127.0.0.1
   tower_job_template:
