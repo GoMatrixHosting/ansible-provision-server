@@ -80,7 +80,7 @@
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
   tower_job_template:
-    name: "{{ subscription_id_final }} - 00 - Provision a New Server"
+    name: "{{ subscription_id }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
@@ -102,7 +102,7 @@
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
   tower_job_template:
-    name: "{{ subscription_id_final }} - 00 - Provision a New Server"
+    name: "{{ subscription_id }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
