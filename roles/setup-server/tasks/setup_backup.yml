@@ -15,7 +15,7 @@
     group: root
     mode: '0644'
 
-- name: Ensure /backup/ location exists
+- name: Ensure borgmatic config directory exists
   delegate_to: "{{ server_ip_final }}"
   file:
     path: /root/.config/borgmatic
@@ -37,7 +37,9 @@
 
 - name: Run the 'borg init' command
   delegate_to: "{{ server_ip_final }}"
-  command: 'borg init --encryption={{ matrix_awx_borg_password }} /backup/borg'
+  command: 'borg init --encryption=repokey /backup/borg'
+  environment:
+    BORG_PASSPHRASE: '{{ matrix_awx_borg_password }}'
 
 # ^ This step can be skipped after Debian 11 :)
 
