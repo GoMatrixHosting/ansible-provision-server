@@ -284,12 +284,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save initial 'Configure Synapse' survey.json to the AWX tower
+- name: Save new 'Configure Synapse' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
-  copy:
-    src: './roles/modify-awx-account/surveys/configure_synapse.json'
+  template:
+    src: './roles/modify-awx-account/surveys/configure_synapse.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
-    mode: 0644
 
 - name: Create 'Configure Synapse' job template
   delegate_to: 127.0.0.1
@@ -324,12 +323,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save initial 'Configure Jitsi' survey.json to the AWX tower
+- name: Save new 'Configure Jitsi' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
-  copy:
-    src: './roles/modify-awx-account/surveys/configure_jitsi.json'
+  template:
+    src: './roles/modify-awx-account/surveys/configure_jitsi.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json'
-    mode: 0644
 
 - name: Create 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
@@ -364,12 +362,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save initial 'Configure Ma1sd' survey.json to the AWX tower
+- name: Save new 'Configure Ma1sd' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
-  copy:
-    src: './roles/modify-awx-account/surveys/configure_ma1sd.json'
+  template:
+    src: './roles/modify-awx-account/surveys/configure_ma1sd.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
-    mode: 0644
 
 - name: Create 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
@@ -404,12 +401,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save initial 'Configure Base Domain Website' survey.json to the AWX tower
+- name: Save new 'Configure Base Domain Website' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
-  copy:
-    src: './roles/modify-awx-account/surveys/configure_base_domain_website.json'
+  template:
+    src: './roles/modify-awx-account/surveys/configure_base_domain_website.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json'
-    mode: 0644
 
 - name: Create 'Configure Base Domain Website' job template
   delegate_to: 127.0.0.1
