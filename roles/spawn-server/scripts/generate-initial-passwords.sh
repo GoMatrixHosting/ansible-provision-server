@@ -21,6 +21,7 @@ if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 cat <<VAREND > "$VARFILE"
 # AWX Settings
 matrix_awx_enabled: true
+matrix_awx_borg_password: $(generatePassword)
 # Basic Settings
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com

@@ -1,3 +1,4 @@
+
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ip_final }}"
   apt:
@@ -13,7 +14,6 @@
      - git
      - openssl
      - prometheus-node-exporter
-     - s3fs
 
 - name: Create swapfile with the right permissions
   delegate_to: "{{ server_ip_final }}"

@@ -1,0 +1,57 @@
+
+- name: Install necessary utils on target machine
+  delegate_to: "{{ server_ip_final }}"
+  apt:
+    pkg:
+     - borgbackup
+     - pigz
+
+- name: Ensure /backup/ location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /backup
+    state: directory
+    owner: matrix
+    group: matrix
+    mode: '0644'
+
+- name: Ensure /backup/ location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /root/.config/borgmatic
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Save new 'Provision Server' survey.json to the AWX tower, template
+  delegate_to: "{{ server_ip_final }}"
+  template:
+    src: './roles/setup-server/templates/config.yaml.j2'
+    dest: '/root/.config/borgmatic/config.yaml'
+
+- name: Run the 'borg init' command
+  command: 'borg init --encryption={{ matrix_awx_borg_password }} /backup/borg'
+
+- name: Install backup.sh script is installed
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: ./roles/setup-server/scripts/backup.sh
+    dest: /root/backup.sh
+    mode: '0700'
+
+- name: Touch the backup.log file
+  file:
+    path: /matrix/awx/backup.log
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Creates a crontab entry for backup.sh
+  cron:
+    name: "Snapshot database and run borgmatic"
+    user: root
+    special_time: hourly
+    job: "/root/backup.sh"
+
