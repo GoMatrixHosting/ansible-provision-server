@@ -51,6 +51,7 @@
     mode: '0700'
 
 - name: Touch the backup.log file
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /matrix/awx/backup.log
     state: touch
@@ -59,6 +60,7 @@
     mode: '0644'
 
 - name: Creates a crontab entry for backup.sh
+  delegate_to: "{{ server_ip_final }}"
   cron:
     name: "Snapshot database and run borgmatic"
     user: root
