@@ -11,8 +11,8 @@
   file:
     path: /backup
     state: directory
-    owner: matrix
-    group: matrix
+    owner: root
+    group: root
     mode: '0644'
 
 - name: Ensure /backup/ location exists
