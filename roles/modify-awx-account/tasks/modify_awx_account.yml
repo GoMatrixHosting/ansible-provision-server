@@ -101,7 +101,8 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, digitalocean-droplet, digitalocean-space
+    job_tags: imposter-check, digitalocean-droplet
+    skip_tags: digitalocean-space
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
