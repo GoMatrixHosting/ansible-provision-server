@@ -40,6 +40,10 @@
   command: 'borg init --encryption=repokey /backup/borg'
   environment:
     BORG_PASSPHRASE: '{{ matrix_awx_borg_password }}'
+  args: 
+    creates: /backup/borg/nonce
+
+#when: /backup/borg/nonce doesn't exist
 
 # ^ This step can be skipped after Debian 11 :)
 
