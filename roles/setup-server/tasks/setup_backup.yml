@@ -24,11 +24,6 @@
     group: root
     mode: '0700'
 
-- name: Reload Matrix variables from matrix_vars.yml
-  include_vars:
-    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
-  no_log: True
-
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: "{{ server_ip_final }}"
   template:
