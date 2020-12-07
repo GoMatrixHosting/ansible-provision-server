@@ -139,10 +139,10 @@
     validate_certs: yes
   when: byo_bool|bool == true
 
-- name: Create 'Update/Deploy a Server' job template
+- name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
   tower_job_template:
-    name: "{{ matrix_domain }} - 0 - Update/Deploy a Server"
+    name: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
@@ -158,11 +158,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Update/Deploy a Server' job template
+- name: Allow user account to use 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
-    job_template: "{{ matrix_domain }} - 0 - Update/Deploy a Server"
+    job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     role: execute
     state: present
     tower_host: "{{ tower_host }}"
@@ -175,13 +175,13 @@
   set_fact:
     rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
 
-- name: Build a schedule for 'Update/Deploy a Server' job template
+- name: Build a schedule for 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_schedule:
-    name: "{{ matrix_domain }} - 0 - Deploy a New Server Schedule"
+    name: "{{ matrix_domain }} - 0 - Update Server Schedule"
     enabled: yes
     state: present
-    unified_job_template: "{{ matrix_domain }} - 0 - Update/Deploy a Server"
+    unified_job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     rrule: "{{ rrule_line }}"
 
 - name: Create 'Start/Restart all Services' job template
