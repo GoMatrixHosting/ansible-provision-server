@@ -186,7 +186,7 @@
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertbefore: '# End Synapse Extension'
-    line: '  max_mau_value: "{{ mau_limit }}"'
+    line: '  max_mau_value: {{ mau_limit }}'
     mode: '0600'
     state: present
   when: mau_limit is defined
