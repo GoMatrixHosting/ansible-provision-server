@@ -4,12 +4,30 @@
   apt:
     pkg:
      - borgbackup
+     - borgmatic
      - pigz
 
-- name: Ensure /backup/ location exists
+- name: Create the ro /chroot directory if it doesn't exist.
+  file:
+    path: /chroot
+    state: directory
+    owner: root
+    group: root
+    mode: '1755'
+
+- name: Ensure /backup/borg/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
-    path: /backup
+    path: /backup/borg
+    state: directory
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure /backup/snapshot/ location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /backup/snapshot
     state: directory
     owner: root
     group: root
@@ -42,8 +60,6 @@
     BORG_PASSPHRASE: '{{ matrix_awx_borg_password }}'
   args: 
     creates: /backup/borg/nonce
-
-#when: /backup/borg/nonce doesn't exist
 
 # ^ This step can be skipped after Debian 11 :)
 
