@@ -7,7 +7,8 @@
      - borgmatic
      - pigz
 
-- name: Create the ro /chroot directory if it doesn't exist.
+- name: Create the /chroot directory if it doesn't exist.
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot
     state: directory
