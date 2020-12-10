@@ -44,21 +44,21 @@
     matrix_jitsi_timezone: "Singapore"
   when: do_droplet_region_long == "Singapore (SGP)"
 
-- name: Set valid digitalocean area code for Singapore.
+- name: Set valid digitalocean area code for London.
   delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "lon1"
     matrix_jitsi_timezone: "Europe/London"
   when: do_droplet_region_long == "London (GBR)"
 
-- name: Set valid digitalocean area code for Singapore.
+- name: Set valid digitalocean area code for Toronto.
   delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "tor1"
     matrix_jitsi_timezone: "America/Toronto"
   when: do_droplet_region_long == "Toronto (CAN)"
 
-- name: Set valid digitalocean area code for Singapore.
+- name: Set valid digitalocean area code for Balgalore.
   delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "blr1"
