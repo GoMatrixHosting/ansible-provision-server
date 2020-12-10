@@ -1,7 +1,7 @@
 
 target: localhost
 
-# Configure Base Domain Website
+# Configure Website + Access Backup
 customise_base_domain_website: false
 sftp_password: ""
 

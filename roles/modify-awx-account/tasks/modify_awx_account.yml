@@ -402,17 +402,17 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Save new 'Configure Base Domain Website' survey.json to the AWX tower, template
+- name: Save new 'Configure Website + Access Backup' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/configure_base_domain_website.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json'
+    src: './roles/modify-awx-account/surveys/configure_website_access_backup.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json'
 
-- name: Create 'Configure Base Domain Website' job template
+- name: Create 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
   tower_job_template:
-    name: "{{ matrix_domain }} - 1 - Configure Base Domain Website"
-    description: "Configure base domain website settings."
+    name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
+    description: "Configure base domain website settings and access the services backup."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-nginx-proxy"
@@ -421,7 +421,7 @@
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_base_domain_website.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json') }}"
     state: present
     verbosity: 1
     tower_host: "{{ tower_host }}"
@@ -429,11 +429,11 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Base Domain Website' job template
+- name: Allow user account to use 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
-    job_template: "{{ matrix_domain }} - 1 - Configure Base Domain Website"
+    job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     role: execute
     state: present
     tower_host: "{{ tower_host }}"
