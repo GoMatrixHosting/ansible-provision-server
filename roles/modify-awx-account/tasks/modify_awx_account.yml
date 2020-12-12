@@ -101,7 +101,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, digitalocean-droplet
+    job_tags: imposter-check, digitalocean-droplet, setup-backup
     skip_tags: digitalocean-space
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
@@ -131,7 +131,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, byo-server
+    job_tags: imposter-check, byo-server, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
