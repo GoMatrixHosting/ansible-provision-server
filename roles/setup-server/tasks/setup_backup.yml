@@ -51,9 +51,9 @@
 
 - name: Run the 'borg init' command
   delegate_to: "{{ server_ip_final }}"
-  command: 'borg init --encryption=none /backup/borg'
+  command: 'borg init --encryption=none /chroot/backup/borg'
   args: 
-    creates: /backup/borg/nonce
+    creates: /chroot/backup/borg/nonce
 
 # ^ This step can be skipped after Debian 11 :)
 
