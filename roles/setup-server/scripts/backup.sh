@@ -1,7 +1,7 @@
 #!/bin/bash -x
 # gomatrixhosting-matrix-docker-ansible-deploy/docs/maintenance-postgres.md
 
-cd /backup/snapshot || exit 1
+cd /chroot/backup/snapshot || exit 1
 STIME="$(date +%s)"
 
 DUMPIT=1; BORGIT=1;

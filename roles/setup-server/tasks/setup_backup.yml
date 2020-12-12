@@ -16,10 +16,10 @@
     group: root
     mode: '1755'
 
-- name: Ensure /backup/borg/ location exists
+- name: Ensure /chroot/backup/borg/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
-    path: /backup/borg
+    path: /chroot/backup/borg
     state: directory
     owner: root
     group: root
@@ -28,7 +28,7 @@
 - name: Ensure /backup/snapshot/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
-    path: /backup/snapshot
+    path: /chroot/backup/snapshot
     state: directory
     owner: root
     group: root

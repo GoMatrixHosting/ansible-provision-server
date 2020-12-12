@@ -2,15 +2,12 @@ location:
     source_directories:
         - /matrix/synapse
         - /matrix/awx
-        - /chroot
+        - /chroot/website
 
     one_file_system: true
 
     repositories:
-        - /backup/borg/
-
-    exclude_patterns:
-        - /chroot/backup
+        - /chroot/backup/borg/
 
     exclude_caches: true
 
