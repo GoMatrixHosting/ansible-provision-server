@@ -274,8 +274,6 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
     dest: /matrix/awx/configure_element.json
     mode: '0644'
-  args: 
-    creates: /matrix/awx/configure_element.json
 
 - name: Create 'Configure Element' job template
   delegate_to: 127.0.0.1
@@ -322,8 +320,6 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
     dest: /matrix/awx/configure_synapse.json
     mode: '0644'
-  args: 
-    creates: /matrix/awx/configure_synapse.json
 
 - name: Create 'Configure Synapse' job template
   delegate_to: 127.0.0.1
@@ -370,8 +366,6 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json'
     dest: /matrix/awx/configure_jitsi.json
     mode: '0644'
-  args: 
-    creates: /matrix/awx/configure_jitsi.json
 
 - name: Create 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
@@ -418,8 +412,6 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
     dest: /matrix/awx/configure_ma1sd.json
     mode: '0644'
-  args: 
-    creates: /matrix/awx/configure_ma1sd.json
 
 - name: Create 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
@@ -466,8 +458,6 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json'
     dest: /matrix/awx/configure_website_access_backup.json
     mode: '0644'
-  args: 
-    creates: /matrix/awx/configure_website_access_backup.json
 
 - name: Create 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
