@@ -62,7 +62,7 @@
   delegate_to: "{{ server_ip_final }}"
   command: 'borg init --encryption=none /chroot/backup/borg'
   args: 
-    creates: /chroot/backup/borg/nonce
+    creates: /chroot/backup/borg/README
 
 # ^ This step can be skipped after Debian 11 :)
 
