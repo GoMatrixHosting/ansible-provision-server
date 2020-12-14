@@ -7,7 +7,6 @@
   tags: digitalocean-space
 
 # Save server IPs
-# Create initial variable files
 - import_tasks: "{{ role_path }}/tasks/save_server_ips.yml"
   tags: always
 
