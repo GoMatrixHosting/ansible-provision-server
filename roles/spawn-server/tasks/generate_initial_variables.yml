@@ -78,14 +78,14 @@
   wait_for_connection:
     sleep: 5
 
-- name: create /matrix/awx config directory
+- name: Create /matrix/awx config directory
   delegate_to: "{{ server_ip_final }}"
   file:
     path: /matrix/awx
     state: directory
     mode: '0700'
 
-# Create target.yml variable file for launching deploy scripts
+# Create extra_vars.yml variable file for launching deploy scripts
 
 - name: Add target line to extra_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -190,5 +190,35 @@
     mode: '0600'
     state: present
   when: mau_limit is defined
+
+# Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
+
+- name: Copy organisation.yml variables file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
+    dest: /matrix/awx/organisation.yml
+    mode: '0700'
+
+- name: Copy server_vars.yml variables file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    dest: /matrix/awx/server_vars.yml
+    mode: '0700'
+
+- name: Copy extra_vars.yml variables file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    dest: /matrix/awx/extra_vars.yml
+    mode: '0700'
+
+- name: Copy matrix_vars.yml variables file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    dest: /matrix/awx/matrix_vars.yml
+    mode: '0700'
 
 
