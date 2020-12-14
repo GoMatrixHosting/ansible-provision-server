@@ -34,5 +34,7 @@ BORGMATIC_ELAPSED="$(($BORGMATIC_ETIME - $STIME))"
 FILE_SIZE=$(stat -c '%s' /backup/snapshot/postgres.sql.gzip-1--rsyncable.latest.gz)
 DATE_TIME=$(date '+%F_%H:%M:%S')
 
+chmod -R 0755 /chroot/backup
+
 echo "$DATE_TIME $0: Snapshot (returned $DOCKERRC at $DOCKER_ELAPSED seconds)+ BorgBackup (returned $BORGMATICRC at $BORGMATIC_ELAPSED seconds) completed, database.gz size: $FILE_SIZE" >> /matrix/awx/backup.log
 

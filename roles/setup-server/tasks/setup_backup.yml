@@ -16,6 +16,15 @@
     group: root
     mode: '1755'
 
+- name: Ensure /chroot/backup/ location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /chroot/backup
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Ensure /chroot/backup/borg/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
@@ -23,7 +32,7 @@
     state: directory
     owner: root
     group: root
-    mode: '0644'
+    mode: '0755'
 
 - name: Ensure /backup/snapshot/ location exists
   delegate_to: "{{ server_ip_final }}"
@@ -32,7 +41,7 @@
     state: directory
     owner: root
     group: root
-    mode: '0644'
+    mode: '0755'
 
 - name: Ensure borgmatic config directory exists
   delegate_to: "{{ server_ip_final }}"
