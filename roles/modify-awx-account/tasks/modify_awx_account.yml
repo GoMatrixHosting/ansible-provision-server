@@ -86,6 +86,14 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
   when: byo_bool|bool == false
 
+- name: Copy provision_survey_mp.json survey file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
+    dest: /matrix/awx/provision_survey_mp.json
+    mode: '0700'
+  when: byo_bool|bool == false
+
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
   tower_job_template:
@@ -114,6 +122,14 @@
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_byo.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
+  when: byo_bool|bool == true
+
+- name: Copy provision_survey_byo.json survey file
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
+    dest: /matrix/awx/provision_survey_byo.json
+    mode: '0700'
   when: byo_bool|bool == true
 
 - name: Re-create 'Provision a New Server' job template
