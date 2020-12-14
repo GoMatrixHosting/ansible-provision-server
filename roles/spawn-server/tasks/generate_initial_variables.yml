@@ -193,28 +193,28 @@
 
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 
-- name: Copy organisation.yml variables file
+- name: Copy organisation.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     dest: /matrix/awx/organisation.yml
     mode: '0700'
 
-- name: Copy server_vars.yml variables file
+- name: Copy server_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     dest: /matrix/awx/server_vars.yml
     mode: '0700'
 
-- name: Copy extra_vars.yml variables file
+- name: Copy extra_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     dest: /matrix/awx/extra_vars.yml
     mode: '0700'
 
-- name: Copy matrix_vars.yml variables file
+- name: Copy matrix_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
