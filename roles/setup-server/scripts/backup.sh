@@ -7,7 +7,7 @@ STIME="$(date +%s)"
 DUMPIT=1; BORGIT=1;
 
 if [ "$DUMPIT" = 1 ]; then
-  rm -f ./postgres.sql.gzip-1--rsyncable.latest.gz
+  rm -f ./postgres-latest.sql.gzip.gz
 
   docker run \
   --rm \
@@ -17,7 +17,7 @@ if [ "$DUMPIT" = 1 ]; then
   postgres:13.1-alpine \
   pg_dumpall -h matrix-postgres \
   | pigz --stdout --fast --blocksize 16384 --independent --processes 2 --rsyncable \
-  > ./postgres.sql.gzip-1--rsyncable.latest.gz
+  > ./postgres-latest.sql.gzip.gz
 fi
 
 DOCKERRC="$?";
@@ -31,12 +31,12 @@ BORGMATICRC="$?";
 BORGMATIC_ETIME="$(date +%s)"
 BORGMATIC_ELAPSED="$(($BORGMATIC_ETIME - $STIME))"
 
-FILE_SIZE=$(stat -c '%s' /backup/snapshot/postgres.sql.gzip-1--rsyncable.latest.gz)
+FILE_SIZE=$(stat -c '%s' /chroot/backup/snapshot/postgres-latest.sql.gzip.gz)
 DATE_TIME=$(date '+%F_%H:%M:%S')
 
-chmod 744 /chroot/backup/borg/*
+chmod 644 /chroot/backup/borg/*
 chmod 755 /chroot/backup/borg/data
-chmod 744 /chroot/backup/borg/data/*
+chmod 644 /chroot/backup/borg/data/*
 
 echo "$DATE_TIME $0: Snapshot (returned $DOCKERRC at $DOCKER_ELAPSED seconds)+ BorgBackup (returned $BORGMATICRC at $BORGMATIC_ELAPSED seconds) completed, database.gz size: $FILE_SIZE" >> /matrix/awx/backup.log
 
