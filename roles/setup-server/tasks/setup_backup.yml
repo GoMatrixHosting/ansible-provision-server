@@ -16,6 +16,14 @@
     group: root
     mode: '1755'
 
+- name: Create the rw /chroot/website directory if it doesn't exist.
+  file:
+    path: /chroot/website
+    state: directory
+    owner: matrix
+    group: matrix
+    mode: '0777'
+
 - name: Ensure /chroot/backup/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
@@ -34,7 +42,7 @@
     group: root
     mode: '0755'
 
-- name: Ensure /backup/snapshot/ location exists
+- name: Ensure /chroot/backup/snapshot/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup/snapshot
