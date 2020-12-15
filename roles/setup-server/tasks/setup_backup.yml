@@ -7,8 +7,7 @@
      - borgmatic
      - pigz
 
-- name: Create the /chroot directory if it doesn't exist.
-  delegate_to: "{{ server_ip_final }}"
+- name: Create the ro /chroot directory with sticky bit if it doesn't exist. (/chroot/website has matrix:matrix permissions and is mounted to nginx container)
   file:
     path: /chroot
     state: directory
@@ -22,43 +21,55 @@
     state: directory
     owner: matrix
     group: matrix
-    mode: '0777'
+    mode: '0474'
 
 - name: Ensure /chroot/backup/ location exists
-  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup
     state: directory
-    owner: root
-    group: root
-    mode: '0755'
+    owner: sftp
+    group: sftp
+    mode: '0700'
 
 - name: Ensure /chroot/backup/borg/ location exists
-  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup/borg
     state: directory
-    owner: root
-    group: root
-    mode: '0755'
+    owner: sftp
+    group: sftp
+    mode: '0700'
 
 - name: Ensure /chroot/backup/snapshot/ location exists
-  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup/snapshot
     state: directory
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: Ensure borgmatic config directory exists
-  delegate_to: "{{ server_ip_final }}"
-  file:
-    path: /root/.config/borgmatic
-    state: directory
-    owner: root
-    group: root
+    owner: sftp
+    group: sftp
     mode: '0700'
+
+- name: Ensure /chroot/backup/root/ location exists
+  file:
+    path: /chroot/backup/root
+    state: directory
+    owner: sftp
+    group: sftp
+    mode: '0700'
+
+- name: Ensure /chroot/backup/root/.config/ location exists
+  file:
+    path: /chroot/backup/root/.config
+    state: directory
+    owner: sftp
+    group: sftp
+    mode: '0700'
+
+- name: Ensure /chroot/backup/root/.cache/ location exists
+  file:
+    path: /chroot/backup/root/.cache
+    state: directory
+    owner: sftp
+    group: sftp
+    mode: '700'
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: "{{ server_ip_final }}"

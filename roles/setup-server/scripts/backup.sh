@@ -34,9 +34,9 @@ BORGMATIC_ELAPSED="$(($BORGMATIC_ETIME - $STIME))"
 FILE_SIZE=$(stat -c '%s' /chroot/backup/snapshot/postgres-latest.sql.gzip.gz)
 DATE_TIME=$(date '+%F_%H:%M:%S')
 
-chmod 644 /chroot/backup/borg/*
-chmod 755 /chroot/backup/borg/data
-chmod 644 /chroot/backup/borg/data/*
+cp -a -r /root/.config/borg /chroot/backup/root/.config/
+cp -a -r /root/.cache/borg /chroot/backup/root/.cache/
+chown -R sftp:sftp /chroot/backup/
 
 echo "$DATE_TIME $0: Snapshot (returned $DOCKERRC at $DOCKER_ELAPSED seconds)+ BorgBackup (returned $BORGMATICRC at $BORGMATIC_ELAPSED seconds) completed, database.gz size: $FILE_SIZE" >> /matrix/awx/backup.log
 
