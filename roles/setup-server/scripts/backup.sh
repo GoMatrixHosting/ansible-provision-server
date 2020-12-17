@@ -7,7 +7,7 @@ STIME="$(date +%s)"
 DUMPIT=1; TARIT=1;
 
 if [ "$DUMPIT" = 1 ]; then
-  rm -f /chroot/backup/snapshot/postgres_*
+  rm -f /chroot/backup/postgres_*
   DATE=$(date '+%F')
   docker run \
   --rm \
@@ -17,7 +17,7 @@ if [ "$DUMPIT" = 1 ]; then
   postgres:13.1-alpine \
   pg_dumpall -h matrix-postgres \
   | pigz --stdout --fast --blocksize 16384 --independent --processes 2 --rsyncable \
-  > /chroot/backup/snapshot/postgres_$DATE.sql.gz
+  > /chroot/backup/postgres_$DATE.sql.gz
 fi
 
 DOCKERRC="$?";
@@ -25,15 +25,14 @@ DOCKER_ETIME="$(date +%s)"
 DOCKER_ELAPSED="$(($DOCKER_ETIME - $STIME))"
 
 if [ "$TARIT" = 1 ]; then
-  tar -czf /chroot/backup/matrix/awx.tar.gz ./awx
-  tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/backup/matrix/synapse.tar.gz ./synapse
+  tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/backup/matrix.tar.gz ./awx ./synapse
 fi
 
 TARRC="$?";
 TAR_ETIME="$(date +%s)"
 TAR_ELAPSED="$(($TAR_ETIME - $STIME))"
 
-FILE_SIZE=$(stat -c '%s' /chroot/backup/snapshot/postgres_$DATE.sql.gz)
+FILE_SIZE=$(stat -c '%s' /chroot/backup/postgres_$DATE.sql.gz)
 DATE_TIME=$(date '+%F_%H:%M:%S')
 
 chown -R sftp:sftp /chroot/backup/
