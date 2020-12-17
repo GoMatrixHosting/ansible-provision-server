@@ -7,7 +7,7 @@ STIME="$(date +%s)"
 DUMPIT=1; TARIT=1;
 
 if [ "$DUMPIT" = 1 ]; then
-  rm -f /chroot/backup/snapshot/postgres-latest.sql.gz
+  rm -f /chroot/backup/snapshot/postgres_*
   DATE=$(date '+%F')
   docker run \
   --rm \
