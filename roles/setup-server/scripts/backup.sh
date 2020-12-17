@@ -16,7 +16,7 @@ if [ "$DUMPIT" = 1 ]; then
   --env-file=/matrix/postgres/env-postgres-psql \
   postgres:13.1-alpine \
   pg_dumpall -h matrix-postgres \
-  | pigz --stdout --fast --blocksize 16384 --independent --processes 2 --TARable \
+  | pigz --stdout --fast --blocksize 16384 --independent --processes 2 --rsyncable \
   > /chroot/backup/snapshot/postgres_$DATE.sql.gz
 fi
 
