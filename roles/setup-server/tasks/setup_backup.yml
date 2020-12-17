@@ -1,10 +1,4 @@
 
-- name: Add specified repository into sources list
-  delegate_to: "{{ server_ip_final }}"
-  apt_repository:
-    repo: deb http://deb.debian.org/debian buster-backports main
-    state: present
-
 - name: Install necessary utils on target machine
   delegate_to: "{{ server_ip_final }}"
   apt:
@@ -47,7 +41,7 @@
 
 - name: Ensure /chroot/backup/matrix/ location exists
   file:
-    path: /chroot/backup/borg
+    path: /chroot/backup/matrix
     state: directory
     owner: sftp
     group: sftp
