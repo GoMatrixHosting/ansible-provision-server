@@ -6,6 +6,7 @@
      - pigz
 
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
+  delegate_to: "{{ server_ip_final }}"
   user:
     name: sftp
     comment: SFTP user to set custom web files
@@ -16,6 +17,7 @@
     update_password: on_create
 
 - name: Create the ro /chroot directory with sticky bit if it doesn't exist. (/chroot/website has matrix:matrix permissions and is mounted to nginx container)
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot
     state: directory
@@ -24,6 +26,7 @@
     mode: '1755'
 
 - name: Create the rw /chroot/website directory if it doesn't exist.
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/website
     state: directory
@@ -32,6 +35,7 @@
     mode: '0574'
 
 - name: Ensure /chroot/backup/ location exists
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup
     state: directory
@@ -40,6 +44,7 @@
     mode: '0700'
 
 - name: Ensure /chroot/backup/matrix/ location exists
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup/matrix
     state: directory
@@ -48,6 +53,7 @@
     mode: '0700'
 
 - name: Ensure /chroot/backup/snapshot/ location exists
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/backup/snapshot
     state: directory
