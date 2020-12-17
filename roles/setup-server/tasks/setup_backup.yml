@@ -6,6 +6,7 @@
      - pigz
 
 - name: Ensure group "sftp" exists
+  delegate_to: "{{ server_ip_final }}"
   group:
     name: sftp
     state: present
