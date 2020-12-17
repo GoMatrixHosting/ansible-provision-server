@@ -29,7 +29,7 @@
     state: directory
     owner: matrix
     group: matrix
-    mode: '0474'
+    mode: '0574'
 
 - name: Ensure /chroot/backup/ location exists
   file:
