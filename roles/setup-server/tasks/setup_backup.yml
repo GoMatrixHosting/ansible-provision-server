@@ -1,10 +1,14 @@
 
+- name: Add specified repository into sources list
+  delegate_to: "{{ server_ip_final }}"
+  apt_repository:
+    repo: deb http://deb.debian.org/debian buster-backports main
+    state: present
+
 - name: Install necessary utils on target machine
   delegate_to: "{{ server_ip_final }}"
   apt:
     pkg:
-     - borgbackup
-     - borgmatic
      - pigz
 
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
@@ -41,7 +45,7 @@
     group: sftp
     mode: '0700'
 
-- name: Ensure /chroot/backup/borg/ location exists
+- name: Ensure /chroot/backup/matrix/ location exists
   file:
     path: /chroot/backup/borg
     state: directory
@@ -56,30 +60,6 @@
     owner: sftp
     group: sftp
     mode: '0700'
-
-- name: Ensure /chroot/backup/root/ location exists
-  file:
-    path: /chroot/backup/root
-    state: directory
-    owner: sftp
-    group: sftp
-    mode: '0700'
-
-- name: Ensure /chroot/backup/root/.config/ location exists
-  file:
-    path: /chroot/backup/root/.config
-    state: directory
-    owner: sftp
-    group: sftp
-    mode: '0700'
-
-- name: Ensure /chroot/backup/root/.cache/ location exists
-  file:
-    path: /chroot/backup/root/.cache
-    state: directory
-    owner: sftp
-    group: sftp
-    mode: '700'
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: "{{ server_ip_final }}"

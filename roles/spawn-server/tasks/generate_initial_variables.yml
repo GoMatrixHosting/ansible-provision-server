@@ -29,6 +29,16 @@
     create: yes
   when: do_droplet_region is defined
 
+- name: Add do_droplet_region line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    line: 'do_droplet_region_long: {{ do_droplet_region_long }}'
+    mode: '0600'
+    state: present
+    create: yes
+  when: do_droplet_region_long is defined
+
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
