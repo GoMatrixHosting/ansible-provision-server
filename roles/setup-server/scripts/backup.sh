@@ -28,6 +28,7 @@ if [ "$TARIT" = 1 ]; then
   tar -czf /chroot/backup/matrix/awx.tar.gz ./awx
   tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/backup/matrix/synapse.tar.gz ./synapse
 fi
+
 TARRC="$?";
 TAR_ETIME="$(date +%s)"
 TAR_ELAPSED="$(($TAR_ETIME - $STIME))"
