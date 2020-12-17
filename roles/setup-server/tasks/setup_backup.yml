@@ -5,6 +5,11 @@
     pkg:
      - pigz
 
+- name: Ensure group "sftp" exists
+  group:
+    name: sftp
+    state: present
+
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
   delegate_to: "{{ server_ip_final }}"
   user:
