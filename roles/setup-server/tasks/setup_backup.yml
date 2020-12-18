@@ -31,17 +31,6 @@
     group: root
     mode: '1755'
 
-#- name: Create the rw /chroot/website directory if it doesn't exist.
-#  delegate_to: "{{ server_ip_final }}"
-#  file:
-#    path: /chroot/website
-#    state: directory
-#    owner: matrix
-#    group: matrix
-#    mode: '0574'
-
-# ^ Leave this step to deploy stage.
-
 - name: Ensure /chroot/backup/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
