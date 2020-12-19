@@ -11,6 +11,12 @@
     name: sftp
     state: present
 
+- name: Ensure group "matrix" exists
+  delegate_to: "{{ server_ip_final }}"
+  group:
+    name: matrix
+    state: present
+
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
   delegate_to: "{{ server_ip_final }}"
   user:
@@ -22,6 +28,16 @@
     password: '!'
     update_password: on_create
 
+- name: If user account doesn't exist, create a disabled account for Matrix user 'matrix', with a primary group of 'matrix', and a shell of /bin/false
+  delegate_to: "{{ server_ip_final }}"
+  user:
+    name: matrix
+    comment: Matrix user, initialised early incase of /chroot/backup/ recovery.
+    home: /home/matrix/
+    group: matrix
+    password: '!'
+    update_password: on_create
+
 - name: Create the ro /chroot directory with sticky bit if it doesn't exist. (/chroot/website has matrix:matrix permissions and is mounted to nginx container)
   delegate_to: "{{ server_ip_final }}"
   file:
@@ -30,6 +46,15 @@
     owner: root
     group: root
     mode: '1755'
+
+- name: Create the rw /chroot/website directory if it doesn't exist.
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /chroot/website
+    state: directory
+    owner: matrix
+    group: matrix
+    mode: '0574'
 
 - name: Ensure /chroot/backup/ location exists
   delegate_to: "{{ server_ip_final }}"
