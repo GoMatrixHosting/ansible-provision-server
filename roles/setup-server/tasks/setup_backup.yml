@@ -11,6 +11,12 @@
     name: sftp
     state: present
 
+- name: Ensure group "matrix" exists
+  delegate_to: "{{ server_ip_final }}"
+  group:
+    name: sftp
+    state: matrix
+
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
   delegate_to: "{{ server_ip_final }}"
   user:
@@ -30,6 +36,15 @@
     owner: root
     group: root
     mode: '1755'
+
+- name: Create the rw /chroot/website directory if it doesn't exist.
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /chroot/website
+    state: directory
+    owner: matrix
+    group: matrix
+    mode: '0574'
 
 - name: Ensure /chroot/backup/ location exists
   delegate_to: "{{ server_ip_final }}"
