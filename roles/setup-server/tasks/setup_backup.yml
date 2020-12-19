@@ -14,8 +14,8 @@
 - name: Ensure group "matrix" exists
   delegate_to: "{{ server_ip_final }}"
   group:
-    name: sftp
-    state: matrix
+    name: matrix
+    state: present
 
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
   delegate_to: "{{ server_ip_final }}"
