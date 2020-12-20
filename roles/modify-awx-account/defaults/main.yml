@@ -25,7 +25,7 @@ matrix_synapse_enable_registration: false
 matrix_synapse_federation_enabled: false
 matrix_synapse_allow_public_rooms_over_federation: false
 matrix_synapse_enable_group_creation: false
-matrix_synapse_auto_join_rooms_raw: ''
+matrix_synapse_auto_join_rooms: ''
 matrix_synapse_use_presence: false
 matrix_synapse_max_upload_size_mb: 10
 ext_enable_registration_captcha: false
