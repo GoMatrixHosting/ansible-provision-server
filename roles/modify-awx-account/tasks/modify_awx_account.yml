@@ -7,12 +7,10 @@
 # ^ Might be redundant
 
 - name: Install tower dep
-  delegate_to: 127.0.0.1
   pip:
       name: ansible-tower-cli
 
 - name: Add new host to organisations inventory
-  delegate_to: 127.0.0.1
   tower_host:
     name: "matrix.{{ matrix_domain }}"
     description: "{{ matrix_domain }} Matrix Server"
@@ -25,7 +23,6 @@
   register: fs_host
 
 - name: Create 'matrix_servers' group
-  delegate_to: 127.0.0.1
   tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
@@ -38,23 +35,18 @@
   register: fs_group
 
 - name: Configure awx-cli 1
-  delegate_to: 127.0.0.1
   shell: awx-cli config username "{{ tower_username }}"
 
 - name: Configure awx-cli 2
-  delegate_to: 127.0.0.1
   shell: awx-cli config password "{{ tower_password }}"
 
 - name: Configure awx-cli 3
-  delegate_to: 127.0.0.1
   shell: awx-cli config host "{{ tower_host }}"
 
 - name: Associate host group
-  delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
 - name: Disallow user account to use the 'Provision a New Server' job_template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
@@ -66,7 +58,6 @@
     validate_certs: yes
 
 - name: Allow user account to read the 'Provision a New Server' job_template/history
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
@@ -80,7 +71,6 @@
 # must write these in with templates
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_mp.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
@@ -95,7 +85,6 @@
   when: byo_bool|bool == false
 
 - name: Re-create 'Provision a New Server' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ subscription_id }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
@@ -118,7 +107,6 @@
   when: byo_bool|bool == false
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_byo.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
@@ -133,7 +121,6 @@
   when: byo_bool|bool == true
 
 - name: Re-create 'Provision a New Server' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ subscription_id }} - 00 - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
@@ -156,7 +143,6 @@
   when: byo_bool|bool == true
 
 - name: Create 'Deploy/Update a Server' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
@@ -175,7 +161,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Deploy/Update a Server' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
@@ -187,12 +172,10 @@
     validate_certs: yes
 
 - name: Create an rrule string for a schedule for every Monday
-  delegate_to: 127.0.0.1
   set_fact:
     rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
 
 - name: Build a schedule for 'Deploy/Update a Server' job template
-  delegate_to: 127.0.0.1
   awx.awx.tower_schedule:
     name: "{{ matrix_domain }} - 0 - Update Server Schedule"
     enabled: yes
@@ -201,7 +184,6 @@
     rrule: "{{ rrule_line }}"
 
 - name: Create 'Start/Restart all Services' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     description: "Starts or restarts all services on the server."
@@ -220,7 +202,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Start/Restart all Services' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
@@ -232,7 +213,6 @@
     validate_certs: yes
 
 - name: Create 'Stop all Services' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 0 - Stop all Services"
     description: "Stops all services on the server."
@@ -251,7 +231,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Stop all Services' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
@@ -263,7 +242,6 @@
     validate_certs: yes
 
 - name: Save new 'Configure Element' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_element.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
@@ -276,7 +254,6 @@
     mode: '0644'
 
 - name: Create 'Configure Element' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
     description: "Configure Element client via survey."
@@ -297,7 +274,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Configure Element' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
@@ -309,7 +285,6 @@
     validate_certs: yes
 
 - name: Save new 'Configure Synapse' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_synapse.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
@@ -322,7 +297,6 @@
     mode: '0644'
 
 - name: Create 'Configure Synapse' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
     description: "Configure Synapse (homeserver) settings."
@@ -343,7 +317,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Configure Synapse' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
@@ -355,7 +328,6 @@
     validate_certs: yes
 
 - name: Save new 'Configure Jitsi' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_jitsi.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json'
@@ -368,7 +340,6 @@
     mode: '0644'
 
 - name: Create 'Configure Jitsi' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Jitsi"
     description: "Configure Jitsi conferencing settings."
@@ -389,7 +360,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Configure Jitsi' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Jitsi"
@@ -401,7 +371,6 @@
     validate_certs: yes
 
 - name: Save new 'Configure Ma1sd' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_ma1sd.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
@@ -414,7 +383,6 @@
     mode: '0644'
 
 - name: Create 'Configure Ma1sd' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     description: "Configure Ma1sd conferencing settings."
@@ -435,7 +403,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Configure Ma1sd' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Ma1sd"
@@ -447,7 +414,6 @@
     validate_certs: yes
 
 - name: Save new 'Configure Website + Access Backup' survey.json to the AWX tower, template
-  delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_website_access_backup.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json'
@@ -460,7 +426,6 @@
     mode: '0644'
 
 - name: Create 'Configure Website + Access Backup' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     description: "Configure base domain website settings and access the services backup."
@@ -481,7 +446,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Configure Website + Access Backup' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
@@ -493,14 +457,12 @@
     validate_certs: yes
 
 - name: Save initial 'Create User' survey.json to the AWX tower
-  delegate_to: 127.0.0.1
   copy:
     src: './roles/modify-awx-account/surveys/create_user.json'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json'
     mode: 0644
 
 - name: Create 'Create User' job template
-  delegate_to: 127.0.0.1
   tower_job_template:
     name: "{{ matrix_domain }} - 2 - Create User"
     description: "Create a new user account and choose if it has admin access."
@@ -520,7 +482,6 @@
     validate_certs: yes
 
 - name: Allow user account to use 'Create User' job template
-  delegate_to: 127.0.0.1
   tower_role:
     user: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"

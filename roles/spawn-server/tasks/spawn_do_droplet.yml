@@ -10,63 +10,54 @@
 # Balgalore (IND) = blr1
 
 - name: Set valid digitalocean area code for New York City.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "nyc3"
     matrix_jitsi_timezone: "America/New_York"
   when: do_droplet_region_long == "New York City (USA)"
 
 - name: Set valid digitalocean area code for San Francisco.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "sfo3"
     matrix_jitsi_timezone: "America/Los_Angeles"
   when: do_droplet_region_long == "San Francisco (USA)"
 
 - name: Set valid digitalocean area code for Amsterdam.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "ams3"
     matrix_jitsi_timezone: "Europe/Amsterdam"
   when: do_droplet_region_long == "Amsterdam (NLD)"
 
 - name: Set valid digitalocean area code for Frankfurt.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "fra1"
     matrix_jitsi_timezone: "Europe/Berlin"
   when: do_droplet_region_long == "Frankfurt (DEU)"
 
 - name: Set valid digitalocean area code for Singapore.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "sgp1"
     matrix_jitsi_timezone: "Singapore"
   when: do_droplet_region_long == "Singapore (SGP)"
 
 - name: Set valid digitalocean area code for London.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "lon1"
     matrix_jitsi_timezone: "Europe/London"
   when: do_droplet_region_long == "London (GBR)"
 
 - name: Set valid digitalocean area code for Toronto.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "tor1"
     matrix_jitsi_timezone: "America/Toronto"
   when: do_droplet_region_long == "Toronto (CAN)"
 
 - name: Set valid digitalocean area code for Balgalore.
-  delegate_to: 127.0.0.1
   set_fact:
     do_droplet_region: "blr1"
     matrix_jitsi_timezone: "Asia/Kolkata"
   when: do_droplet_region_long == "Balgalore (IND)"
 
 - name: Set MAU limit for Micro Server
-  delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-1vcpu-2gb"
     swap_size: "2G"
@@ -74,7 +65,6 @@
   when: plan_title=="Micro Server"
 
 - name: Set MAU limit for Small Server
-  delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-2vcpu-4gb"
     swap_size: "2G"
@@ -82,7 +72,6 @@
   when: plan_title=="Small Server"
 
 - name: Set MAU limit for Medium Server
-  delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-4vcpu-8gb"
     swap_size: "4G"
@@ -90,7 +79,6 @@
   when: plan_title=="Medium Server"
 
 - name: Set MAU limit for Large Server
-  delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-8vcpu-16gb"
     swap_size: "8G"
@@ -98,7 +86,6 @@
   when: plan_title=="Large Server"
 
 - name: Set MAU limit for Jumbo Server
-  delegate_to: 127.0.0.1
   set_fact:
     slug_size: "so-16vcpu-128gb"
     swap_size: "16G"
@@ -106,7 +93,6 @@
   when: plan_title=="Jumbo Server"
 
 - name: do_droplet_region line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_region: {{ do_droplet_region }}'
@@ -114,7 +100,6 @@
     state: present
 
 - name: 
-  delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_sshkey_info:
     oauth_token: '{{ do_api_token }}'
   register: ssh_keys
@@ -123,7 +108,6 @@
     msg: "{{ ssh_keys }}"
 
 - name: Build an array of all the ssh key ids
-  delegate_to: 127.0.0.1
   set_fact:
     ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
   with_items: "{{ ssh_keys.data }}"
@@ -132,7 +116,6 @@
     msg: "{{ ssh_key_id_array }}"
 
 - name: Spawn a new Digital Ocean Droplet
-  delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
     state: present
     name: '{{ matrix_domain }}'
@@ -153,7 +136,6 @@
     msg: "{{ new_server_info.data.droplet }}"
 
 - name: Assign server IPs to variables
-  delegate_to: 127.0.0.1
   set_fact:
     server_ipv4: "{{ new_server_info.data.ip_address }}"
     server_ipv6: "{{ new_server_info.data.ipv6_address }}"
