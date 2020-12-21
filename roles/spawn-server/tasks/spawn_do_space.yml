@@ -35,6 +35,7 @@
     msg: "{{ do_spaces_region }}"
 
 - name: do_spaces_region line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_spaces_region: {{ do_spaces_region }}'
@@ -42,27 +43,32 @@
     state: present
 
 - name: Install python3-boto on tower with yum
+  delegate_to: 127.0.0.1
   yum:
     name: python3-boto3
     state: latest
 
 - name: Install s3cmd on tower with yum
+  delegate_to: 127.0.0.1
   yum:
     name: s3cmd
     state: latest
 
 - name: Create s3cmd config directory if it does not exist locally on AWX
+  delegate_to: 127.0.0.1
   file:
     path: /var/lib/awx/projects/hosting/s3cmd
     state: directory
     mode: '0700'
 
 - name: Create an empty s3cmd config file if it doesn't exist
+  delegate_to: 127.0.0.1
   file:
     path: '/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
     state: touch
 
 - name: Create s3cmd config file for region using blockinfile
+  delegate_to: 127.0.0.1
   blockinfile:
     dest: '/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
     block: |
@@ -152,6 +158,7 @@
     backup: no
 
 - name: Run a command to list all DigitalOcean 'spaces'
+  delegate_to: 127.0.0.1
   command: '/usr/bin/s3cmd ls --config=/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
   register: list_of_spaces
 
@@ -159,6 +166,7 @@
     msg: "{{ list_of_spaces }}"
 
 - name: Run a command to create DigitalOcean 'space' if it doesn't exist
+  delegate_to: 127.0.0.1
   command: 's3cmd mb s3://{{ subscription_id }} --config=/var/lib/awx/projects/hosting/s3cmd/s3cfg-{{ do_spaces_region }}'
   when: matrix_domain not in list_of_spaces.stdout
 

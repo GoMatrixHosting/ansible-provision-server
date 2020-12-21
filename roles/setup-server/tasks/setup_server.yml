@@ -1,7 +1,6 @@
 
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ip_final }}"
-  connection: remote
   apt:
     name: "*"
     update_cache: yes

@@ -3,6 +3,7 @@
 # Append to server_vars.yml variable file
 
 - name: Add slug_size line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'slug_size: {{ slug_size }}'
@@ -11,6 +12,7 @@
   when: slug_size is defined
 
 - name: Add swap_size line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'swap_size: {{ swap_size }}'
@@ -18,6 +20,7 @@
     state: present
 
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_region: {{ do_droplet_region }}'
@@ -27,6 +30,7 @@
   when: do_droplet_region is defined
 
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
@@ -35,6 +39,7 @@
   when: new_server_info is defined
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'server_ipv4: {{ server_ipv4 }}'
@@ -43,6 +48,7 @@
   when: server_ipv4|length > 0
 
 - name: Add server_ipv6 line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'server_ipv6: {{ server_ipv6 }}'
@@ -51,6 +57,7 @@
   when: server_ipv6|length > 0
 
 - name: Add matrix_domain line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'matrix_domain: {{ matrix_domain }}'
@@ -58,6 +65,7 @@
     state: present
 
 - name: Add plan_title line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'plan_title: {{ plan_title }}'
@@ -80,6 +88,7 @@
 # Create extra_vars.yml variable file for launching deploy scripts
 
 - name: Add target line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'target: "matrix.{{ matrix_domain }}"'
@@ -87,6 +96,7 @@
     state: present
 
 - name: Add target line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'matrix_domain: "{{ matrix_domain }}"'
@@ -94,6 +104,7 @@
     state: present
 
 - name: Add matrix_awx_enabled line to extra_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     line: 'matrix_awx_enabled: true'
@@ -103,21 +114,25 @@
 # Create matrix_vars.yml variable file
 
 - name: Install password generation script
+  delegate_to: 127.0.0.1
   copy:
     src: ./roles/spawn-server/scripts/generate-initial-passwords.sh
     dest: /var/lib/awx/projects/hosting/generate-initial-passwords.sh
     mode: '0700'
 
 - name: Check if matrix_vars.yml file already exists on AWX
+  delegate_to: 127.0.0.1
   stat: 
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
   register: varsfile
 
 - name: Generate initial matrix_vars.yml on AWX if it does not exist
+  delegate_to: 127.0.0.1
   command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "{{ element_subdomain }}" "{{ client_email }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
@@ -127,6 +142,7 @@
   when: base_domain_used|bool == true
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
@@ -136,6 +152,7 @@
   when: base_domain_used|bool == false
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings'
@@ -145,6 +162,7 @@
   when: base_domain_used|bool == false
 
 - name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Jitsi Settings'
@@ -154,6 +172,7 @@
   when: matrix_jitsi_timezone is defined
 
 - name: Add limit_usage_by_mau line to matrix_vars.yml file if mau_limit is defined
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertbefore: '# End Synapse Extension'
@@ -163,6 +182,7 @@
   when: mau_limit is defined
 
 - name: Add mau_max_value line to matrix_vars.yml file if mau_limit is defined
+  delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertbefore: '# End Synapse Extension'

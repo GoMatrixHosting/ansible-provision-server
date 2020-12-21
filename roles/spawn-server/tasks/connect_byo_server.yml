@@ -1,29 +1,34 @@
 
 - name: Set MAU limit for Micro Server
+  delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
     plan_title: "Micro Server"
   when: plan_title_long == "Micro Server ~5 users (1vcpu-1gb)"
 
 - name: Set MAU limit for Small Server
+  delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
     plan_title: "Small Server"
   when: plan_title_long == "Small Server ~25 users (1vcpu-2gb)"
 
 - name: Set MAU limit for Medium Server
+  delegate_to: 127.0.0.1
   set_fact:
     swap_size: "4G"
     plan_title: "Medium Server"
   when: plan_title_long == "Medium Server ~50 users (2vcpu-4gb)"
 
 - name: Set MAU limit for Large Server
+  delegate_to: 127.0.0.1
   set_fact:
     swap_size: "8G"
     plan_title: "Large Server"
   when: plan_title_long == "Large Server ~100 users (4vcpu-8gb)"
 
 - name: Set MAU limit for Jumbo Server
+  delegate_to: 127.0.0.1
   set_fact:
     swap_size: "32G"
     plan_title: "Large Server"
@@ -55,6 +60,7 @@
   register: timezone_output
 
 - name: Set valid timezone for Jitsi instance
+  delegate_to: 127.0.0.1
   set_fact:
     matrix_jitsi_timezone: "{{ timezone_output.stdout }}"
 
