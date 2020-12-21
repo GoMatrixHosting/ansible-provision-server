@@ -23,8 +23,8 @@
 # do_image_master: value
 
 - name: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-  hosts: "dummyvalue.com"
-#  become: true
+  hosts: localhost
+  connection: local
   gather_facts: false
 
   roles:

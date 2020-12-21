@@ -1,13 +1,13 @@
 
 - name: Install imposter-check script
-  delegate_to: 127.0.0.1
+#  delegate_to: 127.0.0.1
   copy:
     src: ./roles/imposter-check/scripts/imposter-check.py
     dest: /var/lib/awx/projects/hosting/imposter-check.py
     mode: '0700'
 
 - name: Run imposter-check script and collect output
-  delegate_to: 127.0.0.1
+#  delegate_to: 127.0.0.1
   command: /usr/bin/python3 /var/lib/awx/projects/hosting/imposter-check.py "{{ matrix_domain }}" "{{ subscription_id }}"
   register: impostercheck
 
