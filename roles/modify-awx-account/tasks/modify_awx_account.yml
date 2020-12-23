@@ -492,6 +492,52 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Save new 'Configure Synapse Admin' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/configure_synapse_admin.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json'
+
+- name: Copy 'Configure Synapse Admin' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse admin.json'
+    dest: /matrix/awx/configure_synapse_admin.json
+    mode: '0644'
+
+- name: Create 'Configure Synapse Admin' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
+    description: "Configure 'Synapse Admin', a moderation tool to help you manage your server."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "start,setup-all"
+    inventory: "{{ member_id }} Inventory"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow user account to use 'Configure Synapse Admin' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    user: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
 - name: Save initial 'Create User' survey.json to the AWX tower
   delegate_to: 127.0.0.1
   copy:
