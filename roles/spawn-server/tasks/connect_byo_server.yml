@@ -3,64 +3,69 @@
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
-    plan_title: "Micro Server"
-  when: plan_title_long == "Micro Server ~5 users (1vcpu-1gb)"
+    mau_limit: 5
+  when: (subscription_type == "on-premise" and plan_title == "Micro On-Premise Server")
 
 - name: Set MAU limit for Small Server
   delegate_to: 127.0.0.1
   set_fact:
-    swap_size: "2G"
-    plan_title: "Small Server"
-  when: plan_title_long == "Small Server ~25 users (1vcpu-2gb)"
+    swap_size: "4G"
+    mau_limit: 25
+  when: (subscription_type == "on-premise" and plan_title == "Small On-Premise Server")
 
 - name: Set MAU limit for Medium Server
   delegate_to: 127.0.0.1
   set_fact:
-    swap_size: "4G"
-    plan_title: "Medium Server"
-  when: plan_title_long == "Medium Server ~50 users (2vcpu-4gb)"
+    swap_size: "8G"
+    mau_limit: 50
+  when: (subscription_type == "on-premise" and plan_title == "Medium On-Premise Server")
 
 - name: Set MAU limit for Large Server
   delegate_to: 127.0.0.1
   set_fact:
-    swap_size: "8G"
-    plan_title: "Large Server"
-  when: plan_title_long == "Large Server ~100 users (4vcpu-8gb)"
+    swap_size: "16G"
+    mau_limit: 100
+  when: (subscription_type == "on-premise" and plan_title == "Large On-Premise Server")
 
 - name: Set MAU limit for Jumbo Server
   delegate_to: 127.0.0.1
   set_fact:
-    swap_size: "32G"
-    plan_title: "Large Server"
-  when: plan_title_long == "Jumbo Server ~1000 users (8vcpu-32gb)"
+    swap_size: "64G"
+    mau_limit: 1000
+  when: (subscription_type == "on-premise" and plan_title == "Jumbo On-Premise Server")
 
 - name: Test if SSH is possible with ipv4
   delegate_to: "{{ server_ip_final }}"
   command: echo success
   register: echo_output
+  when: subscription_type == "on-premise"
 
 - debug:
     msg: "{{ echo_output.stdout }}"
+  when: subscription_type == "on-premise"
 
 - name: Disable password authentication
-  delegate_to: "{{ server_ip_final }}"
   lineinfile:
     path: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
+  when: subscription_type == "on-premise"
 
 - name: Restart SSH
   delegate_to: "{{ server_ip_final }}"
   service:
     name: ssh
     state: restarted
+  when: subscription_type == "on-premise"
 
 - name: Collect timezone of connected server (Debian and derivatives only) 
   delegate_to: "{{ server_ip_final }}"
   command: cat /etc/timezone
   register: timezone_output
+  when: subscription_type == "on-premise"
 
 - name: Set valid timezone for Jitsi instance
   delegate_to: 127.0.0.1
   set_fact:
     matrix_jitsi_timezone: "{{ timezone_output.stdout }}"
+  when: subscription_type == "on-premise"
 

@@ -10,7 +10,6 @@
     - Your server has been created! You now need to configure your DNS to have the 
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
-    - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
@@ -21,23 +20,21 @@
     - You also decided that your base domain was already in use, you'll need to configure
     - "a .well-known entry for your existing web service before you proceed:" 
     - https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-well-known.md
-  when: base_domain_used == 'true' and server_ipv4|length > 0 and server_ipv6|length > 0 
+  when: base_domain_used == 'true' and server_ipv4|length == 0 and server_ipv6|length > 0 
 
 - debug:
     msg: 
     - Your server has been created! You now need to configure your DNS to have the 
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
-    - A       -                       -         -       -      {{ server_ipv4 }}
     - A       -                       -         -       -      {{ server_ipv6 }}
-    - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
     - "-"
     - Setting the IPv6 record is optional. If you need help doing this please contact us.
-  when: base_domain_used == 'false' and server_ipv4|length > 0 and server_ipv6|length > 0
+  when: base_domain_used == 'false' and server_ipv4|length == 0 and server_ipv6|length > 0
 
 - debug:
     msg: 
@@ -75,6 +72,7 @@
     - Your server has been created! You now need to configure your DNS to have the 
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
+    - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
@@ -85,19 +83,21 @@
     - You also decided that your base domain was already in use, you'll need to configure
     - "a .well-known entry for your existing web service before you proceed:" 
     - https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-well-known.md
-  when: base_domain_used == 'true' and server_ipv4|length == 0 and server_ipv6|length > 0 
+  when: base_domain_used == 'true' and server_ipv4|length > 0 and server_ipv6|length > 0 
 
 - debug:
     msg: 
     - Your server has been created! You now need to configure your DNS to have the 
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
+    - A       -                       -         -       -      {{ server_ipv4 }}
     - A       -                       -         -       -      {{ server_ipv6 }}
+    - A       matrix                  -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv6 }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
     - "-"
     - Setting the IPv6 record is optional. If you need help doing this please contact us.
-  when: base_domain_used == 'false' and server_ipv4|length == 0 and server_ipv6|length > 0
+  when: base_domain_used == 'false' and server_ipv4|length > 0 and server_ipv6|length > 0
 
