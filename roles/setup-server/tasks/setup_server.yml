@@ -16,20 +16,24 @@
      - prometheus-node-exporter
       
 - name: Create swapfile with the right permissions
+  delegate_to: "{{ server_ip_final }}"
   command: 'fallocate -l {{ swap_size }} /swapfile'
   register: swapfile_new
   args:
     creates: /swapfile
     
 - name: Set correct permissions on swapfile
+  delegate_to: "{{ server_ip_final }}"
   command: 'chmod 600 /swapfile'
   when: swapfile_new.delta is defined
 
 - name: Make swapfile
+  delegate_to: "{{ server_ip_final }}"
   command: 'mkswap /swapfile'
   when: swapfile_new.delta is defined
   
 - name: Make swapfile
+  delegate_to: "{{ server_ip_final }}"
   command: 'swapon /swapfile'
   when: swapfile_new.delta is defined
 
