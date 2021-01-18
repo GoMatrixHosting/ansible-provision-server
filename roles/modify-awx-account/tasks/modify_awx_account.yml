@@ -501,7 +501,7 @@
 - name: Copy 'Configure Synapse Admin' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse admin.json'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json'
     dest: /matrix/awx/configure_synapse_admin.json
     mode: '0644'
 
