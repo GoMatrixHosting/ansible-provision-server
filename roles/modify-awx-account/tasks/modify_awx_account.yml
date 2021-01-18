@@ -86,11 +86,11 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
   when: subscription_type == "digitalocean"
 
-- name: Copy provision_survey_mp.json survey file to target
+- name: Copy provision_survey_digitalocean.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
-    dest: /matrix/awx/provision_survey_mp.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
+    dest: /matrix/awx/provision_survey_digitalocean.json
     mode: '0644'
   when: subscription_type == "digitalocean"
 
@@ -124,7 +124,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
   when: subscription_type == "on-premise"
 
-- name: Copy provision_survey_byo.json survey file to target
+- name: Copy provision_survey_on-premise.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
