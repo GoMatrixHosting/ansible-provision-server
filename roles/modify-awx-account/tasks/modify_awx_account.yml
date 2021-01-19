@@ -53,10 +53,10 @@
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
-- name: Disallow user account to use the 'Provision a New Server' job_template
+- name: Disallow team from using the 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
     role: execute
     state: absent
@@ -68,7 +68,7 @@
 - name: Allow user account to read the 'Provision a New Server' job_template/history
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
     role: read
     state: present
@@ -174,10 +174,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Deploy/Update a Server' job template
+- name: Allow team to use 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     role: execute
     state: present
@@ -219,10 +219,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Start/Restart all Services' job template
+- name: Allow team to use 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     role: execute
     state: present
@@ -250,10 +250,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Stop all Services' job template
+- name: Allow team to use 'Stop all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
     role: execute
     state: present
@@ -296,10 +296,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Element' job template
+- name: Allow team to use 'Configure Element' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
     role: execute
     state: present
@@ -342,10 +342,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Synapse' job template
+- name: Allow team to use 'Configure Synapse' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
     role: execute
     state: present
@@ -388,10 +388,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Jitsi' job template
+- name: Allow team to use 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Jitsi"
     role: execute
     state: present
@@ -434,10 +434,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Ma1sd' job template
+- name: Allow team to use 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     role: execute
     state: present
@@ -480,10 +480,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Website + Access Backup' job template
+- name: Allow team to use 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     role: execute
     state: present
@@ -526,10 +526,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Synapse Admin' job template
+- name: Allow team to use 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     role: execute
     state: present
@@ -565,10 +565,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Create User' job template
+- name: Allow team to use 'Create User' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ client_email }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
     role: execute
     state: present
