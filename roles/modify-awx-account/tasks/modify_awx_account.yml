@@ -16,7 +16,7 @@
   tower_host:
     name: "matrix.{{ matrix_domain }}"
     description: "{{ matrix_domain }} Matrix Server"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     state: present
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
@@ -29,7 +29,7 @@
   tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     state: present
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
@@ -101,7 +101,7 @@
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Ansible Provision Server"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -139,7 +139,7 @@
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Ansible Provision Server"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -163,7 +163,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "setup-all,start"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -208,7 +208,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -239,7 +239,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "stop"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -283,7 +283,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-client-element"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -329,7 +329,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-synapse"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -375,7 +375,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-jitsi"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -421,7 +421,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-ma1sd"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -467,7 +467,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-nginx-proxy"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -513,7 +513,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-all"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -552,7 +552,7 @@
     description: "Create a new user account and choose if it has admin access."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - AWX Playbooks"
     playbook: create_user.yml
     credential: "{{ member_id }} - AWX SSH Key"
