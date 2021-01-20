@@ -122,7 +122,7 @@
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_byo.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
-  when: subscription_type == "on-premise"
+  when: subscription_type == "on_premise"
 
 - name: Copy provision_survey_on-premise.json survey file to target
   delegate_to: "{{ server_ip_final }}"
@@ -130,7 +130,7 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
     dest: /matrix/awx/provision_survey_on-premise.json
     mode: '0644'
-  when: subscription_type == "on-premise"
+  when: subscription_type == "on_premise"
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
@@ -153,7 +153,7 @@
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
-  when: subscription_type == "on-premise"
+  when: subscription_type == "on_premise"
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
