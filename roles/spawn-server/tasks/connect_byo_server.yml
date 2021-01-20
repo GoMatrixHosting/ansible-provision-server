@@ -45,6 +45,7 @@
   when: subscription_type == "on_premise"
 
 - name: Disable password authentication
+  delegate_to: "{{ server_ip_final }}"
   lineinfile:
     path: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
