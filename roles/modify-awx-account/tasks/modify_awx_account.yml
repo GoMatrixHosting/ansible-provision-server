@@ -120,8 +120,8 @@
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/provision_survey_byo.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
+    src: './roles/modify-awx-account/surveys/provision_survey_on-premise.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
   when: subscription_type == "on_premise"
 
 - name: Copy provision_survey_on-premise.json survey file to target
