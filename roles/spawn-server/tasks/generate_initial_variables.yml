@@ -20,6 +20,9 @@
     state: present
     create: yes
   when: do_droplet_region is defined
+  
+- debug:
+    msg: '{{ new_server_info }}'
 
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
