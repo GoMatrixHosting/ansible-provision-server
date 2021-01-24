@@ -14,7 +14,6 @@ current_subscription_id = sys.argv[2]
 used_domains = []
 
 member_ids = os.listdir('/var/lib/awx/projects/clients/')
-print(member_ids)
 
 for member_id in member_ids:
   if os.path.isdir('/var/lib/awx/projects/clients/' + member_id):
