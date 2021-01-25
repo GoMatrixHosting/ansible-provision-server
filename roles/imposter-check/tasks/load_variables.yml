@@ -20,4 +20,3 @@
 - name: Include organisation variables from organisation.yml
   include_vars:
     file: /var/lib/awx/projects/clients/{{ member_id }}/organisation.yml
-  no_log: True
