@@ -59,6 +59,7 @@ matrix_synapse_configuration_extension_yaml: |
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_password: $(generatePassword)
+matrix_synapse_connection_password: $(generatePassword)
 # Base Domain Settings
 # Synapse Admin Settings
 matrix_synapse_admin_enabled: false
