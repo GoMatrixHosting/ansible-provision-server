@@ -1,6 +1,6 @@
 # Spawn a Server
 - import_tasks: "{{ role_path }}/tasks/spawn_do_droplet.yml"
-  tags: digitalocean-droplet
+  tags: always
 
 # Spawn a 'Space'
 - import_tasks: "{{ role_path }}/tasks/spawn_do_space.yml"
@@ -12,7 +12,7 @@
 
 # Connects an existing BYO server
 - import_tasks: "{{ role_path }}/tasks/connect_byo_server.yml"
-  tags: byo-server
+  tags: always
 
 # Create initial variable files
 - import_tasks: "{{ role_path }}/tasks/generate_initial_variables.yml"

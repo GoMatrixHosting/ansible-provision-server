@@ -9,15 +9,8 @@
     line: 'slug_size: {{ slug_size }}'
     mode: '0600'
     state: present
-  when: slug_size is defined
-
-- name: Add swap_size line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'swap_size: {{ swap_size }}'
-    mode: '0600'
-    state: present
+  when: subscription_type == "digitalocean"
+#  when: slug_size is defined
 
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -27,7 +20,8 @@
     mode: '0600'
     state: present
     create: yes
-  when: do_droplet_region is defined
+  when: subscription_type == "digitalocean"
+#  when: do_droplet_region is defined
 
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -36,7 +30,8 @@
     line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
     mode: '0600'
     state: present
-  when: new_server_info is defined
+  when: subscription_type == "digitalocean"
+#  when: new_server_info is defined
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1

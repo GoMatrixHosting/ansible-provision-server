@@ -39,18 +39,6 @@
       "type": "text"
     },
     {
-      "question_name": "Server Size",
-      "question_description": "Select the size of the server you wish to install, base this on the capacity of your hardware.",
-      "required": true,
-      "min": null,
-      "max": null,
-      "default": "{{ plan_title_long }}",
-      "choices": "Micro Server ~5 users (1vcpu-1gb)\nSmall Server ~25 users (1vcpu-2gb)\nMedium Server ~50 users (2vcpu-4gb)\nLarge Server ~100 users (4vcpu-8gb)\nJumbo Server ~1000 users (8vcpu-32gb)",
-      "new_question": true,
-      "variable": "plan_title_long",
-      "type": "multiplechoice"
-    },
-    {
       "question_name": "Server IPv4",
       "question_description": "The IPv4 address of the existing server. You must already have the AWX hosters public SSH key loaded into it. At least one IP address must be specified.",
       "required": true,

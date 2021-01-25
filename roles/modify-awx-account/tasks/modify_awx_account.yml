@@ -16,9 +16,9 @@
   tower_host:
     name: "matrix.{{ matrix_domain }}"
     description: "{{ matrix_domain }} Matrix Server"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     state: present
-    tower_host: "{{ tower_host }}"
+    tower_host: "https://{{ tower_host }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
@@ -29,7 +29,7 @@
   tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     state: present
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
@@ -40,23 +40,26 @@
 - name: Configure awx-cli 1
   delegate_to: 127.0.0.1
   shell: awx-cli config username "{{ tower_username }}"
+  no_log: True
 
 - name: Configure awx-cli 2
   delegate_to: 127.0.0.1
   shell: awx-cli config password "{{ tower_password }}"
+  no_log: True
 
 - name: Configure awx-cli 3
   delegate_to: 127.0.0.1
   shell: awx-cli config host "{{ tower_host }}"
+  no_log: True
 
 - name: Associate host group
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
-- name: Disallow user account to use the 'Provision a New Server' job_template
+- name: Disallow team from using the 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
     role: execute
     state: absent
@@ -68,7 +71,7 @@
 - name: Allow user account to read the 'Provision a New Server' job_template/history
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ subscription_id }} - 00 - Provision a New Server"
     role: read
     state: present
@@ -82,17 +85,17 @@
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/provision_survey_mp.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
-  when: byo_bool|bool == false
+    src: './roles/modify-awx-account/surveys/provision_survey_digitalocean.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
+  when: subscription_type == "digitalocean"
 
-- name: Copy provision_survey_mp.json survey file to target
+- name: Copy provision_survey_digitalocean.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json'
-    dest: /matrix/awx/provision_survey_mp.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
+    dest: /matrix/awx/provision_survey_digitalocean.json
     mode: '0644'
-  when: byo_bool|bool == false
+  when: subscription_type == "digitalocean"
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
@@ -101,36 +104,36 @@
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Ansible Provision Server"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_mp.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, digitalocean-droplet, setup-backup
+    job_tags: imposter-check, setup-backup
     skip_tags: digitalocean-space
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
-  when: byo_bool|bool == false
+  when: subscription_type == "digitalocean"
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/provision_survey_byo.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
-  when: byo_bool|bool == true
+    src: './roles/modify-awx-account/surveys/provision_survey_on-premise.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
+  when: subscription_type == "on_premise"
 
-- name: Copy provision_survey_byo.json survey file to target
+- name: Copy provision_survey_on-premise.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json'
-    dest: /matrix/awx/provision_survey_byo.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
+    dest: /matrix/awx/provision_survey_on-premise.json
     mode: '0644'
-  when: byo_bool|bool == true
+  when: subscription_type == "on_premise"
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
@@ -139,21 +142,21 @@
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Ansible Provision Server"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_byo.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, byo-server, setup-backup
+    job_tags: imposter-check, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "{{ tower_host }}"
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
-  when: byo_bool|bool == true
+  when: subscription_type == "on_premise"
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
@@ -163,7 +166,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "setup-all,start"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -174,10 +177,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Deploy/Update a Server' job template
+- name: Allow team to use 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     role: execute
     state: present
@@ -208,7 +211,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -219,10 +222,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Start/Restart all Services' job template
+- name: Allow team to use 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     role: execute
     state: present
@@ -239,7 +242,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "stop"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -250,10 +253,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Stop all Services' job template
+- name: Allow team to use 'Stop all Services' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
     role: execute
     state: present
@@ -283,7 +286,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-client-element"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -296,10 +299,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Element' job template
+- name: Allow team to use 'Configure Element' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
     role: execute
     state: present
@@ -329,7 +332,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-synapse"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -342,10 +345,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Synapse' job template
+- name: Allow team to use 'Configure Synapse' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
     role: execute
     state: present
@@ -375,7 +378,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-jitsi"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -388,10 +391,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Jitsi' job template
+- name: Allow team to use 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Jitsi"
     role: execute
     state: present
@@ -421,7 +424,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-ma1sd"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -434,10 +437,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Ma1sd' job template
+- name: Allow team to use 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     role: execute
     state: present
@@ -467,7 +470,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-nginx-proxy"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -480,10 +483,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Website + Access Backup' job template
+- name: Allow team to use 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     role: execute
     state: present
@@ -501,7 +504,7 @@
 - name: Copy 'Configure Synapse Admin' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse admin.json'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json'
     dest: /matrix/awx/configure_synapse_admin.json
     mode: '0644'
 
@@ -513,7 +516,7 @@
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
     job_tags: "start,setup-all"
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -526,10 +529,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Configure Synapse Admin' job template
+- name: Allow team to use 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     role: execute
     state: present
@@ -552,7 +555,7 @@
     description: "Create a new user account and choose if it has admin access."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
-    inventory: "{{ member_id }} Inventory"
+    inventory: "{{ member_id }}"
     project: "{{ member_id }} - AWX Playbooks"
     playbook: create_user.yml
     credential: "{{ member_id }} - AWX SSH Key"
@@ -565,10 +568,10 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
-- name: Allow user account to use 'Create User' job template
+- name: Allow team to use 'Create User' job template
   delegate_to: 127.0.0.1
   tower_role:
-    user: "{{ member_id }}"
+    team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
     role: execute
     state: present
