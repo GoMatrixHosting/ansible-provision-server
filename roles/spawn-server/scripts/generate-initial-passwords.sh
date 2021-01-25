@@ -58,9 +58,6 @@ matrix_synapse_configuration_extension_yaml: |
   admin_contact: 'mailto:$CLIENT_EMAIL'
 # End Synapse Extension
 # PostgreSQL Settings
-matrix_postgres_connection_hostname: matrix-postgres
-matrix_postgres_db_name: synapse
-matrix_postgres_connection_username: synapse
 matrix_postgres_connection_password: $(generatePassword)
 # Base Domain Settings
 # Synapse Admin Settings
