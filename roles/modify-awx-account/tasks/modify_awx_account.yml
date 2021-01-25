@@ -40,14 +40,17 @@
 - name: Configure awx-cli 1
   delegate_to: 127.0.0.1
   shell: awx-cli config username "{{ tower_username }}"
+  no_log: True
 
 - name: Configure awx-cli 2
   delegate_to: 127.0.0.1
   shell: awx-cli config password "{{ tower_password }}"
+  no_log: True
 
 - name: Configure awx-cli 3
   delegate_to: 127.0.0.1
   shell: awx-cli config host "{{ tower_host }}"
+  no_log: True
 
 - name: Associate host group
   delegate_to: 127.0.0.1
