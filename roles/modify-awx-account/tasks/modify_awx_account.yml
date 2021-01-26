@@ -555,9 +555,10 @@
     description: "Create a new user account and choose if it has admin access."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     job_type: run
+    job_tags: "create-user"
     inventory: "{{ member_id }}"
-    project: "{{ member_id }} - AWX Playbooks"
-    playbook: create_user.yml
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json') }}"
