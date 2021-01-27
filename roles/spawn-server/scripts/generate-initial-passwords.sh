@@ -63,6 +63,19 @@ matrix_synapse_connection_password: $(generatePassword)
 # Base Domain Settings
 # Synapse Admin Settings
 matrix_synapse_admin_enabled: false
+# Matrix Shared Secret Auth
+matrix_synapse_ext_password_provider_shared_secret_auth_enabled: false
+matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generatePassword)
+# Matrix Corporal
+matrix_corporal_enabled: false
+matrix_corporal_policy_provider_config: |
+  {
+    "Type": "static_file",
+    "Path": "var/policy.json"
+  }
+matrix_corporal_http_api_enabled: false
+matrix_corporal_http_api_auth_token: $(generatePassword)
+matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND

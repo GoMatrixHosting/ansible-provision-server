@@ -1,0 +1,114 @@
+{
+  "name": "Configure Matrix Corporal",
+  "description": "Matrix Corporal configures a single source of truth about users/rooms/communities and configures them for you.",
+  "spec": [
+    {
+      "question_name": "Enable Corporal",
+      "question_description": "Controls if Matrix Corporal is enabled at all.",
+      "required": true,
+      "min": null,
+      "max": null,
+      "default": "{{ matrix_corporal_enabled|string|lower }}",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "matrix_corporal_enabled",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Corporal Policy Provider",
+      "question_description": "Controls what provider policy is used with Matrix Corporal.",
+      "required": true,
+      "min": null,
+      "max": null,
+      "default": "Simple Static File",
+      "choices": "Simple Static File\nHTTP Pull Mode (API Enabled)\nHTTP Push Mode (API Enabled)",
+      "new_question": true,
+      "variable": "matrix_corporal_policy_provider_mode",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Enable Community Creation",
+      "question_description": "Allows regular users (who aren't server admins) to create 'communities', which are basically groups of rooms.",
+      "required": false,
+      "min": null,
+      "max": null,
+      "default": "{{ matrix_synapse_enable_group_creation|string|lower }}",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "matrix_synapse_enable_group_creation",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Synapse Auto-Join Room",
+      "question_description": "Sets the 'auto-join' rooms, where new users will be automatically invited to, these rooms must already exist. Entries must be divided with commas, for example: #announcements:example.org,#main:example.org",
+      "required": false,
+      "min": 0,
+      "max": 4096,
+      "default": "{{ matrix_synapse_auto_join_rooms }}",
+      "choices": "",
+      "new_question": true,
+      "variable": "matrix_synapse_auto_join_rooms_raw",
+      "type": "text"
+    },
+    {
+      "question_name": "Enable Synapse Presence",
+      "question_description": "Controls whether presence is enabled. This shows who's online and reading your posts. Disabling it will increase both performance and user privacy.",
+      "required": false,
+      "min": null,
+      "max": null,
+      "default": "{{ matrix_synapse_use_presence|string|lower }}",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "matrix_synapse_use_presence",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Synapse Max Upload Size",
+      "question_description": "Sets the maximum size for uploaded files in MB.",
+      "required": false,
+      "min": 0,
+      "max": 3,
+      "default": "{{ matrix_synapse_max_upload_size_mb }}",
+      "choices": "",
+      "new_question": true,
+      "variable": "matrix_synapse_max_upload_size_mb",
+      "type": "text"
+    },
+    {
+      "question_name": "Enable ReCaptcha on Registration",
+      "question_description": "Enables Googles ReCaptcha verification for registering an account, recommended for public servers.",
+      "required": false,
+      "min": null,
+      "max": null,
+      "default": "{{ ext_enable_registration_captcha|string|lower }}",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "ext_enable_registration_captcha",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Recaptcha Public Key",
+      "question_description": "Sets the Google ReCaptcha public key for this website.",
+      "required": false,
+      "min": 0,
+      "max": 40,
+      "default": "{{ ext_recaptcha_public_key }}",
+      "choices": "",
+      "new_question": true,
+      "variable": "ext_recaptcha_public_key",
+      "type": "text"
+    },
+    {
+      "question_name": "Recaptcha Private Key",
+      "question_description": "Sets the Google ReCaptcha private key for this website.",
+      "required": false,
+      "min": 0,
+      "max": 40,
+      "default": "{{ ext_recaptcha_private_key }}",
+      "choices": "",
+      "new_question": true,
+      "variable": "ext_recaptcha_private_key",
+      "type": "text"
+    }
+  ]
+}

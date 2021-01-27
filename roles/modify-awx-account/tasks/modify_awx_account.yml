@@ -203,6 +203,25 @@
     unified_job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     rrule: "{{ rrule_line }}"
 
+- name: Create 'Self-Check' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 0 - Self-Check"
+    description: "Perform basic diagnostics on the matrix server."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "self-check"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
 - name: Create 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
   tower_job_template:
