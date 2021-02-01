@@ -572,6 +572,52 @@
     tower_password: "{{ tower_password }}"
     validate_certs: yes
 
+- name: Save new 'Configure Corporal' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/configure_corporal.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
+
+- name: Copy 'Configure Corporal' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
+    dest: /matrix/awx/configure_corporal.json
+    mode: '0644'
+
+- name: Create 'Configure Corporal' job template
+  delegate_to: 127.0.0.1
+  tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Corporal"
+    description: "Configure Matrix Corporal, a tool that manages your Matrix server according to a configuration policy."
+    extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    job_type: run
+    job_tags: "start,setup-corporal"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
+- name: Allow team to use 'Configure Corporal' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Corporal"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
+
 - name: Save initial 'Create User' survey.json to the AWX tower
   delegate_to: 127.0.0.1
   copy:

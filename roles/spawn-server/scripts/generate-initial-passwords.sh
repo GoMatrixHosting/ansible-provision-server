@@ -81,11 +81,6 @@ matrix_corporal_enabled: false
 matrix_corporal_http_api_enabled: false
 matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
 # Matrix Corporal Policy Provider
-matrix_corporal_policy_provider_config: |
-  {
-    "Type": "static_file",
-    "Path": "var/policy.json"
-  }
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND
