@@ -51,21 +51,21 @@ matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
 matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
+matrix_synapse_rc_login:
+    address:
+        per_second: 50
+        burst_count: 300
+    account:
+        per_second: 0.17
+        burst_count: 300
+    failed_attempts:
+        per_second: 0.17
+        burst_count: 3
 # Synapse Extension
 matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
-  rc_login:
-      account:
-          burst_count: 3
-          per_second: 0.17
-      address:
-          burst_count: 3
-          per_second: 0.17
-      failed_attempts:
-          burst_count: 3
-          per_second: 0.17
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_password: $(generatePassword)
