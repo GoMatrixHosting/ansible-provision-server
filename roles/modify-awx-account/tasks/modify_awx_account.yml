@@ -221,6 +221,18 @@
     tower_username: "{{ tower_username }}"
     tower_password: "{{ tower_password }}"
     validate_certs: yes
+    
+- name: Allow team to use 'Self-Check' job template
+  delegate_to: 127.0.0.1
+  tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 0 - Self-Check"
+    role: execute
+    state: present
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
 
 - name: Create 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1

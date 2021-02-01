@@ -56,6 +56,16 @@ matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
+  rc_login:
+      account:
+          burst_count: 3
+          per_second: 0.17
+      address:
+          burst_count: 3
+          per_second: 0.17
+      failed_attempts:
+          burst_count: 3
+          per_second: 0.17
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_password: $(generatePassword)
@@ -68,14 +78,14 @@ matrix_synapse_ext_password_provider_shared_secret_auth_enabled: false
 matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generatePassword)
 # Matrix Corporal
 matrix_corporal_enabled: false
+matrix_corporal_http_api_enabled: false
+matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
+# Matrix Corporal Policy Provider
 matrix_corporal_policy_provider_config: |
   {
     "Type": "static_file",
     "Path": "var/policy.json"
   }
-matrix_corporal_http_api_enabled: false
-matrix_corporal_http_api_auth_token: $(generatePassword)
-matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND
