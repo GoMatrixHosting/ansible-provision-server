@@ -21,6 +21,8 @@ if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 cat <<VAREND > "$VARFILE"
 # AWX Settings
 matrix_awx_enabled: true
+matrix_awx_janitor_user_password: $(generatePassword)
+matrix_awx_janitor_user_created: false
 # Basic Settings
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com
@@ -62,6 +64,8 @@ matrix_synapse_rc_login:
         per_second: 0.17
         burst_count: 3
 # Synapse Extension
+matrix_synapse_ext_password_provider_rest_auth_enabled: false
+matrix_synapse_ext_password_provider_rest_auth_endpoint: "http://matrix-corporal:41080/_matrix/corporal"
 matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
@@ -73,14 +77,14 @@ matrix_synapse_connection_password: $(generatePassword)
 # Base Domain Settings
 # Synapse Admin Settings
 matrix_synapse_admin_enabled: false
-# Matrix Shared Secret Auth
+# Shared Secret Auth Settings
 matrix_synapse_ext_password_provider_shared_secret_auth_enabled: false
 matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generatePassword)
-# Matrix Corporal
+# Corporal Settings
 matrix_corporal_enabled: false
 matrix_corporal_http_api_enabled: false
 matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
-# Matrix Corporal Policy Provider
+# Corporal Policy Provider Settings
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
 VAREND
