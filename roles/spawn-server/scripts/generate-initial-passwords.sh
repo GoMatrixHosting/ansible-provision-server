@@ -55,11 +55,11 @@ matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
 matrix_synapse_rc_login:
     address:
-        per_second: 50
-        burst_count: 300
+        per_second: 0.17
+        burst_count: 3
     account:
         per_second: 0.17
-        burst_count: 300
+        burst_count: 3
     failed_attempts:
         per_second: 0.17
         burst_count: 3
