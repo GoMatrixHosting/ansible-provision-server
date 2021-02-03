@@ -83,7 +83,7 @@ matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generat
 # Corporal Settings
 matrix_corporal_enabled: false
 matrix_corporal_http_api_enabled: false
-matrix_corporal_reconciliation_user_id_local_part: "matrix-corporal"
+matrix_corporal_corporal_user_id_local_part: "matrix-corporal"
 # Corporal Policy Provider Settings
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false

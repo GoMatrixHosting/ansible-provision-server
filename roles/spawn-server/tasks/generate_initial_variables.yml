@@ -193,27 +193,27 @@
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     dest: /matrix/awx/organisation.yml
-    mode: '0644'
+    mode: '0660'
 
 - name: Copy server_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     dest: /matrix/awx/server_vars.yml
-    mode: '0644'
+    mode: '0660'
 
 - name: Copy extra_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
     dest: /matrix/awx/extra_vars.yml
-    mode: '0644'
+    mode: '0660'
 
 - name: Copy matrix_vars.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     dest: /matrix/awx/matrix_vars.yml
-    mode: '0644'
+    mode: '0660'
 
 
