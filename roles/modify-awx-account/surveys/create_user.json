@@ -4,10 +4,10 @@
   "spec": [
     {
       "question_name": "Username",
-      "question_description": "Sets the username of the newly created account.",
+      "question_description": "Sets the username of the newly created account. Exclude the '@' and server name postfix. So to create @stevo:example.org just enter 'stevo'.",
       "required": true,
       "min": 0,
-      "max": 512,
+      "max": 1024,
       "default": "",
       "choices": "",
       "new_question": true,
@@ -19,7 +19,7 @@
       "question_description": "Sets the password of the newly created account.",
       "required": true,
       "min": 0,
-      "max": 64,
+      "max": 256,
       "default": "",
       "choices": "",
       "new_question": true,
