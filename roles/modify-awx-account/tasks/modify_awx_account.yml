@@ -202,6 +202,10 @@
     state: present
     unified_job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     rrule: "{{ rrule_line }}"
+    tower_host: "{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    validate_certs: yes
 
 - name: Create 'Self-Check' job template
   delegate_to: 127.0.0.1
