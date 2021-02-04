@@ -88,8 +88,8 @@
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
 - name: Disallow team from using the 'Provision a New Server' job_template
-  awx.awx.delegate_to: 127.0.0.1
-  tower_role:
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "0 - {{ subscription_id }} - Provision a New Server"
     role: execute
