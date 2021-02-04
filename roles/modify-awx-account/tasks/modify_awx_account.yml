@@ -22,9 +22,10 @@
   shell: |
       curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
   register: tower_token
+  no_log: True
       
-- debug:
-    msg: "The token: {{ tower_token.stdout }}"
+#- debug:
+#    msg: "The token: {{ tower_token.stdout }}"
       
 #- name: Create a new AWX token using username/password
 #  delegate_to: 127.0.0.1
@@ -87,27 +88,29 @@
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
 - name: Disallow team from using the 'Provision a New Server' job_template
-  delegate_to: 127.0.0.1
+  awx.awx.delegate_to: 127.0.0.1
   tower_role:
     team: "{{ member_id }}"
     job_template: "0 - {{ subscription_id }} - Provision a New Server"
     role: execute
     state: absent
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow user account to read the 'Provision a New Server' job_template/history
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "0 - {{ subscription_id }} - Provision a New Server"
     role: read
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 # must write these in with templates
@@ -129,7 +132,7 @@
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -144,9 +147,10 @@
     verbosity: 1
     job_tags: imposter-check, setup-backup
     skip_tags: digitalocean-space
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
   when: subscription_type == "digitalocean"
 
@@ -167,7 +171,7 @@
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -182,15 +186,16 @@
     verbosity: 1
     job_tags: imposter-check, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
   when: subscription_type == "on_premise"
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -202,21 +207,23 @@
     credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Create an rrule string for a schedule for every Monday
@@ -232,14 +239,15 @@
     state: present
     unified_job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     rrule: "{{ rrule_line }}"
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Create 'Self-Check' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Self-Check"
     description: "Perform basic diagnostics on the matrix server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -251,26 +259,28 @@
     credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
     
 - name: Allow team to use 'Self-Check' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Self-Check"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Create 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     description: "Starts or restarts all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -282,26 +292,28 @@
     credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Create 'Stop all Services' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Stop all Services"
     description: "Stops all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -313,21 +325,23 @@
     credential: "{{ member_id }} - AWX SSH Key"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Stop all Services' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Element' survey.json to the AWX tower, template
@@ -345,7 +359,7 @@
 
 - name: Create 'Configure Element' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
     description: "Configure Element client via survey."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -359,21 +373,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Element' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Synapse' survey.json to the AWX tower, template
@@ -391,7 +407,7 @@
 
 - name: Create 'Configure Synapse' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
     description: "Configure Synapse (homeserver) settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -405,21 +421,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Synapse' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}""
     validate_certs: yes
 
 - name: Save new 'Configure Jitsi' survey.json to the AWX tower, template
@@ -437,7 +455,7 @@
 
 - name: Create 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Jitsi"
     description: "Configure Jitsi conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -451,21 +469,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Jitsi"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Ma1sd' survey.json to the AWX tower, template
@@ -483,7 +503,7 @@
 
 - name: Create 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     description: "Configure Ma1sd conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -497,21 +517,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Website + Access Backup' survey.json to the AWX tower, template
@@ -529,7 +551,7 @@
 
 - name: Create 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     description: "Configure base domain website settings and access the services backup."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -543,21 +565,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Synapse Admin' survey.json to the AWX tower, template
@@ -575,7 +599,7 @@
 
 - name: Create 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     description: "Configure 'Synapse Admin', a moderation tool to help you manage your server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -589,21 +613,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save new 'Configure Corporal' survey.json to the AWX tower, template
@@ -621,7 +647,7 @@
 
 - name: Create 'Configure Corporal' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Corporal"
     description: "Configure Matrix Corporal, a tool that manages your Matrix server according to a configuration policy."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -635,21 +661,23 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Corporal' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Corporal"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Save initial 'Create User' survey.json to the AWX tower
@@ -661,7 +689,7 @@
 
 - name: Create 'Create User' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 2 - Create User"
     description: "Create a new user account and choose if it has admin access."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -675,20 +703,22 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/create_user.json') }}"
     state: present
     verbosity: 1
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
 - name: Allow team to use 'Create User' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
     role: execute
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
 
