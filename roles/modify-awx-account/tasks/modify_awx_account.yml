@@ -17,7 +17,7 @@
     name: jq
     state: latest
 
-- name: Run fancyCommand
+- name: Collect AWX admin token the hard way!
   delegate_to: 127.0.0.1
   shell: |
       curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
@@ -26,42 +26,44 @@
 - debug:
     msg: "The token: {{ tower_token.stdout }}"
       
-- name: Create a new AWX token using username/password
-  delegate_to: 127.0.0.1
-  awx.awx.tower_token:
-    description: 'Creating token to test tower jobs'
-    scope: "write"
-    state: present
-    tower_host: "https://{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+#- name: Create a new AWX token using username/password
+#  delegate_to: 127.0.0.1
+#  awx.awx.tower_token:
+#    description: 'Creating token to test tower jobs'
+#    scope: "write"
+#    state: present
+#    tower_host: "https://{{ tower_host }}"
+#    tower_username: "{{ tower_username }}"
+#    tower_password: "{{ tower_password }}"
     
-- debug:
-    msg: "The token: {{ tower_token }}"
+#- debug:
+#    msg: "The token: {{ tower_token }}"
 
 - name: Add new host to organisations inventory
   delegate_to: 127.0.0.1
-  tower_host:
+  awx.awx.tower_host:
     name: "matrix.{{ matrix_domain }}"
     description: "{{ matrix_domain }} Matrix Server"
     inventory: "{{ member_id }}"
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
   register: fs_host
 
 - name: Create 'matrix_servers' group
   delegate_to: 127.0.0.1
-  tower_group:
+  awx.awx.tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
     inventory: "{{ member_id }}"
     state: present
-    tower_host: "{{ tower_host }}"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    #tower_username: "{{ tower_username }}"
+    #tower_password: "{{ tower_password }}"
     validate_certs: yes
   register: fs_group
 
