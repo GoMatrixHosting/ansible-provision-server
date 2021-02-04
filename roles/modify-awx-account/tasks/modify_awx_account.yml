@@ -10,6 +10,18 @@
   delegate_to: 127.0.0.1
   pip:
       name: ansible-tower-cli
+      
+- name: Create a new AWX token using username/password
+  awx.awx.tower_token:
+    description: 'Creating token to test tower jobs'
+    scope: "write"
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    
+- debug:
+    msg: "The token: {{ tower_token }}"
 
 - name: Add new host to organisations inventory
   delegate_to: 127.0.0.1
