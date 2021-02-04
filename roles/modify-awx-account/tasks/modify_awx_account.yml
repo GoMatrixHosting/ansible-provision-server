@@ -10,6 +10,14 @@
   delegate_to: 127.0.0.1
   pip:
       name: ansible-tower-cli
+
+- name: Run fancyCommand
+  command: |
+    runuser -u webhook --  ~/.local/bin/awx login --conf.host https://{{ tower_host }} --conf.username {{ tower_username }} --conf.password {{ tower_password }} | tr '\n' ' ' | sed -r 's/\{      \"token\": \"//' | sed -r 's/\" \} //'
+  register: tower_token
+      
+- debug:
+    msg: "The token: {{ tower_token.stdout }}"
       
 - name: Create a new AWX token using username/password
   delegate_to: 127.0.0.1
