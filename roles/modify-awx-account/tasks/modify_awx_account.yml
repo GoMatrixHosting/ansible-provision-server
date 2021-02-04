@@ -11,10 +11,16 @@
   pip:
       name: ansible-tower-cli
 
+- name: Install jq in AWX
+  delegate_to: 127.0.0.1
+  yum:
+    name: jq
+    state: latest
+
 - name: Run fancyCommand
   delegate_to: 127.0.0.1
   command: |
-    runuser -u webhook --  ~/.local/bin/awx login --conf.host https://{{ tower_host }} --conf.username {{ tower_username }} --conf.password {{ tower_password }} | tr '\n' ' ' | sed -r 's/\{      \"token\": \"//' | sed -r 's/\" \} //'
+      curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
   register: tower_token
       
 - debug:
