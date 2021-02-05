@@ -136,7 +136,7 @@
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
-    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars2.yml') }}"
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     inventory: "{{ member_id }}"
     project: "{{ member_id }} - Ansible Provision Server"
@@ -199,7 +199,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "setup-all,start"
     inventory: "{{ member_id }}"
@@ -251,7 +251,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Self-Check"
     description: "Perform basic diagnostics on the matrix server."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "self-check"
     inventory: "{{ member_id }}"
@@ -284,7 +284,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     description: "Starts or restarts all services on the server."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start"
     inventory: "{{ member_id }}"
@@ -317,7 +317,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Stop all Services"
     description: "Stops all services on the server."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "stop"
     inventory: "{{ member_id }}"
@@ -363,7 +363,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
     description: "Configure Element client via survey."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-client-element"
     inventory: "{{ member_id }}"
@@ -411,7 +411,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
     description: "Configure Synapse (homeserver) settings."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-synapse"
     inventory: "{{ member_id }}"
@@ -459,7 +459,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Jitsi"
     description: "Configure Jitsi conferencing settings."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-jitsi"
     inventory: "{{ member_id }}"
@@ -507,7 +507,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     description: "Configure Ma1sd conferencing settings."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-ma1sd"
     inventory: "{{ member_id }}"
@@ -555,7 +555,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     description: "Configure base domain website settings and access the services backup."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-nginx-proxy"
     inventory: "{{ member_id }}"
@@ -603,7 +603,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     description: "Configure 'Synapse Admin', a moderation tool to help you manage your server."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-all"
     inventory: "{{ member_id }}"
@@ -651,7 +651,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Corporal"
     description: "Configure Matrix Corporal, a tool that manages your Matrix server according to a configuration policy."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-corporal"
     inventory: "{{ member_id }}"
@@ -693,7 +693,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 2 - Create User"
     description: "Create a new user account and choose if it has admin access."
-    extra_vars: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "create-user"
     inventory: "{{ member_id }}"
