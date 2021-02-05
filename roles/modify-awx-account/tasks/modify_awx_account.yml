@@ -43,7 +43,7 @@
 
 - name: Add new host to organisations inventory
   delegate_to: 127.0.0.1
-  tower_host:
+  awx.awx.tower_host:
     name: "matrix.{{ matrix_domain }}"
     description: "{{ matrix_domain }} Matrix Server"
     inventory: "{{ member_id }}"
@@ -57,7 +57,7 @@
 
 - name: Create 'matrix_servers' group
   delegate_to: 127.0.0.1
-  tower_group:
+  awx.awx.tower_group:
     name: matrix_servers
     description: "Matrix servers to deploy/configure."
     inventory: "{{ member_id }}"
@@ -90,7 +90,7 @@
 
 - name: Disallow team from using the 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "0 - {{ subscription_id }} - Provision a New Server"
     role: execute
@@ -103,7 +103,7 @@
 
 - name: Allow user account to read the 'Provision a New Server' job_template/history
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "0 - {{ subscription_id }} - Provision a New Server"
     role: read
@@ -133,7 +133,7 @@
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -172,7 +172,7 @@
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -196,7 +196,7 @@
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     description: "Creates a new matrix service with Spantaleev's playbooks"
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -216,7 +216,7 @@
 
 - name: Allow team to use 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
     role: execute
@@ -248,7 +248,7 @@
 
 - name: Create 'Self-Check' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Self-Check"
     description: "Perform basic diagnostics on the matrix server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -268,7 +268,7 @@
     
 - name: Allow team to use 'Self-Check' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Self-Check"
     role: execute
@@ -281,7 +281,7 @@
 
 - name: Create 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     description: "Starts or restarts all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -301,7 +301,7 @@
 
 - name: Allow team to use 'Start/Restart all Services' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Start/Restart all Services"
     role: execute
@@ -314,7 +314,7 @@
 
 - name: Create 'Stop all Services' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Stop all Services"
     description: "Stops all services on the server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -334,7 +334,7 @@
 
 - name: Allow team to use 'Stop all Services' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 0 - Stop all Services"
     role: execute
@@ -360,7 +360,7 @@
 
 - name: Create 'Configure Element' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
     description: "Configure Element client via survey."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -382,7 +382,7 @@
 
 - name: Allow team to use 'Configure Element' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
     role: execute
@@ -408,7 +408,7 @@
 
 - name: Create 'Configure Synapse' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
     description: "Configure Synapse (homeserver) settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -430,7 +430,7 @@
 
 - name: Allow team to use 'Configure Synapse' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse"
     role: execute
@@ -456,7 +456,7 @@
 
 - name: Create 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Jitsi"
     description: "Configure Jitsi conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -478,7 +478,7 @@
 
 - name: Allow team to use 'Configure Jitsi' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Jitsi"
     role: execute
@@ -504,7 +504,7 @@
 
 - name: Create 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     description: "Configure Ma1sd conferencing settings."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -552,7 +552,7 @@
 
 - name: Create 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     description: "Configure base domain website settings and access the services backup."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -574,7 +574,7 @@
 
 - name: Allow team to use 'Configure Website + Access Backup' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
     role: execute
@@ -600,7 +600,7 @@
 
 - name: Create 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     description: "Configure 'Synapse Admin', a moderation tool to help you manage your server."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -622,7 +622,7 @@
 
 - name: Allow team to use 'Configure Synapse Admin' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Synapse Admin"
     role: execute
@@ -648,7 +648,7 @@
 
 - name: Create 'Configure Corporal' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Corporal"
     description: "Configure Matrix Corporal, a tool that manages your Matrix server according to a configuration policy."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -670,7 +670,7 @@
 
 - name: Allow team to use 'Configure Corporal' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Corporal"
     role: execute
@@ -690,7 +690,7 @@
 
 - name: Create 'Create User' job template
   delegate_to: 127.0.0.1
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 2 - Create User"
     description: "Create a new user account and choose if it has admin access."
     extra_vars_path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
@@ -712,7 +712,7 @@
 
 - name: Allow team to use 'Create User' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
     role: execute
