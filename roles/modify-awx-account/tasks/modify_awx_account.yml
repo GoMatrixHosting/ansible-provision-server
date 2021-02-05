@@ -234,7 +234,7 @@
 
 - name: Build a schedule for 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
-  tower_schedule:
+  awx.awx.tower_schedule:
     name: "{{ matrix_domain }} - 0 - Update Server Schedule"
     enabled: yes
     state: present
