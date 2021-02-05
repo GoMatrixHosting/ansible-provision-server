@@ -526,7 +526,7 @@
 
 - name: Allow team to use 'Configure Ma1sd' job template
   delegate_to: 127.0.0.1
-  tower_role:
+  awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Ma1sd"
     role: execute
