@@ -80,29 +80,32 @@
     state: directory
     mode: '0700'
 
-# Create extra_vars.yml variable file for launching deploy scripts
+# Append to extra_vars.json variable file for launching deploy scripts
 
-- name: Add target line to extra_vars.yml file locally on AWX
+- name: Add target line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    line: 'target: "matrix.{{ matrix_domain }}"'
+    insertafter: '{'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    line: '  "target": "matrix.{{ matrix_domain }}",'
     mode: '0600'
     state: present
 
-- name: Add target line to extra_vars.yml file locally on AWX
+- name: Add target line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    line: 'matrix_domain: "{{ matrix_domain }}"'
+    insertafter: '{'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    line: '  "matrix_domain": "{{ matrix_domain }}",'
     mode: '0600'
     state: present
 
-- name: Add matrix_awx_enabled line to extra_vars.yml file locally on AWX
+- name: Add matrix_awx_enabled line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    line: 'matrix_awx_enabled: true'
+    insertafter: '{'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    line: '  "matrix_awx_enabled": "true",'
     mode: '0600'
     state: present
 
@@ -202,11 +205,11 @@
     dest: /matrix/awx/server_vars.yml
     mode: '0660'
 
-- name: Copy extra_vars.yml variables file to target
+- name: Copy extra_vars.json variables file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.yml'
-    dest: /matrix/awx/extra_vars.yml
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    dest: /matrix/awx/extra_vars.json
     mode: '0660'
 
 - name: Copy matrix_vars.yml variables file to target
