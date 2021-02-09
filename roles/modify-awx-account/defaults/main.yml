@@ -9,7 +9,7 @@ sftp_password: ""
 matrix_client_element_enabled: true
 matrix_client_element_brand: 'Element'
 matrix_client_element_default_theme: 'light'
-matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/Y4SPBdZ.jpg'
+matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/wDTXQtz.jpg'
 matrix_client_element_registration_enabled: true
 element_subdomain: 'element'
 
