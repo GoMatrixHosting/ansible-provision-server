@@ -53,6 +53,7 @@ matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
 matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
+matrix_synapse_caches_global_factor: 2.0
 matrix_synapse_rc_login:
     address:
         per_second: 0.17
