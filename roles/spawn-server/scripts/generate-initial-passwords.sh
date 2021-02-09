@@ -54,6 +54,9 @@ matrix_synapse_metrics_port: 9100
 matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
 matrix_synapse_caches_global_factor: 2.0
+matrix_synapse_url_preview_enabled: true
+matrix_synapse_registration_shared_secret: $(generatePassword)
+matrix_synapse_allow_guest_access: false
 matrix_synapse_rc_login:
     address:
         per_second: 0.17
