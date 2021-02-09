@@ -30,6 +30,7 @@ matrix_synapse_url_preview_enabled: true
 matrix_synapse_allow_guest_access: false
 matrix_synapse_auto_join_rooms: ''
 matrix_synapse_max_upload_size_mb: 10
+ext_registrations_require_3pid: false
 ext_enable_registration_captcha: false
 ext_recaptcha_public_key: public-key
 ext_recaptcha_private_key: private-key
