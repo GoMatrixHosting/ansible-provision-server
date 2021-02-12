@@ -34,7 +34,6 @@ ext_enable_registration_captcha: false
 ext_recaptcha_public_key: public-key
 ext_recaptcha_private_key: private-key
 
-
 # Configure Synapse Admin
 matrix_synapse_admin_enabled: false
 
