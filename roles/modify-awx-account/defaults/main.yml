@@ -35,6 +35,7 @@ ext_federation_whitelist_raw: ''
 ext_enable_registration_captcha: false
 ext_recaptcha_public_key: public-key
 ext_recaptcha_private_key: private-key
+ext_url_preview_accept_language_default: "['en']"
 
 # Configure Synapse Admin
 matrix_synapse_admin_enabled: false
