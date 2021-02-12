@@ -71,6 +71,8 @@ matrix_synapse_rc_login:
 matrix_synapse_ext_password_provider_rest_auth_enabled: false
 matrix_synapse_ext_password_provider_rest_auth_endpoint: "http://matrix-corporal:41080/_matrix/corporal"
 matrix_synapse_configuration_extension_yaml: |
+  url_preview_accept_language:
+    - en
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
