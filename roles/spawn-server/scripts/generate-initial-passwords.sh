@@ -48,6 +48,7 @@ matrix_jitsi_jvb_auth_password: $(generatePassword)
 matrix_jitsi_jibri_recorder_password: $(generatePassword)
 matrix_jitsi_jibri_xmpp_password: $(generatePassword)
 # Synapse Settings
+matrix_synapse_auto_join_rooms: []
 matrix_synapse_container_metrics_api_host_bind_port: 9000
 matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
@@ -93,6 +94,9 @@ matrix_corporal_corporal_user_id_local_part: "matrix-corporal"
 # Corporal Policy Provider Settings
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
+# Custom Settings
+ext_federation_whitelist_raw: []
+ext_url_preview_accept_language_default: ['en']
 VAREND
 
 
