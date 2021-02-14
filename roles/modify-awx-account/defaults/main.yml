@@ -46,7 +46,7 @@ matrix_corporal_raise_ratelimits: 'Raised'
 matrix_corporal_pull_mode_token: ''
 matrix_corporal_http_api_auth_token: ''
 
-# Custom Variables (these will be reset on re-provision)
+# Custom Variables
 matrix_synapse_auto_join_rooms: []
 ext_federation_whitelist_raw: []
 ext_url_preview_accept_language_default: ["en"]
