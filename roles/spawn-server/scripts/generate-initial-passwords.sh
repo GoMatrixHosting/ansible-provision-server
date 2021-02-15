@@ -38,7 +38,7 @@ matrix_client_element_configuration_extension_json: |
   "disable_3pid_login": true
   }
 # End Element Extension
-# Ma1sd Settings
+# ma1sd Settings
 matrix_ma1sd_enabled: true 
 # Jitsi Settings
 matrix_jitsi_enabled: true
