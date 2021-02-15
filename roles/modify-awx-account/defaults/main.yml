@@ -50,4 +50,6 @@ matrix_corporal_http_api_auth_token: ''
 matrix_synapse_auto_join_rooms: []
 ext_federation_whitelist_raw: []
 ext_url_preview_accept_language_default: ["en"]
-
+# https://github.com/ma1uta/ma1sd/blob/master/docs/stores/README.md
+ext_matrix_ma1sd_auth_store: 'Synapse Internal'
+ext_matrix_ma1sd_configuration_extension_yaml: [" ldap:", " enabled: true", " connection:", " host: ldapHostnameOrIp", " tls: false", " port: 389", " baseDNs: ['OU=Users,DC=example,DC=org']", " bindDn: CN=My ma1sd User,OU=Users,DC=example,DC=org", " bindPassword: TheUserPassword"]
