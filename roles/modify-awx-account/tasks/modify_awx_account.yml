@@ -440,7 +440,7 @@
     dest: /matrix/awx/configure_ma1sd.json
     mode: '0660'
 
-- name: Create 'Configure ma1sd' job template
+- name: Create 'Configure ma1sd (Advanced)' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure ma1sd (Advanced)"
@@ -460,7 +460,7 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Allow team to use 'Configure ma1sd' job template
+- name: Allow team to use 'Configure ma1sd (Advanced)' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_role:
     team: "{{ member_id }}"
@@ -572,7 +572,7 @@
     dest: /matrix/awx/configure_corporal.json
     mode: '0660'
 
-- name: Create 'Configure Corporal' job template
+- name: Create 'Configure Corporal (Advanced)' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Corporal (Advanced)"
@@ -592,7 +592,7 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Allow team to use 'Configure Corporal' job template
+- name: Allow team to use 'Configure Corporal (Advanced)' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_role:
     team: "{{ member_id }}"
