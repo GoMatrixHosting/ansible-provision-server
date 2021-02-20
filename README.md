@@ -1,27 +1,30 @@
 # Ansible Provision Server
 
-Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account.
+Allows user to select their base url, element client url, the DigitalOcean droplet location or to connect their own On-Premises server.
 
-```
-# IPO Summary:
+# DigitalOcean Mode
 
-INPUT: matrix_domain, do_droplet_region, plan_size, client_email, base_domain_used
-PROCESSING: Spawns a DO droplet and DO space with that name. Or connects a users BYO server. Creates AWX account for client and generates matrix_vars.yml. Performs initial server setup.
-OUTPUT: server_ipv4, server_ipv6
+Allows a user to select the location of their DigitalOcean server.
 
-(see: https://developers.digitalocean.com/documentation/changelog/api-v2/new-size-slugs-for-droplet-plan-changes/)
+- base_url - what URL the Matrix service will be based around. For a base_url of 'example.org' a homeserver at 'matrix.example.org' will be created.
+- base_domain_used - whether the base_url has an existing website at it, or if you want the base_url to be served by the digitalocean droplet.
+- element_subdomain - the subdomain the element client will intially be hosted at.
+- do_droplet_region_long - a long string to represent the location of the droplet that will be created. Available regions:
+	- 'New York City (USA)'
+	- 'San Francisco (USA)'
+	- 'Amsterdam (NLD)'
+	- 'Frankfurt (DEU)'
+	- 'Singapore (SGP)'
+	- 'London (GBR)'
+	- 'Toronto (CAN)'
+	- 'Balgalore (IND)'
 
-Plan size	Slug		vCPUs	RAM	Disk	Transfer	Monthly Cost
-"micro" 	s-1vcpu-2gb 	1 	2 GB 	50 GB 	2 TB 		$10
-"small" 	s-2vcpu-4gb 	2 	4 GB 	80 GB 	4 TB 		$20
-"medium"	s-4vcpu-8gb 	4 	8 GB 	160 GB 	5 TB 		$40
-"large"		s-8vcpu-32gb 	8 	32 GB 	320 GB 	7 TB 		$80
-"jumbo"		-	 	- 	- 	- 	- 		-
+# On-Premises Mode
 
-Relies on the following file on the AWX host: /var/lib/awx/hosting/hosting_vars.yml
+Allows a user to connect their own hardware, at the moment it must be a Debian 10 server and it must have the SSH public key loaded into it.
 
-do_api_token: value
-do_spaces_access_key: value
-do_spaces_secret_key: value
-do_image_master: value
-```
+- base_url
+- base_domain_used
+- element_subdomain
+- server_ipv4 - the IPv4 address of the server to connect to AWX, at least one IP address must be defined.
+- server_ipv6 - the IPv6 address of the server to connect to AWX, at least one IP address must be defined.
