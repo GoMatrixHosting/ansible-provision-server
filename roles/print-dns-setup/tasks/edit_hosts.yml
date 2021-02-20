@@ -1,0 +1,11 @@
+  
+- name: Create fake DNS record for faster testing. :)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: /etc/hosts
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK {{ matrix_domain }} -->"
+    block: |
+      "{{ server_ip_final }}	{{ matrix_domain }}"
+      "{{ server_ip_final }}	matrix.{{ matrix_domain }}"
+      "{{ server_ip_final }}	{{ element_subdomain }}.{{ matrix_domain }}"
+      "{{ server_ip_final }}	jisti.{{ matrix_domain }}"

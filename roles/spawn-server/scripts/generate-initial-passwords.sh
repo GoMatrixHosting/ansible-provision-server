@@ -21,6 +21,8 @@ if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 cat <<VAREND > "$VARFILE"
 # AWX Settings
 matrix_awx_enabled: true
+matrix_awx_janitor_user_password: $(generatePassword)
+matrix_awx_janitor_user_created: false
 # Basic Settings
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com
@@ -36,7 +38,7 @@ matrix_client_element_configuration_extension_json: |
   "disable_3pid_login": true
   }
 # End Element Extension
-# Ma1sd Settings
+# ma1sd Settings
 matrix_ma1sd_enabled: true 
 # Jitsi Settings
 matrix_jitsi_enabled: true
@@ -46,13 +48,32 @@ matrix_jitsi_jvb_auth_password: $(generatePassword)
 matrix_jitsi_jibri_recorder_password: $(generatePassword)
 matrix_jitsi_jibri_xmpp_password: $(generatePassword)
 # Synapse Settings
+matrix_synapse_auto_join_rooms: []
 matrix_synapse_container_metrics_api_host_bind_port: 9000
 matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
 matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
+matrix_synapse_caches_global_factor: 2.0
+matrix_synapse_url_preview_enabled: true
+matrix_synapse_registration_shared_secret: $(generatePassword)
+matrix_synapse_allow_guest_access: false
+matrix_synapse_rc_login:
+    address:
+        per_second: 0.17
+        burst_count: 3
+    account:
+        per_second: 0.17
+        burst_count: 3
+    failed_attempts:
+        per_second: 0.17
+        burst_count: 3
 # Synapse Extension
+matrix_synapse_ext_password_provider_rest_auth_enabled: false
+matrix_synapse_ext_password_provider_rest_auth_endpoint: "http://matrix-corporal:41080/_matrix/corporal"
 matrix_synapse_configuration_extension_yaml: |
+  url_preview_accept_language:
+    - en
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
@@ -63,8 +84,19 @@ matrix_synapse_connection_password: $(generatePassword)
 # Base Domain Settings
 # Synapse Admin Settings
 matrix_synapse_admin_enabled: false
+# Shared Secret Auth Settings
+matrix_synapse_ext_password_provider_shared_secret_auth_enabled: false
+matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generatePassword)
+# Corporal Settings
+matrix_corporal_enabled: false
+matrix_corporal_http_api_enabled: false
+matrix_corporal_corporal_user_id_local_part: "matrix-corporal"
+# Corporal Policy Provider Settings
 # Extra Settings
 matrix_vars_yml_snapshotting_enabled: false
+# Custom Settings
+ext_federation_whitelist_raw: []
+ext_url_preview_accept_language_default: ['en']
 VAREND
 
 
