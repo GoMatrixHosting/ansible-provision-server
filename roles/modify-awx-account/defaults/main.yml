@@ -53,3 +53,7 @@ ext_url_preview_accept_language_default: ["en"]
 # https://github.com/ma1uta/ma1sd/blob/master/docs/stores/README.md
 ext_matrix_ma1sd_auth_store: 'Synapse Internal'
 ext_matrix_ma1sd_configuration_extension_yaml: ["matrix_client_element_configuration_extension_json: |", "  ldap:", "    enabled: true", "    connection:", "      host: ldapHostnameOrIp", "      tls: false", "      port: 389", "      baseDNs: [\'OU=Users,DC=example,DC=org\']", "      bindDn: CN=My ma1sd User,OU=Users,DC=example,DC=org", "      bindPassword: TheUserPassword"]
+sftp_auth_method: 'Disabled'
+sftp_password: ''
+sftp_public_key: ''
+
