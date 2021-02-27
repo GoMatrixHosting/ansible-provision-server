@@ -32,7 +32,7 @@
   delegate_to: "{{ server_ip_final }}"
   user:
     name: matrix
-    comment: Matrix user, initialised early incase of /chroot/backup/ recovery.
+    comment: Matrix user, initialised early incase of /chroot/export/ recovery.
     home: /home/matrix/
     group: matrix
     password: '!'
@@ -56,36 +56,36 @@
     group: matrix
     mode: '0574'
 
-- name: Ensure /chroot/backup/ location exists
+- name: Ensure /chroot/export/ location exists
   delegate_to: "{{ server_ip_final }}"
   file:
-    path: /chroot/backup
+    path: /chroot/export
     state: directory
     owner: sftp
     group: sftp
     mode: '0700'
 
-- name: Install backup.sh script is installed
+- name: Install export.sh script is installed
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: ./roles/setup-server/scripts/backup.sh
-    dest: /root/backup.sh
+    src: ./roles/setup-server/scripts/export.sh
+    dest: /root/export.sh
     mode: '0700'
 
-- name: Touch the backup.log file
+- name: Touch the export.log file
   delegate_to: "{{ server_ip_final }}"
   file:
-    path: /matrix/awx/backup.log
+    path: /matrix/awx/export.log
     state: touch
     owner: root
     group: root
     mode: '0644'
 
-- name: Creates a crontab entry for backup.sh
+- name: Creates a crontab entry for export.sh
   delegate_to: "{{ server_ip_final }}"
   cron:
-    name: "Snapshot database and run backup"
+    name: "Snapshot database and run export"
     user: root
     special_time: hourly
-    job: "/root/backup.sh"
+    job: "/root/export.sh"
 
