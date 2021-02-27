@@ -5,5 +5,5 @@
 
 # Setup Server Export
 - import_tasks: "{{ role_path }}/tasks/setup_export.yml"
-  tags: setup-backup
+  tags: setup-export
 
