@@ -118,7 +118,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, setup-backup
+    job_tags: imposter-check, setup-export
     skip_tags: digitalocean-space
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
@@ -130,7 +130,7 @@
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_on-premise.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
-  when: subscription_type == "on_premise"
+  when: subscription_type == "on_premises"
 
 - name: Copy provision_survey_on-premise.json survey file to target
   delegate_to: "{{ server_ip_final }}"
@@ -138,7 +138,7 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
     dest: /matrix/awx/provision_survey_on-premise.json
     mode: '0644'
-  when: subscription_type == "on_premise"
+  when: subscription_type == "on_premises"
 
 - name: Re-create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
@@ -155,12 +155,12 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, setup-backup
+    job_tags: imposter-check, setup-export
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
-  when: subscription_type == "on_premise"
+  when: subscription_type == "on_premises"
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
@@ -195,6 +195,13 @@
   delegate_to: 127.0.0.1
   set_fact:
     rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
+  when: deploy_branch == "testing"
+
+- name: Create an rrule string for a schedule for every Monday
+  delegate_to: 127.0.0.1
+  set_fact:
+    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU"
+  when: deploy_branch == "master"
 
 - name: Build a schedule for 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
@@ -471,24 +478,24 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Save new 'Configure Website + Access Backup' survey.json to the AWX tower, template
+- name: Save new 'Configure Website + Access Export' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/configure_website_access_backup.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json'
+    src: './roles/modify-awx-account/surveys/configure_website_access_export.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
 
-- name: Copy 'Configure Website + Access Backup' survey.json to target
+- name: Copy 'Configure Website + Access Export' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json'
-    dest: /matrix/awx/configure_website_access_backup.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
+    dest: /matrix/awx/configure_website_access_export.json
     mode: '0660'
 
-- name: Create 'Configure Website + Access Backup' job template
+- name: Create 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
-    name: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
-    description: "Configure base domain website settings and access the services backup."
+    name: "{{ matrix_domain }} - 1 - Configure Website + Access Export"
+    description: "Configure base domain website settings and access the services export."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-nginx-proxy"
@@ -497,18 +504,18 @@
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_backup.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json') }}"
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Allow team to use 'Configure Website + Access Backup' job template
+- name: Allow team to use 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_role:
     team: "{{ member_id }}"
-    job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Backup"
+    job_template: "{{ matrix_domain }} - 1 - Configure Website + Access Export"
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
