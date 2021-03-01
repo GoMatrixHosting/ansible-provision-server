@@ -24,7 +24,7 @@ matrix_awx_enabled: true
 matrix_awx_janitor_user_password: $(generatePassword)
 matrix_awx_janitor_user_created: false
 matrix_awx_backup_enabled: false
-awx_backup_encryption_passphrase: $(generatePassword)
+matrix_awx_backup_encryption_passphrase: $(generatePassword)
 # Basic Settings
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com

@@ -66,8 +66,6 @@
     src: '{{ role_path }}/templates/borg_config.yaml.j2'
     dest: '/root/.config/borgmatic/config.yaml'
 
-# need encryption key for borg backup
-
 - name: Reload matrix server variables from matrix_vars.yml
   include_vars:
     file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
@@ -75,7 +73,7 @@
 
 - name: Initialise borg repo, perform init
   delegate_to: '{{ backup_server_hostname }}'
-  shell: ' export BORG_PASSPHRASE={{ awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
 
@@ -88,3 +86,9 @@
     state: directory
     recurse: yes
 
+- name: Create crontab entry for client backup pruning
+  cron:
+    name: "Prune client borg backups"
+    special_time: daily
+    job: '/usr/bin/borgmatic prune'
+    
