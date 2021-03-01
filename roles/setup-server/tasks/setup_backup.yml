@@ -1,0 +1,90 @@
+
+- name: Ensure client backup location exists
+  delegate_to: '{{ backup_server_hostname }}'
+  file:
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Ensure ssh config location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /root/.ssh/
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+
+- name: Copy client backup SSH key to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/hosting/client_backup_private.key'
+    dest: /root/.ssh/client_backup_private.key
+    mode: '0600'
+
+- name: Collect SSH public key value
+  delegate_to: 127.0.0.1
+  shell: cat '/var/lib/awx/projects/hosting/client_backup_public.key'
+  register: client_backup_public_key
+
+- name: Print client backup public key to authorized_keys of backup server
+  delegate_to: '{{ backup_server_hostname }}'
+  lineinfile:
+    path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
+    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ client_backup_public_key.stdout }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    mode: '0600'
+
+- name: Update SSH config on target
+  delegate_to: "{{ server_ip_final }}"
+  blockinfile:
+    path: /root/.ssh/config
+    create: yes
+    block: |
+      Host {{ backup_server_hostname }}
+          HostName {{ backup_server_ip }}
+          User {{ backup_server_user }}
+          IdentityFile /root/.ssh/client_backup_private.key
+
+- name: Ensure borgmatic config location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /root/.config/borgmatic/
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Save borgmatic config file, template
+  delegate_to: "{{ server_ip_final }}"
+  template:
+    src: '{{ role_path }}/templates/borg_config.yaml.j2'
+    dest: '/root/.config/borgmatic/config.yaml'
+
+# need encryption key for borg backup
+
+- name: Reload matrix server variables from matrix_vars.yml
+  include_vars:
+    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
+  no_log: True
+
+- name: Initialise borg repo, perform init
+  delegate_to: '{{ backup_server_hostname }}'
+  shell: ' export BORG_PASSPHRASE={{ awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+  args:
+    creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
+
+- name: Recursively change ownership of files in backup location
+  delegate_to: '{{ backup_server_hostname }}'
+  file:
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    state: directory
+    recurse: yes
+

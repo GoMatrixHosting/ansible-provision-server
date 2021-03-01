@@ -1,25 +1,23 @@
 location:
     source_directories:
-        - /matrix/synapse
-        - /matrix/awx
-        - /chroot/website
+        - /chroot/
 
     one_file_system: true
 
     repositories:
-        - /chroot/backup/borg/
+        - {{ backup_server_hostname }}:{{ backup_server_directory }}/Clients/{{ awx_url }}/
 
     exclude_caches: true
 
 storage:
     compression: auto,zstd
-    # encryption_passphrase: xxxx
+    encryption_passphrase: {{ awx_backup_encryption_passphrase }}
     archive_name_format: '{hostname}-{now}'
     checkpoint_interval: 600
 
 retention:
     keep_daily: 7
-    keep_weekly: 2
+    keep_weekly: 4
     prefix: '{hostname}-'
 
 consistency:
