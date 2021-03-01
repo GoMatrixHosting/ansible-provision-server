@@ -5,7 +5,7 @@ location:
     one_file_system: true
 
     repositories:
-        - {{ backup_server_hostname }}:{{ backup_server_directory }}/Clients/{{ awx_url }}/
+        - {{ backup_server_hostname }}:{{ backup_server_directory }}/Clients/{{ matrix_domain }}/
 
     exclude_caches: true
 
