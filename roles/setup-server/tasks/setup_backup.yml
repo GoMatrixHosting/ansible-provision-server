@@ -1,6 +1,6 @@
 
 - name: Install borgmatic on client machine
-  delegate_to: "{{ backup_server_ip }}"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     name: borgmatic
 
