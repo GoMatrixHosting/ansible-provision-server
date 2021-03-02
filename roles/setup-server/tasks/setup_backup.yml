@@ -1,6 +1,6 @@
 
 - name: Ensure client backup location exists
-  delegate_to: '{{ backup_server_ip }}'
+  delegate_to: "{{ backup_server_ip }}"
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
     owner: '{{ backup_server_user }}'
@@ -31,7 +31,7 @@
   register: backup_public_key
 
 - name: Print client backup public key to authorized_keys of backup server
-  delegate_to: '{{ backup_server_ip }}'
+  delegate_to: "{{ backup_server_ip }}"
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
     line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ backup_public_key.stdout }}'
@@ -72,13 +72,13 @@
   no_log: True
 
 - name: Initialise borg repo, perform init
-  delegate_to: '{{ backup_server_ip }}'
+  delegate_to: "{{ backup_server_ip }}"
   shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
 
 - name: Recursively change ownership of files in backup location
-  delegate_to: '{{ backup_server_ip }}'
+  delegate_to: "{{ backup_server_ip }}"
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
     owner: '{{ backup_server_user }}'
@@ -87,9 +87,21 @@
     recurse: yes
 
 - name: Create crontab entry for client backup pruning
-  delegate_to: '{{ backup_server_ip }}'
+  delegate_to: "{{ backup_server_ip }}"
   cron:
     name: "Prune client borg backups"
     special_time: daily
     job: '/usr/bin/borgmatic prune'
-    
+
+- name: Write backup servers SSH fingerprint to known hosts file
+  delegate_to: "{{ server_ip_final }}"
+  lineinfile:
+    path: '/root/.ssh/known_hosts'
+    line: '{{ backup_server_ssh_fingerprint }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644' 
+
+- name: Perform initial SSH connection from new server to backup server
+  command: ssh {{ backup_server_hostname }}
+
