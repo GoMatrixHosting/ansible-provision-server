@@ -30,10 +30,20 @@
   shell: cat '/var/lib/awx/projects/hosting/backup_public.key'
   register: backup_public_key
 
-- name: Print client backup public key to authorized_keys of backup server
+- name: Add client backup public keys spacer to authorized_keys of backup server
   delegate_to: "{{ backup_server_ip }}"
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
+    line: '# Client backups'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    mode: '0600'
+
+- name: Add client backup public key to authorized_keys of backup server
+  delegate_to: "{{ backup_server_ip }}"
+  lineinfile:
+    path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
+    insertafter: '# Client backups'
     line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ backup_public_key.stdout }}'
     owner: '{{ backup_server_user }}'
     group: '{{ backup_server_user }}'
@@ -105,5 +115,5 @@
 
 - name: Perform initial SSH connection from new server to backup server
   delegate_to: "{{ server_ip_final }}"
-  shell: ssh {{ backup_server_hostname }}
+  shell: ssh -tt {{ backup_server_hostname }}
 
