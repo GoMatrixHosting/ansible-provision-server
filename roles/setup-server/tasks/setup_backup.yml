@@ -1,4 +1,9 @@
 
+- name: Install borgmatic on client machine
+  delegate_to: "{{ backup_server_ip }}"
+  apt:
+    name: borgmatic
+
 - name: Ensure client backup location exists
   delegate_to: "{{ backup_server_ip }}"
   file:
@@ -103,6 +108,10 @@
     special_time: daily
     job: '/usr/bin/borgmatic prune'
 
+- name: Remove any old and unused SSH fingerprints
+  delegate_to: "{{ server_ip_final }}"
+  command: ssh-keygen -R {{ backup_server_ip }}
+
 - name: Write backup servers SSH fingerprint to known hosts file
   delegate_to: "{{ server_ip_final }}"
   lineinfile:
@@ -112,8 +121,4 @@
     owner: 'root'
     group: 'root'
     mode: '0644' 
-
-#- name: Perform initial SSH connection from new server to backup server
-#  delegate_to: "{{ server_ip_final }}"
-#  shell: ssh -tt {{ backup_server_hostname }}
 
