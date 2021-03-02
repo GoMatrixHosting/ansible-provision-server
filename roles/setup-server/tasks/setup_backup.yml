@@ -98,6 +98,7 @@
   lineinfile:
     path: '/root/.ssh/known_hosts'
     line: '{{ backup_server_ssh_fingerprint }}'
+    create: yes
     owner: 'root'
     group: 'root'
     mode: '0644' 
