@@ -104,5 +104,6 @@
     mode: '0644' 
 
 - name: Perform initial SSH connection from new server to backup server
+  delegate_to: "{{ server_ip_final }}"
   command: ssh {{ backup_server_hostname }}
 
