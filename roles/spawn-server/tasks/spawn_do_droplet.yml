@@ -114,8 +114,6 @@
     state: present
   when: subscription_type == "digitalocean"
 
-# load ssh key from file
-
 - name: Record the public SSH key into a variable
   set_fact:
     public_ssh_key: "{{ lookup('file', '/var/lib/awx/projects/hosting/client_public.key') }}"
@@ -133,12 +131,12 @@
     msg: "{{ ssh_keys }}"
   when: subscription_type == "digitalocean"
 
-- name: Build an array of all the ssh key ids
+- name: Build an array with the correct SSH ID
   delegate_to: 127.0.0.1
   set_fact:
     ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
-  with_items: "{{ ssh_keys.data }}"
   when: (subscription_type == "digitalocean") and (item.public_key == public_ssh_key)
+  loop: "{{ ssh_keys.data|flatten(levels=1) }}"
 
 - debug:
     msg: "{{ ssh_key_id_array }}"
