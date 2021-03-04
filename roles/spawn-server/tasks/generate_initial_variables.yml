@@ -10,7 +10,6 @@
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
-#  when: slug_size is defined
 
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -21,7 +20,6 @@
     state: present
     create: yes
   when: subscription_type == "digitalocean"
-#  when: do_droplet_region is defined
 
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -31,7 +29,6 @@
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
-#  when: new_server_info is defined
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -67,6 +64,28 @@
     mode: '0600'
     state: present
   when: plan_title is defined
+
+#- name: Add base_mau_limit line to server_vars.yml file locally on AWX
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+#    line: 'base_mau_limit: {{ base_mau_limit }}'
+#    mode: '0600'
+#    state: present
+    
+#- name: Set MAU multiplier if not defined
+#  delegate_to: 127.0.0.1
+#  set_fact:
+#    mau_multiplier: "1"
+#  when: mau_multiplier is not defined
+  
+#- name: Add mau_multiplier line to server_vars.yml file locally on AWX
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+#    line: 'mau_multiplier: {{ mau_multiplier }}'
+#    mode: '0600'
+#    state: present
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ip_final }}"
@@ -195,25 +214,23 @@
     state: present
   when: matrix_jitsi_timezone is defined
 
-- name: Add limit_usage_by_mau line to matrix_vars.yml file if mau_limit is defined
+- name: Disable limit_usage_by_mau line to matrix_vars.yml file
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertbefore: '# End Synapse Extension'
-    line: '  limit_usage_by_mau: True'
+    line: '  limit_usage_by_mau: False'
     mode: '0600'
     state: present
-  when: mau_limit is defined
 
-- name: Add mau_max_value line to matrix_vars.yml file if mau_limit is defined
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertbefore: '# End Synapse Extension'
-    line: '  max_mau_value: {{ mau_limit }}'
-    mode: '0600'
-    state: present
-  when: mau_limit is defined
+#- name: Add mau_max_value line to matrix_vars.yml file if mau_limit is defined
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+#    insertbefore: '# End Synapse Extension'
+#    line: '  max_mau_value: {{ base_mau_limit * mau_multiplier + 1 }}'
+#    mode: '0600'
+#    state: present
 
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 

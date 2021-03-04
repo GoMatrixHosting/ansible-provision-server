@@ -3,35 +3,35 @@
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
-    mau_limit: 5
+#    base_mau_limit: 5
   when: (subscription_type == "on_premises" and plan_title == "Micro On-Premise Server")
 
 - name: Set MAU limit for Small Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "4G"
-    mau_limit: 25
+#    base_mau_limit: 25
   when: (subscription_type == "on_premises" and plan_title == "Small On-Premise Server")
 
 - name: Set MAU limit for Medium Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "8G"
-    mau_limit: 50
+#    base_mau_limit: 50
   when: (subscription_type == "on_premises" and plan_title == "Medium On-Premise Server")
 
 - name: Set MAU limit for Large Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "16G"
-    mau_limit: 100
+#    base_mau_limit: 100
   when: (subscription_type == "on_premises" and plan_title == "Large On-Premise Server")
 
 - name: Set MAU limit for Jumbo Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "64G"
-    mau_limit: 1000
+#    base_mau_limit: 1000
   when: (subscription_type == "on_premises" and plan_title == "Jumbo On-Premise Server")
 
 - name: Test if SSH is possible with ipv4

@@ -70,7 +70,7 @@
   set_fact:
     slug_size: "s-1vcpu-2gb"
     swap_size: "2G"
-    mau_limit: 5
+#    base_mau_limit: 5
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
 - name: Set MAU limit for Small Server
@@ -78,7 +78,7 @@
   set_fact:
     slug_size: "s-2vcpu-4gb"
     swap_size: "4G"
-    mau_limit: 25
+#    base_mau_limit: 25
   when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
 
 - name: Set MAU limit for Medium Server
@@ -86,7 +86,7 @@
   set_fact:
     slug_size: "s-4vcpu-8gb"
     swap_size: "8G"
-    mau_limit: 50
+#    base_mau_limit: 50
   when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
 
 - name: Set MAU limit for Large Server
@@ -94,7 +94,7 @@
   set_fact:
     slug_size: "s-8vcpu-16gb"
     swap_size: "16G"
-    mau_limit: 100
+#    base_mau_limit: 100
   when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
 
 - name: Set MAU limit for Jumbo Server
@@ -102,7 +102,7 @@
   set_fact:
     slug_size: "so-16vcpu-128gb"
     swap_size: "64G"
-    mau_limit: 1000
+#    base_mau_limit: 1000
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo DigitalOcean Server")
 
 - name: do_droplet_region line to server_vars.yml file locally on AWX
