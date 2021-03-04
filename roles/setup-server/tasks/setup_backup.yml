@@ -91,6 +91,7 @@
   shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
+  no_log: True
 
 - name: Recursively change ownership of files in backup location
   delegate_to: "{{ backup_server_ip }}"
