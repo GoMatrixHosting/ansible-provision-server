@@ -1,33 +1,51 @@
 
-- name: Set MAU limit for Micro Server
+- name: Set swap size for Micro On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
   when: (subscription_type == "on_premises" and plan_title == "Micro On-Premises Server")
 
-- name: Set MAU limit for Small Server
+- name: Set swap size for Small On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "4G"
   when: (subscription_type == "on_premises" and plan_title == "Small On-Premises Server")
 
-- name: Set MAU limit for Medium Server
+- name: Set swap size for Medium On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "8G"
   when: (subscription_type == "on_premises" and plan_title == "Medium On-Premises Server")
 
-- name: Set MAU limit for Large Server
+- name: Set swap size for Large On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "16G"
   when: (subscription_type == "on_premises" and plan_title == "Large On-Premises Server")
 
-- name: Set MAU limit for Jumbo Server
+- name: Set swap size for Jumbo 500 On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "64G"
-  when: (subscription_type == "on_premises" and plan_title == "Jumbo On-Premises Server")
+  when: (subscription_type == "on_premises" and plan_title == "Jumbo 500 On-Premises Server")
+
+- name: Set swap size for Jumbo 1000 On-Premises Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    swap_size: "128G"
+  when: (subscription_type == "on_premises" and plan_title == "Jumbo 1000 On-Premises Server")
+
+- name: Set swap size for Jumbo 2000 On-Premises Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    swap_size: "192G"
+  when: (subscription_type == "on_premises" and plan_title == "Jumbo 2000 On-Premises Server")
+
+- name: Set swap size for Jumbo 5000 On-Premises Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    swap_size: "256G"
+  when: (subscription_type == "on_premises" and plan_title == "Jumbo 5000 On-Premises Server")
 
 - name: Test if SSH is possible with ipv4
   delegate_to: "{{ server_ip_final }}"
