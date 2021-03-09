@@ -77,6 +77,7 @@ matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
+  limit_usage_by_mau: false
   url_preview_accept_language:
     - en
 # End Synapse Extension

@@ -3,36 +3,31 @@
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "2G"
-#    base_mau_limit: 5
-  when: (subscription_type == "on_premises" and plan_title == "Micro On-Premise Server")
+  when: (subscription_type == "on_premises" and plan_title == "Micro On-Premises Server")
 
 - name: Set MAU limit for Small Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "4G"
-#    base_mau_limit: 25
-  when: (subscription_type == "on_premises" and plan_title == "Small On-Premise Server")
+  when: (subscription_type == "on_premises" and plan_title == "Small On-Premises Server")
 
 - name: Set MAU limit for Medium Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "8G"
-#    base_mau_limit: 50
-  when: (subscription_type == "on_premises" and plan_title == "Medium On-Premise Server")
+  when: (subscription_type == "on_premises" and plan_title == "Medium On-Premises Server")
 
 - name: Set MAU limit for Large Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "16G"
-#    base_mau_limit: 100
-  when: (subscription_type == "on_premises" and plan_title == "Large On-Premise Server")
+  when: (subscription_type == "on_premises" and plan_title == "Large On-Premises Server")
 
 - name: Set MAU limit for Jumbo Server
   delegate_to: 127.0.0.1
   set_fact:
     swap_size: "64G"
-#    base_mau_limit: 1000
-  when: (subscription_type == "on_premises" and plan_title == "Jumbo On-Premise Server")
+  when: (subscription_type == "on_premises" and plan_title == "Jumbo On-Premises Server")
 
 - name: Test if SSH is possible with ipv4
   delegate_to: "{{ server_ip_final }}"
