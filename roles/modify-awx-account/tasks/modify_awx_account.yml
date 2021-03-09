@@ -320,7 +320,7 @@
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 0 - Backup Server"
     description: "Performs a backup of the entire service to a remote location."
-    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/backup_server.json') }}"
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "backup-server"
     inventory: "{{ member_id }}"
