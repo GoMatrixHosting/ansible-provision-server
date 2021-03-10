@@ -394,7 +394,33 @@
         "-c synchronous_commit=off"
       ]
   when: (plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
-      
+     
+- name: Overwrite worker settings if plan_title is large or greater
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_synapse_workers_enabled': 'true'
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server" or plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Overwrite worker settings if plan_title is jumbo or greater
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_synapse_workers_preset': 'one-of-each'
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+     
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 
 - name: Copy organisation.yml variables file to target
