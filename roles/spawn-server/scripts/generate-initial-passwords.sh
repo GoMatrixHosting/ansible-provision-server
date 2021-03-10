@@ -79,6 +79,9 @@ matrix_synapse_configuration_extension_yaml: |
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
+  limit_remote_rooms:
+    enabled: true
+    complexity: 1.0
   limit_usage_by_mau: false
   url_preview_accept_language:
     - en
