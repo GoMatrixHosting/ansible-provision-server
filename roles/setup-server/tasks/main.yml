@@ -3,6 +3,10 @@
 - import_tasks: "{{ role_path }}/tasks/setup_server.yml"
   tags: always
 
+# Perform firewall setup
+- import_tasks: "{{ role_path }}/tasks/setup_firewall.yml"
+  tags: setup-firewall
+
 # Setup server export
 - import_tasks: "{{ role_path }}/tasks/setup_export.yml"
   tags: setup-export

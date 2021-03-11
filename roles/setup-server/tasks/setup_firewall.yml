@@ -1,0 +1,148 @@
+
+- name: Install necessary packages
+  apt:
+    pkg:
+    - ufw
+
+- name: Allow all access to TCP port 22 with UFW for SSH
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow all access to TCP port 80 with UFW for HTTP
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Allow all access to TCP port 443 with UFW for HTTPS
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Allow all access to TCP/UDP port 5349 with UFW for TURN
+  ufw:
+    rule: allow
+    port: '5349'
+    proto: any
+
+- name: Allow all access to TCP port 8448 with UFW for Matrix Federation
+  ufw:
+    rule: allow
+    port: '8448'
+    proto: tcp
+
+- name: Allow all access to UDP port 49152-49172 for STUN
+  ufw:
+    rule: allow
+    port: 49152:49172
+    proto: tcp
+
+- name: Allow all access to UDP port 10000 for Jitsi
+  ufw:
+    rule: allow
+    port: '10000'
+    proto: udp
+
+# Jumbo Server worker ports
+# 1x generic workers - 18111,	metrics - 19111
+# 1x pusher workers - 0,	metrics - 19200
+# 1x appservice workers - 0,	metrics - 19300
+# 1x federation sender - 0,	metrics - 19400
+# 1x media repo worker - 18551,	metrics - 19551
+# 0x user dir worker - 18661,	metrics - 19661
+# 1x frontend proxy - 18771, 	metrics - 19771
+
+- name: Allow all access to TCP port 18111 with UFW for generic worker
+  ufw:
+    rule: allow
+    port: '18111'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 19111 with UFW for generic worker metrics
+  ufw:
+    rule: allow
+    port: '19111'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 19200 with UFW for pusher worker metrics
+  ufw:
+    rule: allow
+    port: '19200'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 19300 with UFW for appservice worker metrics
+  ufw:
+    rule: allow
+    port: '19300'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 19400 with UFW for federation sender metrics
+  ufw:
+    rule: allow
+    port: '19400'
+    proto: tcp
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server" or plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 18551 with UFW for media repo worker
+  ufw:
+    rule: allow
+    port: '18551'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Allow all access to TCP port 19551 with UFW for media repo worker metrics
+  ufw:
+    rule: allow
+    port: '19551'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+ 
+- name: Allow all access to TCP port 18661 with UFW for user dir worker
+  ufw:
+    rule: allow
+    port: '18661'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Allow all access to TCP port 19661 with UFW for user dir worker metrics
+  ufw:
+    rule: allow
+    port: '19661'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Allow all access to TCP port 18771 with UFW for frontend proxy
+  ufw:
+    rule: allow
+    port: '18771'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Allow all access to TCP port 19771 with UFW for frontend proxy metrics
+  ufw:
+    rule: allow
+    port: '19771'
+    proto: tcp
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Default allow outgoing traffic with UFW
+  ufw:
+    policy: allow
+    direction: outgoing
+
+- name: Default deny incoming traffic with UFW
+  ufw:
+    policy: deny
+    direction: incoming
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    
