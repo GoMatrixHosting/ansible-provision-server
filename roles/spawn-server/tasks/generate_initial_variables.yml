@@ -488,7 +488,6 @@
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '  limit_remote_rooms:'
-    insertbefore: '# End Synapse Extension'
     mode: '0600'
     state: present
   with_dict:
