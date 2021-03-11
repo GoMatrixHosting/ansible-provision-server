@@ -193,6 +193,7 @@
 
 - name: Add Postgresql tuning for Micro Server (s-1vcpu-2gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -215,6 +216,7 @@
       
 - name: Add Postgresql tuning for Small Server (s-2vcpu-4gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -241,6 +243,7 @@
   
 - name: Add Postgresql tuning for Medium Server (s-4vcpu-8gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -267,6 +270,7 @@
 
 - name: Add Postgresql tuning for Large Server (s-8vcpu-16gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -293,6 +297,7 @@
 
 - name: Add Postgresql tuning for Jumbo 500 Server (so-8vcpu-64gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -319,6 +324,7 @@
   
 - name: Add Postgresql tuning for Jumbo 1000 Server (so-16vcpu-128gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -345,6 +351,7 @@
   
 - name: Add Postgresql tuning for Jumbo 2000 Server (so-24vcpu-192gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
@@ -371,6 +378,7 @@
   
 - name: Add Postgresql tuning for Jumbo 5000 Server (so-32vcpu-256gb)
   delegate_to: 127.0.0.1
+    blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: "# PostgreSQL Settings"
     block: |
