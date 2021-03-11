@@ -4,21 +4,22 @@
 
 - name: Create fake DNS record for faster testing 1
   delegate_to: 127.0.0.1
-  shell: echo '# Custom DNS records for {{ matrix_domain }}' >> /etc/hosts
+  shell: |
+    echo -e '# Custom DNS records for {{ matrix_domain }}\n{{ server_ip_final }} {{ matrix_domain }}\n{{ server_ip_final }} matrix.{{ matrix_domain }}\n{{ server_ip_final }} {{ element_subdomain }}.{{ matrix_domain }}\n{{ server_ip_final }} jitsi.{{ matrix_domain }}' >> /etc/hosts
 
-- name: Create fake DNS record for faster testing 2
-  delegate_to: 127.0.0.1
-  shell: echo '{{ server_ip_final }} {{ matrix_domain }}' >> /etc/hosts
-  when: base_domain_used|bool == false
+#- name: Create fake DNS record for faster testing 2
+#  delegate_to: 127.0.0.1
+#  shell: echo '{{ server_ip_final }} {{ matrix_domain }}' >> /etc/hosts
+#  when: base_domain_used|bool == false
 
-- name: Create fake DNS record for faster testing 3
-  delegate_to: 127.0.0.1
-  shell: echo '{{ server_ip_final }} matrix.{{ matrix_domain }}' >> /etc/hosts
+#- name: Create fake DNS record for faster testing 3
+#  delegate_to: 127.0.0.1
+#  shell: echo '{{ server_ip_final }} matrix.{{ matrix_domain }}' >> /etc/hosts
   
-- name: Create fake DNS record for faster testing 4
-  delegate_to: 127.0.0.1
-  shell: echo '{{ server_ip_final }} {{ element_subdomain }}.{{ matrix_domain }}' >> /etc/hosts
+#- name: Create fake DNS record for faster testing 4
+#  delegate_to: 127.0.0.1
+#  shell: echo '{{ server_ip_final }} {{ element_subdomain }}.{{ matrix_domain }}' >> /etc/hosts
   
-- name: Create fake DNS record for faster testing 5
-  delegate_to: 127.0.0.1
-  shell: echo '{{ server_ip_final }} jitsi.{{ matrix_domain }}' >> /etc/hosts
+#- name: Create fake DNS record for faster testing 5
+#  delegate_to: 127.0.0.1
+#  shell: echo '{{ server_ip_final }} jitsi.{{ matrix_domain }}' >> /etc/hosts
