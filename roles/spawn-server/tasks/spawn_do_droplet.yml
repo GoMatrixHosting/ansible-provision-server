@@ -12,7 +12,7 @@
 - name: Set valid digitalocean area code for New York City.
   delegate_to: 127.0.0.1
   set_fact:
-    do_droplet_region: "nyc3"
+    do_droplet_region: "nyc1"
     matrix_jitsi_timezone: "America/New_York"
   when: (subscription_type == "digitalocean" and do_droplet_region_long == "New York City (USA)")
 
