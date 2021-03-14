@@ -191,13 +191,13 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Create an rrule string for a schedule for every Monday
+- name: Create an rrule string for a schedule for every day
   delegate_to: 127.0.0.1
   set_fact:
     rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
   when: deploy_branch == "testing"
 
-- name: Create an rrule string for a schedule for every Monday
+- name: Create an rrule string for a schedule for every Sunday
   delegate_to: 127.0.0.1
   set_fact:
     rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU"
