@@ -1,5 +1,4 @@
 
-
 # Append to server_vars.yml variable file
 
 - name: Add slug_size line to server_vars.yml file locally on AWX
@@ -10,7 +9,6 @@
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
-#  when: slug_size is defined
 
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -21,7 +19,6 @@
     state: present
     create: yes
   when: subscription_type == "digitalocean"
-#  when: do_droplet_region is defined
 
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -31,7 +28,6 @@
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
-#  when: new_server_info is defined
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -128,6 +124,32 @@
   delegate_to: 127.0.0.1
   command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "{{ element_subdomain }}" "{{ client_email }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
+  
+- name: Over-write Element subdomain value if changed
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Element Settings'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_server_fqn_element': '{{ element_subdomain }}.{{ matrix_domain }}'
+  when: varsfile.stat.exists == true
+
+- name: Over-write client_email value if changed
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "  {{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Extension'
+    mode: '0600'
+    state: present
+  with_dict:
+    'admin_contact': "'mailto:{{ client_email }}'"
+  when: varsfile.stat.exists == true
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -169,25 +191,308 @@
     state: present
   when: matrix_jitsi_timezone is defined
 
-- name: Add limit_usage_by_mau line to matrix_vars.yml file if mau_limit is defined
+- name: Add Postgresql tuning for Micro Server (s-1vcpu-2gb)
   delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertbefore: '# End Synapse Extension'
-    line: '  limit_usage_by_mau: True'
-    mode: '0600'
-    state: present
-  when: mau_limit is defined
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=100",
+        "-c shared_buffers=512MB",
+        "-c effective_cache_size=1536MB",
+        "-c maintenance_work_mem=128MB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=1310kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server")
+      
+- name: Add Postgresql tuning for Small Server (s-2vcpu-4gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=100",
+        "-c shared_buffers=1GB",
+        "-c effective_cache_size=3GB",
+        "-c maintenance_work_mem=256MB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=5242kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=2",
+        "-c max_parallel_workers_per_gather=1",
+        "-c max_parallel_workers=2",
+        "-c max_parallel_maintenance_workers=1",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server")
+  
+- name: Add Postgresql tuning for Medium Server (s-4vcpu-8gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=100",
+        "-c shared_buffers=2GB",
+        "-c effective_cache_size=6GB",
+        "-c maintenance_work_mem=512MB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=5242kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=4",
+        "-c max_parallel_workers_per_gather=2",
+        "-c max_parallel_workers=4",
+        "-c max_parallel_maintenance_workers=2",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server")
 
-- name: Add mau_max_value line to matrix_vars.yml file if mau_limit is defined
+- name: Add Postgresql tuning for Large Server (s-8vcpu-16gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=100",
+        "-c shared_buffers=4GB",
+        "-c effective_cache_size=12GB",
+        "-c maintenance_work_mem=1GB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=5242kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=8",
+        "-c max_parallel_workers_per_gather=4",
+        "-c max_parallel_workers=8",
+        "-c max_parallel_maintenance_workers=4",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server")
+
+- name: Add Postgresql tuning for Jumbo 500 Server (so-8vcpu-64gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=200",
+        "-c shared_buffers=16GB",
+        "-c effective_cache_size = 48GB",
+        "-c maintenance_work_mem = 2GB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=20971kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=8",
+        "-c max_parallel_workers_per_gather=4",
+        "-c max_parallel_workers=8",
+        "-c max_parallel_maintenance_workers=4",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server")
+  
+- name: Add Postgresql tuning for Jumbo 1000 Server (so-16vcpu-128gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=200",
+        "-c shared_buffers=32GB",
+        "-c effective_cache_size = 96GB",
+        "-c maintenance_work_mem = 2GB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=41943kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=16",
+        "-c max_parallel_workers_per_gather=4",
+        "-c max_parallel_workers=16",
+        "-c max_parallel_maintenance_workers=4",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server")
+  
+- name: Add Postgresql tuning for Jumbo 2000 Server (so-24vcpu-192gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=200",
+        "-c shared_buffers=48GB",
+        "-c effective_cache_size = 144GB",
+        "-c maintenance_work_mem = 2GB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=62914kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=24",
+        "-c max_parallel_workers_per_gather=4",
+        "-c max_parallel_workers=24",
+        "-c max_parallel_maintenance_workers=4",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server")
+  
+- name: Add Postgresql tuning for Jumbo 5000 Server (so-32vcpu-256gb)
+  delegate_to: 127.0.0.1
+  blockinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: "# PostgreSQL Settings"
+    block: |
+      matrix_postgres_process_extra_arguments: [
+        "-c max_connections=200",
+        "-c shared_buffers=64GB",
+        "-c effective_cache_size = 192GB",
+        "-c maintenance_work_mem = 2GB",
+        "-c checkpoint_completion_target=0.9",
+        "-c wal_buffers=16MB",
+        "-c default_statistics_target=100",
+        "-c random_page_cost=1.1",
+        "-c effective_io_concurrency=200",
+        "-c work_mem=83886kB",
+        "-c min_wal_size=1GB",
+        "-c max_wal_size=4GB",
+        "-c max_worker_processes=32",
+        "-c max_parallel_workers_per_gather=4",
+        "-c max_parallel_workers=32",
+        "-c max_parallel_maintenance_workers=4",
+        "-c synchronous_commit=off"
+      ]
+  when: (plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+     
+- name: Overwrite worker settings if plan_title is large or greater
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertbefore: '# End Synapse Extension'
-    line: '  max_mau_value: {{ mau_limit }}'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings'
     mode: '0600'
     state: present
-  when: mau_limit is defined
+  with_dict:
+    'matrix_synapse_workers_enabled': 'true'
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server" or plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+  
+- name: Overwrite worker settings if plan_title is jumbo or greater
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_synapse_workers_preset': 'one-of-each'
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Overwrite room complexity limit for Micro Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Extension'
+    mode: '0600'
+    state: present
+  with_dict:
+    '    complexity': '10.0'
+  when: (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server")
+
+- name: Overwrite room complexity limit for Micro Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Extension'
+    mode: '0600'
+    state: present
+  with_dict:
+    '    complexity': '20.0'
+  when: (plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server")
+
+- name: Overwrite room complexity limit for Medium Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Extension'
+    mode: '0600'
+    state: present
+  with_dict:
+    '    complexity': '50.0'
+  when: (plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server")
+
+- name: Overwrite room complexity limit for Large Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Extension'
+    mode: '0600'
+    state: present
+  with_dict:
+    '    complexity': '100.0'
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server")
+
+- name: Disable room complexity limit for Jumbo Servers
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '  limit_remote_rooms:'
+    mode: '0600'
+    state: present
+  with_dict:
+    '    enabled': 'false'
+  when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
 
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 

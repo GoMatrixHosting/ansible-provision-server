@@ -1,0 +1,125 @@
+
+- name: Install borgmatic on client machine
+  delegate_to: "{{ server_ip_final }}"
+  apt:
+    name: borgmatic
+
+- name: Ensure client backup location exists
+  delegate_to: "{{ backup_server_ip }}"
+  file:
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Ensure ssh config location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /root/.ssh/
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+
+- name: Copy backup SSH key to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/hosting/backup_private.key'
+    dest: /root/.ssh/backup_private.key
+    mode: '0600'
+
+- name: Collect SSH public key value
+  delegate_to: 127.0.0.1
+  shell: cat '/var/lib/awx/projects/hosting/backup_public.key'
+  register: backup_public_key
+
+- name: Add client backup public keys spacer to authorized_keys of backup server
+  delegate_to: "{{ backup_server_ip }}"
+  lineinfile:
+    path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
+    line: '# Client backups'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    mode: '0600'
+
+- name: Add client backup public key to authorized_keys of backup server
+  delegate_to: "{{ backup_server_ip }}"
+  lineinfile:
+    path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
+    insertafter: '# Client backups'
+    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ backup_public_key.stdout }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    mode: '0600'
+
+- name: Update SSH config on target
+  delegate_to: "{{ server_ip_final }}"
+  blockinfile:
+    path: /root/.ssh/config
+    create: yes
+    block: |
+      Host {{ backup_server_hostname }}
+          HostName {{ backup_server_ip }}
+          User {{ backup_server_user }}
+          IdentityFile /root/.ssh/backup_private.key
+
+- name: Ensure borgmatic config location exists
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: /root/.config/borgmatic/
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Reload matrix server variables from matrix_vars.yml
+  include_vars:
+    file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
+  no_log: True
+
+- name: Save borgmatic config file, template
+  delegate_to: "{{ server_ip_final }}"
+  template:
+    src: '{{ role_path }}/templates/borg_config.yaml.j2'
+    dest: '/root/.config/borgmatic/config.yaml'
+
+- name: Initialise borg repo, perform init
+  delegate_to: "{{ backup_server_ip }}"
+  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+  args:
+    creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
+  no_log: True
+
+- name: Recursively change ownership of files in backup location
+  delegate_to: "{{ backup_server_ip }}"
+  file:
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    state: directory
+    recurse: yes
+
+- name: Create crontab entry for client backup pruning
+  delegate_to: "{{ backup_server_ip }}"
+  cron:
+    name: "Prune client borg backups"
+    special_time: daily
+    job: '/usr/bin/borgmatic prune'
+
+- name: Remove any old and unused SSH fingerprints
+  delegate_to: "{{ server_ip_final }}"
+  shell: echo '' > /root/.ssh/known_hosts
+
+- name: Write backup servers SSH fingerprint to known hosts file
+  delegate_to: "{{ server_ip_final }}"
+  lineinfile:
+    path: '/root/.ssh/known_hosts'
+    line: '{{ backup_server_ssh_fingerprint }}'
+    create: yes
+    owner: 'root'
+    group: 'root'
+    mode: '0644' 
+

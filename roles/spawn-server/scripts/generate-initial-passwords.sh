@@ -23,6 +23,8 @@ cat <<VAREND > "$VARFILE"
 matrix_awx_enabled: true
 matrix_awx_janitor_user_password: $(generatePassword)
 matrix_awx_janitor_user_created: false
+matrix_awx_backup_enabled: false
+matrix_awx_backup_encryption_passphrase: $(generatePassword)
 # Basic Settings
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com
@@ -58,6 +60,8 @@ matrix_synapse_caches_global_factor: 2.0
 matrix_synapse_url_preview_enabled: true
 matrix_synapse_registration_shared_secret: $(generatePassword)
 matrix_synapse_allow_guest_access: false
+matrix_synapse_workers_enabled: false
+matrix_synapse_workers_preset: little-federation-helper
 matrix_synapse_rc_login:
     address:
         per_second: 0.17
@@ -72,11 +76,15 @@ matrix_synapse_rc_login:
 matrix_synapse_ext_password_provider_rest_auth_enabled: false
 matrix_synapse_ext_password_provider_rest_auth_endpoint: "http://matrix-corporal:41080/_matrix/corporal"
 matrix_synapse_configuration_extension_yaml: |
-  url_preview_accept_language:
-    - en
   autocreate_auto_join_rooms: true
   mau_stats_only: true
   admin_contact: 'mailto:$CLIENT_EMAIL'
+  limit_remote_rooms:
+    enabled: true
+    complexity: 1.0
+  limit_usage_by_mau: false
+  url_preview_accept_language:
+    - en
 # End Synapse Extension
 # PostgreSQL Settings
 matrix_postgres_connection_password: $(generatePassword)

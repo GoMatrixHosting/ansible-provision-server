@@ -86,6 +86,6 @@
   cron:
     name: "Snapshot database and run export"
     user: root
-    special_time: hourly
+    special_time: daily
     job: "/root/export.sh"
 

@@ -12,7 +12,7 @@
 - name: Set valid digitalocean area code for New York City.
   delegate_to: 127.0.0.1
   set_fact:
-    do_droplet_region: "nyc3"
+    do_droplet_region: "nyc1"
     matrix_jitsi_timezone: "America/New_York"
   when: (subscription_type == "digitalocean" and do_droplet_region_long == "New York City (USA)")
 
@@ -65,45 +65,61 @@
     matrix_jitsi_timezone: "Asia/Kolkata"
   when: (subscription_type == "digitalocean" and do_droplet_region_long == "Balgalore (IND)")
 
-- name: Set MAU limit for Micro Server
+- name: Set swap size for Micro DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-1vcpu-2gb"
     swap_size: "2G"
-    mau_limit: 5
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
-- name: Set MAU limit for Small Server
+- name: Set swap size for Small DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-2vcpu-4gb"
     swap_size: "4G"
-    mau_limit: 25
   when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
 
-- name: Set MAU limit for Medium Server
+- name: Set swap size for Medium DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-4vcpu-8gb"
     swap_size: "8G"
-    mau_limit: 50
   when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
 
-- name: Set MAU limit for Large Server
+- name: Set swap size for Large DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
     slug_size: "s-8vcpu-16gb"
     swap_size: "16G"
-    mau_limit: 100
   when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
 
-- name: Set MAU limit for Jumbo Server
+- name: Set swap size for Jumbo 500 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so-16vcpu-128gb"
+    slug_size: "so1_5-8vcpu-64gb"
     swap_size: "64G"
-    mau_limit: 1000
-  when: (subscription_type == "digitalocean" and plan_title == "Jumbo DigitalOcean Server")
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 500 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 1000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    slug_size: "so1_5-16vcpu-128gb"
+    swap_size: "128G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 1000 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 2000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    slug_size: "so1_5-24vcpu-192gb"
+    swap_size: "192G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 2000 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 5000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    slug_size: "so1_5-32vcpu-256gb"
+    swap_size: "256G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 5000 DigitalOcean Server")
 
 - name: do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -113,6 +129,13 @@
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
+
+- name: Record the public SSH key into a variable
+  set_fact:
+    public_ssh_key: "{{ lookup('file', '/var/lib/awx/projects/hosting/client_public.key') }}"
+
+- debug:
+    msg: "The public SSH key to check for: {{ public_ssh_key }}"
 
 - name: 
   delegate_to: 127.0.0.1
@@ -124,12 +147,12 @@
     msg: "{{ ssh_keys }}"
   when: subscription_type == "digitalocean"
 
-- name: Build an array of all the ssh key ids
+- name: Build an array with the correct SSH ID
   delegate_to: 127.0.0.1
   set_fact:
     ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
-  with_items: "{{ ssh_keys.data }}"
-  when: subscription_type == "digitalocean"
+  when: (subscription_type == "digitalocean") and (item.public_key == public_ssh_key)
+  loop: "{{ ssh_keys.data|flatten(levels=1) }}"
 
 - debug:
     msg: "{{ ssh_key_id_array }}"
