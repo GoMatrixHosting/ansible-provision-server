@@ -54,6 +54,7 @@ matrix_synapse_auto_join_rooms: []
 matrix_synapse_container_metrics_api_host_bind_port: 9000
 matrix_synapse_metrics_enabled: true
 matrix_synapse_metrics_port: 9100
+matrix_synapse_federation_enabled: false
 matrix_synapse_allow_public_rooms_over_federation: true
 matrix_synapse_enable_registration: false
 matrix_synapse_caches_global_factor: 2.0
