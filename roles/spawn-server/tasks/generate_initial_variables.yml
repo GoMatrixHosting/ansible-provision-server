@@ -494,6 +494,30 @@
     '    enabled': 'false'
   when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
 
+# Create borg backup key file
+
+- name: generate borg backup password:
+  shell: openssl rand -hex 16
+  register: borg-password
+
+- name: Add entry to borg_backup.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+    line: 'matrix_awx_backup_encryption_passphrase: {{ borg-password.stdout }}'
+    mode: '0600'
+    state: present
+    create: yes
+  args:
+    creates: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+
+- name: Copy borg_backup.yml variables file to backup location
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+    dest: '/var/lib/awx/projects/backups/{{ matrix_domain }}-borg_backup.yml'
+    mode: '0660'
+
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 
 - name: Copy organisation.yml variables file to target
@@ -523,5 +547,4 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     dest: /matrix/awx/matrix_vars.yml
     mode: '0660'
-
 

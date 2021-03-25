@@ -1,4 +1,8 @@
 
+- name: Load vars from borg_backup.yml
+  include_vars:
+    file: '/var/lib/awx/projects/clients/{{ member_id }}/borg_backup.yml'
+
 - name: Install borgmatic on client machine
   delegate_to: "{{ server_ip_final }}"
   apt:
