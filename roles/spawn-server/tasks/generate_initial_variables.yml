@@ -496,7 +496,7 @@
 
 # Create borg backup key file
 
-- name: generate borg backup password:
+- name: Generate borg backup password
   shell: openssl rand -hex 16
   register: borg-password
 
