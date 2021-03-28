@@ -497,6 +497,7 @@
 # Create borg backup key file
 
 - name: Generate borg backup password
+  delegate_to: 127.0.0.1
   shell: openssl rand -hex 16
   register: borg-password
 
