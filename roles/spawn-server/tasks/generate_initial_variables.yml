@@ -519,7 +519,7 @@
   when: not borg_backup_file.stat.exists
 
 - name: Copy borg_backup.yml variables file to backup location
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: 127.0.0.1
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
     dest: '/var/lib/awx/projects/backups/{{ matrix_domain }}-borg_backup.yml'
