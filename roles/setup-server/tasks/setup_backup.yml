@@ -53,7 +53,7 @@
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
     insertafter: '# Client backups'
-    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ backup_public_key.stdout }}'
+    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients",restrict {{ backup_public_key.stdout }}'
     owner: '{{ backup_server_user }}'
     group: '{{ backup_server_user }}'
     mode: '0600'
@@ -106,12 +106,12 @@
     state: directory
     recurse: yes
 
-- name: Create crontab entry for client backup pruning
-  delegate_to: "{{ backup_server_ip }}"
-  cron:
-    name: "Prune client borg backups"
-    special_time: daily
-    job: '/usr/bin/borgmatic prune'
+#- name: Create crontab entry for client backup pruning
+#  delegate_to: "{{ backup_server_ip }}"
+#  cron:
+#    name: "Prune client borg backups"
+#    special_time: daily
+#    job: '/usr/bin/borgmatic prune'
 
 - name: Remove any old and unused SSH fingerprints
   delegate_to: "{{ server_ip_final }}"
