@@ -106,13 +106,6 @@
     state: directory
     recurse: yes
 
-#- name: Create crontab entry for client backup pruning
-#  delegate_to: "{{ backup_server_ip }}"
-#  cron:
-#    name: "Prune client borg backups"
-#    special_time: daily
-#    job: '/usr/bin/borgmatic prune'
-
 - name: Remove any old and unused SSH fingerprints
   delegate_to: "{{ server_ip_final }}"
   shell: echo '' > /root/.ssh/known_hosts
