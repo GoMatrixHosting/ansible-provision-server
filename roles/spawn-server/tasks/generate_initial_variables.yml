@@ -500,6 +500,7 @@
   delegate_to: 127.0.0.1
   shell: openssl rand -hex 16
   register: borg_password
+  no_log: True
 
 - name: Add entry to borg_backup.yml file locally on AWX
   delegate_to: 127.0.0.1
