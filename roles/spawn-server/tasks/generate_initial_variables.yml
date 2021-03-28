@@ -503,6 +503,7 @@
   no_log: True
 
 - name: Check if borg_backup.yml already exists
+  delegate_to: 127.0.0.1
   stat:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
   register: borg_backup_file
