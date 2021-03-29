@@ -77,17 +77,6 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Allow team to read-only the 'Provision a New Server' job_template/history
-  delegate_to: 127.0.0.1
-  awx.awx.tower_role:
-    team: "{{ member_id }}"
-    job_template: "0 - {{ subscription_id }} - Provision a New Server"
-    role: read
-    state: present
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
@@ -103,10 +92,11 @@
     mode: '0644'
   when: subscription_type == "digitalocean"
 
-- name: Re-create 'Provision a New Server' job template
+- name: Create 'Re-Provision Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
+    new_name: "0 - {{ subscription_id }} - Re-Provision Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
@@ -140,11 +130,12 @@
     mode: '0644'
   when: subscription_type == "on_premises"
 
-- name: Re-create 'Provision a New Server' job template
+- name: Create 'Re-Provision Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
-    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    new_name: "0 - {{ subscription_id }} - Re-Provision Server"
+    description: "Connects existing server, performs initial setup, adds relevant playbooks to users account."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     inventory: "{{ member_id }}"
