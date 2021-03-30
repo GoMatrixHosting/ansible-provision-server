@@ -76,6 +76,7 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
+  ignore_errors: yes
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
