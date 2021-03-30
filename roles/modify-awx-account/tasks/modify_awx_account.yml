@@ -81,14 +81,14 @@
   delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_digitalocean.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey.json'
   when: subscription_type == "digitalocean"
 
 - name: Copy provision_survey_digitalocean.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
-    dest: /matrix/awx/provision_survey_digitalocean.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey.json'
+    dest: /matrix/awx/provision_survey.json
     mode: '0644'
   when: subscription_type == "digitalocean"
 
@@ -96,7 +96,7 @@
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
-    new_name: "0 - {{ subscription_id }} - Re-Provision Server"
+    new_name: "0 - {{ subscription_id }} - Reprovision Server"
     description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
@@ -119,14 +119,14 @@
   delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/provision_survey_on-premise.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey.json'
   when: subscription_type == "on_premises"
 
 - name: Copy provision_survey_on-premise.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
-    dest: /matrix/awx/provision_survey_on-premise.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey.json'
+    dest: /matrix/awx/provision_survey.json
     mode: '0644'
   when: subscription_type == "on_premises"
 
@@ -134,7 +134,7 @@
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
-    new_name: "0 - {{ subscription_id }} - Re-Provision Server"
+    new_name: "0 - {{ subscription_id }} - Reprovision Server"
     description: "Connects existing server, performs initial setup, adds relevant playbooks to users account."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
