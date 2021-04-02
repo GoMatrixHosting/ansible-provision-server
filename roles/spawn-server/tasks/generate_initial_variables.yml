@@ -131,7 +131,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Element Settings'
+    insertafter: '# Element Settings Start'
     mode: '0600'
     state: present
   with_dict:
@@ -144,7 +144,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "  {{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -155,7 +155,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
     mode: '0600'
     state: present
@@ -165,7 +165,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
     mode: '0600'
     state: present
@@ -175,7 +175,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
     mode: '0600'
     state: present
@@ -185,7 +185,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Jitsi Settings'
+    insertafter: '# Jitsi Settings Start'
     line: 'matrix_jitsi_timezone: "{{ matrix_jitsi_timezone }}"'
     mode: '0600'
     state: present
@@ -195,7 +195,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -218,7 +218,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -245,7 +245,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -272,7 +272,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -299,7 +299,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -326,7 +326,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -353,7 +353,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -380,7 +380,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -409,7 +409,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Settings'
+    insertafter: '# Synapse Settings Start'
     mode: '0600'
     state: present
   with_dict:
@@ -422,7 +422,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Settings'
+    insertafter: '# Synapse Settings Start'
     mode: '0600'
     state: present
   with_dict:
@@ -435,7 +435,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -448,7 +448,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -461,7 +461,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -474,7 +474,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:

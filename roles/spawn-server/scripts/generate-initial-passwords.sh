@@ -19,36 +19,41 @@ VARFILE="$1"; shift
 if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 
 cat <<VAREND > "$VARFILE"
-# AWX Settings
+# AWX Settings Start
 matrix_awx_enabled: true
 matrix_awx_janitor_user_password: $(generatePassword)
 matrix_awx_janitor_user_created: false
 matrix_awx_backup_enabled: false
-# Basic Settings
+# AWX Settings End
+# Basic Settings Start
 matrix_domain: $DOMAIN
 matrix_ssl_lets_encrypt_support_email: chatoasis@protonmail.com
 matrix_coturn_turn_static_auth_secret: $(generatePassword)
 matrix_synapse_macaroon_secret_key: $(generatePassword)
-# Element Settings
+# Basic Settings End
+# Element Settings Start
 matrix_client_element_enabled: true
 matrix_server_fqn_element: $ELEMENT_SUBDOMAIN.$DOMAIN
 matrix_client_element_jitsi_preferredDomain: jitsi.$DOMAIN
-# Element Extension
+# Element Settings End
+# Element Extension Start
 matrix_client_element_configuration_extension_json: |
   {
   "disable_3pid_login": true
   }
-# End Element Extension
-# ma1sd Settings
+# Element Extension End
+# ma1sd Settings Start
 matrix_ma1sd_enabled: true 
-# Jitsi Settings
+# ma1sd Settings End
+# Jitsi Settings Start
 matrix_jitsi_enabled: true
 matrix_jitsi_jicofo_component_secret: $(generatePassword)
 matrix_jitsi_jicofo_auth_password: $(generatePassword)
 matrix_jitsi_jvb_auth_password: $(generatePassword)
 matrix_jitsi_jibri_recorder_password: $(generatePassword)
 matrix_jitsi_jibri_xmpp_password: $(generatePassword)
-# Synapse Settings
+# Jitsi Settings End
+# Synapse Settings Start
 matrix_synapse_auto_join_rooms: []
 matrix_synapse_container_metrics_api_host_bind_port: 9000
 matrix_synapse_metrics_enabled: true
@@ -72,7 +77,8 @@ matrix_synapse_rc_login:
     failed_attempts:
         per_second: 0.17
         burst_count: 3
-# Synapse Extension
+# Synapse Settings End
+# Synapse Extension Start
 matrix_synapse_ext_password_provider_rest_auth_enabled: false
 matrix_synapse_ext_password_provider_rest_auth_endpoint: "http://matrix-corporal:41080/_matrix/corporal"
 matrix_synapse_configuration_extension_yaml: |
@@ -85,26 +91,37 @@ matrix_synapse_configuration_extension_yaml: |
   limit_usage_by_mau: false
   url_preview_accept_language:
     - en
-# End Synapse Extension
-# PostgreSQL Settings
+# Synapse Extension End
+# PostgreSQL Settings Start
 matrix_postgres_connection_password: $(generatePassword)
 matrix_synapse_connection_password: $(generatePassword)
-# Base Domain Settings
-# Synapse Admin Settings
+# PostgreSQL Settings End
+# Base Domain Settings Start
+# Base Domain Settings End
+# Synapse Admin Settings Start
 matrix_synapse_admin_enabled: false
-# Shared Secret Auth Settings
+# Synapse Admin Settings End
+# Shared Secret Auth Settings Start
 matrix_synapse_ext_password_provider_shared_secret_auth_enabled: false
 matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret: $(generatePassword)
-# Corporal Settings
+# Shared Secret Auth Settings End
+# Corporal Settings Start
 matrix_corporal_enabled: false
 matrix_corporal_http_api_enabled: false
 matrix_corporal_corporal_user_id_local_part: "matrix-corporal"
-# Corporal Policy Provider Settings
-# Extra Settings
+# Corporal Settings End
+# Corporal Policy Provider Settings Start
+# Corporal Policy Provider Settings End
+# Dimension Settings Start
+matrix_dimension_enabled: false
+# Dimension Settings End
+# Extra Settings Start
 matrix_vars_yml_snapshotting_enabled: false
-# Custom Settings
+# Extra Settings End
+# Custom Settings Start
 ext_federation_whitelist_raw: []
 ext_url_preview_accept_language_default: ['en']
+# Custom Settings End
 VAREND
 
 
