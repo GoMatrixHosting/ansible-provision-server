@@ -1,10 +1,4 @@
 
-#- name: Load vars from organisation.yml
-#  include_vars:
-#    file: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
-
-# ^ Might be redundant
-
 - name: Install tower dep
   delegate_to: 127.0.0.1
   pip:
@@ -13,7 +7,9 @@
 - name: Install jq in AWX
   delegate_to: 127.0.0.1
   yum:
-    name: jq
+    name: 
+      - jq
+      - pwgen
     state: latest
 
 - name: Collect AWX admin token the hard way!

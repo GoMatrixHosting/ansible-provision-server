@@ -3,7 +3,7 @@
 # https://github.com/spantaleev/matrix-docker-ansible-deploy
 
 generatePassword() {
-    openssl rand -hex 16
+    pwgen -s 20 1
 }
 
 usage() {
