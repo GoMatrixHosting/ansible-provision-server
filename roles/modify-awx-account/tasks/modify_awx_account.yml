@@ -7,9 +7,7 @@
 - name: Install jq in AWX
   delegate_to: 127.0.0.1
   yum:
-    name: 
-      - jq
-      - pwgen
+    name: jq
     state: latest
 
 - name: Collect AWX admin token the hard way!
