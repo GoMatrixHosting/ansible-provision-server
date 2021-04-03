@@ -23,6 +23,8 @@ cat <<VAREND > "$VARFILE"
 matrix_awx_enabled: true
 matrix_awx_janitor_user_password: $(generatePassword)
 matrix_awx_janitor_user_created: false
+matrix_awx_dimension_user_password: $(generatePassword)
+matrix_awx_dimension_user_created: false
 matrix_awx_backup_enabled: false
 # AWX Settings End
 # Basic Settings Start
