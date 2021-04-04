@@ -29,7 +29,6 @@ matrix_awx_backup_enabled: false
 # AWX Settings End
 # Basic Settings Start
 matrix_domain: $DOMAIN
-matrix_ssl_lets_encrypt_support_email: support@gomatrixhosting.com
 matrix_coturn_turn_static_auth_secret: $(generatePassword)
 matrix_synapse_macaroon_secret_key: $(generatePassword)
 # Basic Settings End
