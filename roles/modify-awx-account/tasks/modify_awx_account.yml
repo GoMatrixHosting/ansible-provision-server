@@ -1,10 +1,4 @@
 
-#- name: Load vars from organisation.yml
-#  include_vars:
-#    file: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
-
-# ^ Might be redundant
-
 - name: Install tower dep
   delegate_to: 127.0.0.1
   pip:
@@ -76,17 +70,7 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
-
-- name: Allow team to read-only the 'Provision a New Server' job_template/history
-  delegate_to: 127.0.0.1
-  awx.awx.tower_role:
-    team: "{{ member_id }}"
-    job_template: "0 - {{ subscription_id }} - Provision a New Server"
-    role: read
-    state: present
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
+  ignore_errors: yes
 
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
@@ -103,7 +87,7 @@
     mode: '0644'
   when: subscription_type == "digitalocean"
 
-- name: Re-create 'Provision a New Server' job template
+- name: Create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
@@ -140,11 +124,11 @@
     mode: '0644'
   when: subscription_type == "on_premises"
 
-- name: Re-create 'Provision a New Server' job template
+- name: Create 'Provision a New Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "0 - {{ subscription_id }} - Provision a New Server"
-    description: "Creates digitalocean droplet and space, performs initial setup, adds relevant playbooks to users account."
+    description: "Connects existing server, performs initial setup, adds relevant playbooks to users account."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     inventory: "{{ member_id }}"
@@ -155,7 +139,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, setup-export
+    job_tags: imposter-check, setup-firewall, setup-export, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
@@ -322,7 +306,8 @@
     description: "Performs a backup of the entire service to a remote location."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
-    job_tags: "backup-server"
+    job_tags: "backup-server,use-survey"
+    ask_tags_on_launch: yes
     inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -648,6 +633,50 @@
   awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Corporal (Advanced)"
+    role: execute
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
+- name: Save new 'Configure Dimension' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/configure_dimension.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_dimension.json'
+
+- name: Copy 'Configure Dimension' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_dimension.json'
+    dest: /matrix/awx/configure_dimension.json
+    mode: '0660'
+
+- name: Create 'Configure Dimension' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Dimension"
+    description: "Configure Dimension, the self-hosted integrations server."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "start,setup-all,setup-dimension"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_dimension.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
+- name: Allow team to use 'Configure Dimension' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Dimension"
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"

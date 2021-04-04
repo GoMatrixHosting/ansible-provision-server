@@ -46,6 +46,10 @@ matrix_corporal_raise_ratelimits: 'Raised'
 matrix_corporal_pull_mode_token: ''
 matrix_corporal_http_api_auth_token: ''
 
+# Configure Dimension
+matrix_dimension_enabled: false
+matrix_dimension_access_token: ''
+
 # Custom Variables
 matrix_synapse_auto_join_rooms: []
 ext_federation_whitelist_raw: []
@@ -56,4 +60,5 @@ ext_matrix_ma1sd_configuration_extension_yaml: ["matrix_client_element_configura
 sftp_auth_method: 'Disabled'
 sftp_password: ''
 sftp_public_key: ''
+ext_dimension_users_raw: []
 

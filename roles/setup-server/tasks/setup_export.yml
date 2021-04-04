@@ -87,5 +87,5 @@
     name: "Snapshot database and run export"
     user: root
     special_time: daily
-    job: "/root/export.sh"
+    job: "/bin/sh /root/export.sh"
 

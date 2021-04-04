@@ -125,26 +125,39 @@
   command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "{{ element_subdomain }}" "{{ client_email }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
   
-- name: Over-write Element subdomain value if changed
+- name: Overwrite certbot email value if changed
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Element Settings'
+    insertafter: '# Basic Settings Start'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_ssl_lets_encrypt_support_email': '{{ certbot_email }}'
+  when: varsfile.stat.exists == true
+
+- name: Overwrite Element subdomain value if changed
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Element Settings Start'
     mode: '0600'
     state: present
   with_dict:
     'matrix_server_fqn_element': '{{ element_subdomain }}.{{ matrix_domain }}'
   when: varsfile.stat.exists == true
 
-- name: Over-write client_email value if changed
+- name: Overwrite client_email value if changed
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "  {{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -155,7 +168,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
     mode: '0600'
     state: present
@@ -165,7 +178,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
     mode: '0600'
     state: present
@@ -175,7 +188,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Base Domain Settings'
+    insertafter: '# Base Domain Settings Start'
     line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
     mode: '0600'
     state: present
@@ -185,7 +198,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: '# Jitsi Settings'
+    insertafter: '# Jitsi Settings Start'
     line: 'matrix_jitsi_timezone: "{{ matrix_jitsi_timezone }}"'
     mode: '0600'
     state: present
@@ -195,7 +208,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -218,7 +231,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -245,7 +258,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -272,7 +285,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=100",
@@ -299,7 +312,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -326,7 +339,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -353,7 +366,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -380,7 +393,7 @@
   delegate_to: 127.0.0.1
   blockinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
-    insertafter: "# PostgreSQL Settings"
+    insertafter: "# PostgreSQL Settings Start"
     block: |
       matrix_postgres_process_extra_arguments: [
         "-c max_connections=200",
@@ -409,7 +422,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Settings'
+    insertafter: '# Synapse Settings Start'
     mode: '0600'
     state: present
   with_dict:
@@ -422,7 +435,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Settings'
+    insertafter: '# Synapse Settings Start'
     mode: '0600'
     state: present
   with_dict:
@@ -435,7 +448,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -448,7 +461,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -461,7 +474,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -474,7 +487,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
-    insertafter: '# Synapse Extension'
+    insertafter: '# Synapse Extension Start'
     mode: '0600'
     state: present
   with_dict:
@@ -493,6 +506,37 @@
   with_dict:
     '    enabled': 'false'
   when: (plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+# Create borg backup key file
+
+- name: Generate borg backup password
+  delegate_to: 127.0.0.1
+  shell: openssl rand -hex 16
+  register: borg_password
+  no_log: True
+
+- name: Check if borg_backup.yml already exists
+  delegate_to: 127.0.0.1
+  stat:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+  register: borg_backup_file
+
+- name: Add entry to borg_backup.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+    line: 'matrix_awx_backup_encryption_passphrase: {{ borg_password.stdout }}'
+    mode: '0600'
+    state: present
+    create: yes
+  when: not borg_backup_file.stat.exists
+
+- name: Copy borg_backup.yml variables file to backup location
+  delegate_to: 127.0.0.1
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+    dest: '/var/lib/awx/projects/backups/{{ matrix_domain }}-borg_backup.yml'
+    mode: '0660'
 
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 
@@ -523,5 +567,4 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     dest: /matrix/awx/matrix_vars.yml
     mode: '0660'
-
 

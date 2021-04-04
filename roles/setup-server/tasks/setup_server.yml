@@ -40,10 +40,35 @@
 - name: Make swapfile permanent in /etc/fstab
   delegate_to: "{{ server_ip_final }}"
   mount: name=none
-    src=/swapfile
-    fstype=swap
-    opts=sw
-    passno=0
-    dump=0
-    state=present
+         src=/swapfile
+         fstype=swap
+         opts=sw
+         passno=0
+         dump=0
+         state=present
+
+# Docker logs pruning, interferes with deploy stage. :S
+
+#- name: Ensure docker config folder exists
+#  delegate_to: "{{ server_ip_final }}"
+#  file:
+#    path: '/etc/docker/daemon.json'
+#    owner: root
+#    group: root
+#    mode: '0755'
+#    state: directory   
+
+#- name: Save docker config file, template
+#  delegate_to: "{{ server_ip_final }}"
+#  template:
+#    src: '{{ role_path }}/templates/daemon.json.j2'
+#    dest: '/etc/docker/daemon.json'
+
+- name: Creates a crontab entry for trimming systemd logs
+  delegate_to: "{{ server_ip_final }}"
+  cron:
+    name: "Trim Systemd Logs"
+    user: root
+    special_time: daily
+    job: "sudo journalctl --vacuum-time=28d"
 
