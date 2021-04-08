@@ -10,6 +10,8 @@
 
 - name: Ensure client backup location exists
   delegate_to: "{{ backup_server_ip }}"
+  vars:
+    ansible_ssh_port: "{{ backup_server_port }}"
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
     owner: '{{ backup_server_user }}'
