@@ -12,6 +12,8 @@
     msg: "Backup server port: {{ backup_server_ssh_port }}"
 
 - name: Ensure client backup location exists
+  vars:
+    ansible_port: "{{ backup_server_ssh_port }}"
   delegate_to: "{{ backup_server_ip }}"
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
@@ -20,8 +22,6 @@
     state: directory
     mode: '0755'
     recurse: yes
-  vars:
-    ansible_port: "{{ backup_server_ssh_port }}"
 
 - name: Ensure ssh config location exists
   delegate_to: "{{ server_ip_final }}"
