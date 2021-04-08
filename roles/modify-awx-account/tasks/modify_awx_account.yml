@@ -60,18 +60,6 @@
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
-- name: Disallow team from using the 'Provision a New Server' job_template
-  delegate_to: 127.0.0.1
-  awx.awx.tower_role:
-    team: "{{ member_id }}"
-    job_template: "0 - {{ subscription_id }} - Provision a New Server"
-    role: execute
-    state: absent
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-  ignore_errors: yes
-
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
@@ -145,7 +133,19 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
   when: subscription_type == "on_premises"
-  
+
+- name: Disallow team from executing the 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "0 - {{ subscription_id }} - Provision a New Server"
+    role: execute
+    state: absent
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  ignore_errors: yes
+
 - name: Allow team to view the new 'Provision a New Server' job_template
   delegate_to: 127.0.0.1
   awx.awx.tower_role:
