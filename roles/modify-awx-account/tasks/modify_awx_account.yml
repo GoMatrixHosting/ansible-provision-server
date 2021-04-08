@@ -145,6 +145,18 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
   when: subscription_type == "on_premises"
+  
+- name: Allow team to view the new 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "0 - {{ subscription_id }} - Provision a New Server"
+    role: read
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  ignore_errors: yes
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
