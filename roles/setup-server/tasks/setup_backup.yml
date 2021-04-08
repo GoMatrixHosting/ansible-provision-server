@@ -8,6 +8,9 @@
   apt:
     name: borgmatic
 
+- debug:
+    msg: "Backup server port: {{ backup_server_ssh_port }}"
+
 - name: Ensure client backup location exists
   delegate_to: "{{ backup_server_ip }}"
   vars:
