@@ -21,7 +21,7 @@
     mode: '0755'
     recurse: yes
   vars:
-    ansible_ssh_port: "{{ backup_server_ssh_port }}"
+    ansible_port: "{{ backup_server_ssh_port }}"
 
 - name: Ensure ssh config location exists
   delegate_to: "{{ server_ip_final }}"
