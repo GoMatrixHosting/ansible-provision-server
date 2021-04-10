@@ -13,5 +13,6 @@
   
 # Setup server backup
 - import_tasks: "{{ role_path }}/tasks/setup_backup.yml"
+  when: backup_server_enabled|bool
   tags: setup-backup
 
