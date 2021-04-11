@@ -142,6 +142,7 @@
   community.digitalocean.digital_ocean_sshkey_info:
     oauth_token: '{{ do_api_token }}'
   register: ssh_keys
+  when: subscription_type == "digitalocean"
 
 - debug:
     msg: "{{ ssh_keys }}"
