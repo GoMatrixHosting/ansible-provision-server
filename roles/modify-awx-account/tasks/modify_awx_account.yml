@@ -60,18 +60,6 @@
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
-- name: Disallow team from using the 'Provision a New Server' job_template
-  delegate_to: 127.0.0.1
-  awx.awx.tower_role:
-    team: "{{ member_id }}"
-    job_template: "0 - {{ subscription_id }} - Provision a New Server"
-    role: execute
-    state: absent
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-  ignore_errors: yes
-
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
@@ -145,6 +133,30 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
   when: subscription_type == "on_premises"
+
+- name: Disallow team from executing the 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "0 - {{ subscription_id }} - Provision a New Server"
+    role: execute
+    state: absent
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  ignore_errors: yes
+
+- name: Allow team to view the new 'Provision a New Server' job_template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "0 - {{ subscription_id }} - Provision a New Server"
+    role: read
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  ignore_errors: yes
 
 - name: Create 'Deploy/Update a Server' job template
   delegate_to: 127.0.0.1
@@ -291,6 +303,7 @@
   template:
     src: './roles/modify-awx-account/surveys/backup_server.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/backup_server.json'
+  when: backup_server_enabled|bool
 
 - name: Copy 'Backup Server' survey.json to target
   delegate_to: "{{ server_ip_final }}"
@@ -298,6 +311,7 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/backup_server.json'
     dest: /matrix/awx/backup_server.json
     mode: '0660'
+  when: backup_server_enabled|bool
 
 - name: Create 'Backup Server' job template
   delegate_to: 127.0.0.1
@@ -319,6 +333,7 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
+  when: backup_server_enabled|bool
 
 - name: Allow team to use 'Backup Server' job template
   delegate_to: 127.0.0.1
@@ -330,6 +345,7 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
+  when: backup_server_enabled|bool
 
 - name: Save new 'Configure Element' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
