@@ -479,13 +479,13 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Save new 'Configure ma1sd' survey.json to the AWX tower, template
+- name: Save new 'Configure ma1sd (Advanced)' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_ma1sd.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
 
-- name: Copy 'Configure ma1sd' survey.json to target
+- name: Copy 'Configure ma1sd (Advanced)' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
@@ -611,13 +611,13 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Save new 'Configure Corporal' survey.json to the AWX tower, template
+- name: Save new 'Configure Corporal (Advanced)' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
     src: './roles/modify-awx-account/surveys/configure_corporal.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
 
-- name: Copy 'Configure Corporal' survey.json to target
+- name: Copy 'Configure Corporal (Advanced)' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
@@ -731,6 +731,44 @@
   awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 2 - Create User"
+    role: execute
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+    
+- name: Save initial 'Purge Media (Advanced)' survey.json to the AWX tower
+  delegate_to: 127.0.0.1
+  copy:
+    src: './roles/modify-awx-account/surveys/purge_media.json'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/purge_media.json'
+    mode: '0660'
+
+- name: Create 'Purge Media (Advanced)' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 2 - Purge Media (Advanced)"
+    description: "Removes remote and local media that has accumilated on the server."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "purge-media"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/purge_media.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
+- name: Allow team to use 'Purge Media (Advanced)' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 2 - Purge Media (Advanced)"
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
