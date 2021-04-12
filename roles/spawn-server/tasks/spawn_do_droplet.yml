@@ -1,7 +1,7 @@
 
 # Need section to convert do_droplet_region_long to a valid shortcode:
 # New York City (USA) = nyc1, nyc3
-# San Francisco (USA) = sfo2, sfo3
+# San Francisco (USA) = sfo3
 # Amsterdam (NLD) = ams3
 # Frankfurt (DEU) = fra1
 # Singapore (SGP) = sgp1
@@ -68,28 +68,28 @@
 - name: Set swap size for Micro DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-1vcpu-2gb"
+    slug_size: "s-1vcpu-2gb-intel"
     swap_size: "2G"
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
 - name: Set swap size for Small DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-2vcpu-4gb"
+    slug_size: "s-2vcpu-4gb-intel"
     swap_size: "4G"
   when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
 
 - name: Set swap size for Medium DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-4vcpu-8gb"
+    slug_size: "s-4vcpu-8gb-intel"
     swap_size: "8G"
   when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
 
 - name: Set swap size for Large DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-8vcpu-16gb"
+    slug_size: "s-8vcpu-16gb-intel"
     swap_size: "16G"
   when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
 
