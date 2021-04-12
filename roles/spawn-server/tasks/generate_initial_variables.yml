@@ -125,7 +125,7 @@
   command: /var/lib/awx/projects/hosting/generate-initial-passwords.sh "{{ matrix_domain }}" "{{ element_subdomain }}" "{{ client_email }}" "/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml"
   when: varsfile.stat.exists == false
   
-- name: Overwrite certbot email value if changed
+- name: Insert certbot email value
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -136,7 +136,6 @@
     state: present
   with_dict:
     'matrix_ssl_lets_encrypt_support_email': '{{ certbot_email }}'
-  when: varsfile.stat.exists == true
 
 - name: Overwrite Element subdomain value if changed
   delegate_to: 127.0.0.1
