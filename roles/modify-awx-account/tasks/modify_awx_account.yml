@@ -100,15 +100,15 @@
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
-    src: './roles/modify-awx-account/surveys/provision_survey_on-premise.json.j2'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
+    src: './roles/modify-awx-account/surveys/provision_survey_on-premises.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premises.json'
   when: subscription_type == "on_premises"
 
-- name: Copy provision_survey_on-premise.json survey file to target
+- name: Copy provision_survey_on-premises.json survey file to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json'
-    dest: /matrix/awx/provision_survey_on-premise.json
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premises.json'
+    dest: /matrix/awx/provision_survey_on-premises.json
     mode: '0644'
   when: subscription_type == "on_premises"
 
@@ -124,7 +124,7 @@
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
     survey_enabled: true
-    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premise.json') }}"
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premises.json') }}"
     state: present
     verbosity: 1
     job_tags: imposter-check, setup-firewall, setup-export, setup-backup
