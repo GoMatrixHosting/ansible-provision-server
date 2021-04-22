@@ -46,6 +46,8 @@ matrix_client_element_configuration_extension_json: |
 # ma1sd Settings Start
 matrix_ma1sd_enabled: true 
 # ma1sd Settings End
+# Start ma1sd Extension
+# End ma1sd Extension
 # Jitsi Settings Start
 matrix_jitsi_enabled: true
 matrix_jitsi_jicofo_component_secret: $(generatePassword)
