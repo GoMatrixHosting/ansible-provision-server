@@ -53,6 +53,20 @@
     rule: allow
     port: '10000'
     proto: udp
+    
+- name: Allow all access to TCP port 9100 with UFW for Synapse metrics
+  delegate_to: "{{ server_ip_final }}"
+  ufw:
+    rule: allow
+    port: '9000'
+    proto: tcp
+    
+- name: Allow all access to TCP port 9100 with UFW for Node-Exporter metrics
+  delegate_to: "{{ server_ip_final }}"
+  ufw:
+    rule: allow
+    port: '9100'
+    proto: tcp
 
 # Jumbo Server worker ports
 # 1x generic workers - 18111,	metrics - 19111
