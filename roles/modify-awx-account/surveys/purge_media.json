@@ -1,6 +1,6 @@
 {
   "name": "Purge Media",
-  "description": "",
+  "description": "Removes remote and local media that has accumilated on the server.",
   "spec": [
     {
       "question_name": "Media Type",
