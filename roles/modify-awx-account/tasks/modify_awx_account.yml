@@ -364,7 +364,7 @@
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Element"
-    description: "Configure Element client via survey."
+    description: "Configure Element web client, Element is the most developed Matrix client software."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-client-element"
@@ -408,7 +408,7 @@
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure Synapse"
-    description: "Configure Synapse (homeserver) settings."
+    description: "Configure Synapse settings. Synapse is the homeserver software that powers your Matrix instance."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-synapse"
@@ -496,7 +496,7 @@
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
     name: "{{ matrix_domain }} - 1 - Configure ma1sd (Advanced)"
-    description: "Configure Ma1sd conferencing settings."
+    description: "Configure ma1sd settings, ma1sd is a self-hosted identity server for Matrix."
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "start,setup-ma1sd"
@@ -528,6 +528,7 @@
   template:
     src: './roles/modify-awx-account/surveys/configure_website_access_export.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
+  when: base_domain_used == 'false'
 
 - name: Copy 'Configure Website + Access Export' survey.json to target
   delegate_to: "{{ server_ip_final }}"
@@ -535,6 +536,7 @@
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
     dest: /matrix/awx/configure_website_access_export.json
     mode: '0660'
+  when: base_domain_used == 'false'
 
 - name: Create 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
@@ -555,6 +557,7 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
+  when: base_domain_used == 'false'
 
 - name: Allow team to use 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
@@ -566,6 +569,55 @@
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
+  when: base_domain_used == 'false'
+
+- name: Save new 'Access Export' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/access_export.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json'
+  when: base_domain_used == 'true'
+
+- name: Copy 'Access Export' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json'
+    dest: /matrix/awx/access_export.json
+    mode: '0660'
+  when: base_domain_used == 'true'
+
+- name: Create 'Access Export' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Access Export"
+    description: "Access the services export."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "start,setup-nginx-proxy"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  when: base_domain_used == 'true'
+
+- name: Allow team to use 'Access Export' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Access Export"
+    role: execute
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  when: base_domain_used == 'true'
 
 - name: Save new 'Configure Synapse Admin' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1

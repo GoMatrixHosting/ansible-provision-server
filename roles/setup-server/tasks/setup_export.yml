@@ -55,6 +55,7 @@
     owner: matrix
     group: matrix
     mode: '0574'
+  when: base_domain_used == 'false'
 
 - name: Ensure /chroot/export/ location exists
   delegate_to: "{{ server_ip_final }}"

@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "Create User",
+  "description": "Create a new user account and choose if it has admin access.",
   "spec": [
     {
       "question_name": "Username",
