@@ -1,19 +1,10 @@
 
-# Append to server_vars.yml variable file
-
-- name: Add slug_size line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'slug_size: {{ slug_size }}'
-    mode: '0600'
-    state: present
-  when: subscription_type == "digitalocean"
+# Append to server_vars.yml variable file (non-updatable)
 
 - name: Add do_droplet_region line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_region: {{ do_droplet_region }}'
     mode: '0600'
     state: present
@@ -23,16 +14,38 @@
 - name: Add do_droplet_id line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
 
+- name: Add matrix_domain line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    line: 'matrix_domain: {{ matrix_domain }}'
+    mode: '0600'
+    state: present
+
+# Append to server_vars.yml variable file (updatable)
+
+- name: Add slug_size line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    mode: '0600'
+    state: present
+  with_dict:
+    'slug_size': '"{{ slug_size }}"'
+  when: subscription_type == "digitalocean"
+
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
@@ -44,7 +57,7 @@
 - name: Add server_ipv6 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
@@ -53,21 +66,16 @@
     'server_ipv6': '"{{ server_ipv6 }}"'
   when: server_ipv6|length > 0
 
-- name: Add matrix_domain line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'matrix_domain: {{ matrix_domain }}'
-    mode: '0600'
-    state: present
-
 - name: Add plan_title line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'plan_title: {{ plan_title }}'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'plan_title': '"{{ plan_title }}"'
   when: plan_title is defined
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
@@ -88,7 +96,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     insertafter: '{'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     line: '  "target": "matrix.{{ matrix_domain }}",'
     mode: '0600'
     state: present
@@ -97,7 +105,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     insertafter: '{'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     line: '  "matrix_domain": "{{ matrix_domain }}",'
     mode: '0600'
     state: present
@@ -106,7 +114,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     insertafter: '{'
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     line: '  "matrix_awx_enabled": "true",'
     mode: '0600'
     state: present
@@ -134,7 +142,7 @@
 - name: Insert certbot email value
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Basic Settings Start'
@@ -146,7 +154,7 @@
 - name: Overwrite Element subdomain value if changed
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Element Settings Start'
@@ -159,7 +167,7 @@
 - name: Overwrite client_email value if changed
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "  {{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Extension Start'
@@ -224,7 +232,7 @@
 - name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Jitsi Settings Start'
     line: 'matrix_jitsi_timezone: "{{ matrix_jitsi_timezone }}"'
     mode: '0600'
@@ -446,7 +454,7 @@
 - name: Overwrite worker settings if plan_title is large or greater
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Settings Start'
@@ -459,7 +467,7 @@
 - name: Overwrite worker settings if plan_title is jumbo or greater
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Settings Start'
@@ -472,7 +480,7 @@
 - name: Overwrite room complexity limit for Micro Server
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Extension Start'
@@ -485,7 +493,7 @@
 - name: Overwrite room complexity limit for Micro Server
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Extension Start'
@@ -498,7 +506,7 @@
 - name: Overwrite room complexity limit for Medium Server
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Extension Start'
@@ -511,7 +519,7 @@
 - name: Overwrite room complexity limit for Large Server
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Synapse Extension Start'
@@ -524,7 +532,7 @@
 - name: Disable room complexity limit for Jumbo Servers
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     insertafter: '  limit_remote_rooms:'
@@ -551,7 +559,7 @@
 - name: Add entry to borg_backup.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup.yml'
     line: 'matrix_awx_backup_encryption_passphrase: {{ borg_password.stdout }}'
     mode: '0600'
     state: present
