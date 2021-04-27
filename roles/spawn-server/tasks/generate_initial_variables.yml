@@ -166,32 +166,54 @@
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings Start'
-    line: 'matrix_nginx_proxy_base_domain_serving_enabled: false'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'matrix_nginx_proxy_base_domain_serving_enabled': 'false'
   when: base_domain_used|bool == true
 
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings Start'
-    line: 'matrix_nginx_proxy_base_domain_serving_enabled: true'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'matrix_nginx_proxy_base_domain_serving_enabled': 'true'
   when: base_domain_used|bool == false
 
-- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     insertafter: '# Base Domain Settings Start'
-    line: 'matrix_nginx_proxy_base_domain_homepage_enabled: true'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'matrix_nginx_proxy_base_domain_homepage_enabled': 'true'
   when: base_domain_used|bool == false
+  
+- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Base Domain Settings Start'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_nginx_proxy_base_domain_homepage_enabled': 'false'
+  when: base_domain_used|bool == true
 
 - name: Add matrix_jitsi_timezone line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
