@@ -33,18 +33,24 @@
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'server_ipv4: {{ server_ipv4 }}'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'server_ipv4': '{{ server_ipv4 | quote }}'
   when: server_ipv4|length > 0
 
 - name: Add server_ipv6 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'server_ipv6: {{ server_ipv6 }}'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
+  with_dict:
+    'server_ipv6': '{{ server_ipv6 | quote }}'
   when: server_ipv6|length > 0
 
 - name: Add matrix_domain line to server_vars.yml file locally on AWX
