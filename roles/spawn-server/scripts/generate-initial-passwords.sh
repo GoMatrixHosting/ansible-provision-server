@@ -49,7 +49,6 @@ matrix_ma1sd_enabled: true
 # Start ma1sd Extension
 # End ma1sd Extension
 # Jitsi Settings Start
-matrix_jitsi_enabled: true
 matrix_jitsi_jicofo_component_secret: $(generatePassword)
 matrix_jitsi_jicofo_auth_password: $(generatePassword)
 matrix_jitsi_jvb_auth_password: $(generatePassword)

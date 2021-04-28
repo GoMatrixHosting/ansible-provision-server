@@ -239,6 +239,26 @@
     state: present
   when: matrix_jitsi_timezone is defined
 
+- name: Disable Jitsi by default if Micro to Medium Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Jitsi Settings Start'
+    line: 'matrix_jitsi_enabled: false'
+    mode: '0600'
+    state: present
+  when: (matrix_jitsi_enabled is not defined) and (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server" or plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server" or plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server")
+
+- name: Enable Jitsi by default if Large to Jumbo 5000 Server
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    insertafter: '# Jitsi Settings Start'
+    line: 'matrix_jitsi_enabled: true'
+    mode: '0600'
+    state: present
+  when: (matrix_jitsi_enabled is not defined) and (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server" or plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
 - name: Add Postgresql tuning for Micro Server (s-1vcpu-2gb)
   delegate_to: 127.0.0.1
   blockinfile:
