@@ -546,6 +546,7 @@
   when: base_domain_used == 'false'
 
 - name: Remove 'Configure Website + Access Export' survey.json from the target
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: '/matrix/awx/configure_website_access_export.json'
     state: absent
@@ -620,6 +621,7 @@
   when: base_domain_used == 'true'
 
 - name: Remove 'Access Export' survey.json from the target
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: '/matrix/awx/access_export.json'
     state: absent
