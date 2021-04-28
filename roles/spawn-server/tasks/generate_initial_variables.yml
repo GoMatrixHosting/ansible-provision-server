@@ -510,7 +510,7 @@
     '    complexity': '10.0'
   when: (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server")
 
-- name: Overwrite room complexity limit for Micro Server
+- name: Overwrite room complexity limit for Small Server
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
