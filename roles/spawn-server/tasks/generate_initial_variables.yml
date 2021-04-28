@@ -238,9 +238,6 @@
     mode: '0600'
     state: present
   when: matrix_jitsi_timezone is defined
-  
-- debug:
-    msg: "matrix_jitsi_enabled: {{ matrix_jitsi_enabled }}"
 
 - name: Disable Jitsi by default if Micro to Medium Server
   delegate_to: 127.0.0.1
