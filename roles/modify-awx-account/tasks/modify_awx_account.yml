@@ -529,6 +529,13 @@
     src: './roles/modify-awx-account/surveys/configure_website_access_export.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
   when: base_domain_used == 'false'
+  
+- name: Remove 'Configure Website + Access Export' survey.json from the AWX tower
+  delegate_to: 127.0.0.1
+  file:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
+    state: absent
+  when: base_domain_used == 'true'
 
 - name: Copy 'Configure Website + Access Export' survey.json to target
   delegate_to: "{{ server_ip_final }}"
@@ -537,6 +544,12 @@
     dest: /matrix/awx/configure_website_access_export.json
     mode: '0660'
   when: base_domain_used == 'false'
+
+- name: Remove 'Configure Website + Access Export' survey.json from the target
+  file:
+    path: '/matrix/awx/configure_website_access_export.json'
+    state: absent
+  when: base_domain_used == 'true'
 
 - name: Create 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
@@ -558,6 +571,19 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
   when: base_domain_used == 'false'
+  
+- name: Remove 'Configure Website + Access Export' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Website + Access Export"
+    job_type: run
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    state: absent
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  when: base_domain_used == 'true'
 
 - name: Allow team to use 'Configure Website + Access Export' job template
   delegate_to: 127.0.0.1
@@ -578,6 +604,13 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json'
   when: base_domain_used == 'true'
 
+- name: Remove 'Access Export' survey.json from the AWX tower
+  delegate_to: 127.0.0.1
+  file:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json'
+    state: absent
+  when: base_domain_used == 'false'
+
 - name: Copy 'Access Export' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
@@ -585,6 +618,12 @@
     dest: /matrix/awx/access_export.json
     mode: '0660'
   when: base_domain_used == 'true'
+
+- name: Remove 'Access Export' survey.json from the target
+  file:
+    path: '/matrix/awx/access_export.json'
+    state: absent
+  when: base_domain_used == 'false'
 
 - name: Create 'Access Export' job template
   delegate_to: 127.0.0.1
@@ -606,6 +645,19 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
   when: base_domain_used == 'true'
+
+- name: Remove 'Access Export' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Access Export"
+    job_type: run
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    state: absent
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  when: base_domain_used == 'false'
 
 - name: Allow team to use 'Access Export' job template
   delegate_to: 127.0.0.1
