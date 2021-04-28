@@ -68,56 +68,56 @@
 - name: Set swap size for Micro DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-1vcpu-2gb-intel"
+    slug_size: "s-1vcpu-2gb"
     swap_size: "2G"
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
 - name: Set swap size for Small DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-2vcpu-4gb-intel"
+    slug_size: "s-2vcpu-4gb"
     swap_size: "4G"
   when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
 
 - name: Set swap size for Medium DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-4vcpu-8gb-intel"
+    slug_size: "s-4vcpu-8gb"
     swap_size: "8G"
   when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
 
 - name: Set swap size for Large DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-8vcpu-16gb-intel"
+    slug_size: "s-8vcpu-16gb"
     swap_size: "16G"
   when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
 
 - name: Set swap size for Jumbo 500 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so1_5-8vcpu-64gb"
+    slug_size: "so-8vcpu-64gb"
     swap_size: "64G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 500 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 1000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so1_5-16vcpu-128gb"
+    slug_size: "so-16vcpu-128gb"
     swap_size: "128G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 1000 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 2000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so1_5-24vcpu-192gb"
+    slug_size: "so-24vcpu-192gb"
     swap_size: "192G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 2000 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 5000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so1_5-32vcpu-256gb"
+    slug_size: "so-32vcpu-256gb"
     swap_size: "256G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 5000 DigitalOcean Server")
 
