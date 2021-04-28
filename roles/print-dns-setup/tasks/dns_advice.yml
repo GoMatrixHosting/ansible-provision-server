@@ -11,6 +11,7 @@
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
     - AAAA    matrix                  -         -       -      {{ server_ipv6 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
@@ -29,6 +30,7 @@
     - Type    Host                    Priority  Weight  Port   Target
     - AAAA    -                       -         -       -      {{ server_ipv6 }}
     - AAAA    matrix                  -         -       -      {{ server_ipv6 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
@@ -42,6 +44,7 @@
     - "following records:"
     - Type    Host                    Priority  Weight  Port   Target
     - A       matrix                  -         -       -      {{ server_ipv4 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
@@ -60,6 +63,7 @@
     - Type    Host                    Priority  Weight  Port   Target
     - A       -                       -         -       -      {{ server_ipv4 }}
     - A       matrix                  -         -       -      {{ server_ipv4 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
@@ -74,6 +78,7 @@
     - Type    Host                    Priority  Weight  Port   Target
     - A       matrix                  -         -       -      {{ server_ipv4 }}
     - AAAA    matrix                  -         -       -      {{ server_ipv6 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
@@ -94,6 +99,7 @@
     - AAAA    -                       -         -       -      {{ server_ipv6 }}
     - A       matrix                  -         -       -      {{ server_ipv4 }}
     - AAAA    matrix                  -         -       -      {{ server_ipv6 }}
+    - CNAME   dimension               -         -       -      matrix.{{ matrix_domain }}
     - CNAME   {{ element_subdomain }}{{ dns_spaces.stdout }}-         -       -      matrix.{{ matrix_domain }}
     - CNAME   jitsi                   -         -       -      matrix.{{ matrix_domain }}
     - SRV     _matrix-identity._tcp   10        0       443    matrix.{{ matrix_domain }}
