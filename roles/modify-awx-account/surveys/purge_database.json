@@ -1,0 +1,54 @@
+{
+  "name": "Purge Database",
+  "description": "Attempts to shrink the Synapse database, useful if the purge media tool isn't reclaiming enough space.",
+  "spec": [
+    {
+      "question_name": "Purge Rooms",
+      "question_description": "Choose if you would also like to purge rooms. WARNING: This makes the process significantly longer and can slow down your server in the meantime.",
+      "required": true,
+      "min": null,
+      "max": null,
+      "default": "false",
+      "choices": "true\nfalse",
+      "new_question": true,
+      "variable": "purge_rooms",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Purge Metric",
+      "question_description": "If purging rooms this decides whether you'll be purging rooms based on the number of users, or the number of events.",
+      "required": false,
+      "min": null,
+      "max": null,
+      "default": "Number of users",
+      "choices": "Number of users\nNumber of events",
+      "new_question": true,
+      "variable": "purge_metric",
+      "type": "multiplechoice"
+    },
+    {
+      "question_name": "Purge Metric Value",
+      "question_description": "The number of users or events used to select rooms for purging, rooms with more users or events then this value will be purged.",
+      "required": false,
+      "min": 0,
+      "max": 6,
+      "default": "1000",
+      "choices": "",
+      "new_question": true,
+      "variable": "purge_metric_value",
+      "type": "text"
+    },
+    {
+      "question_name": "Purge Date",
+      "question_description": "The date that rooms will be purged too, the date must be in YYYY-MM-DD format.",
+      "required": false,
+      "min": 0,
+      "max": 12,
+      "default": "1984-01-01",
+      "choices": "",
+      "new_question": true,
+      "variable": "purge_date",
+      "type": "text"
+    }
+  ]
+}
