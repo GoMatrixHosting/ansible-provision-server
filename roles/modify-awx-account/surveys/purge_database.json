@@ -31,7 +31,7 @@
       "question_description": "The number of users or events used to select rooms for purging, rooms with more users or events then this value will be purged.",
       "required": false,
       "min": 0,
-      "max": 6,
+      "max": 7,
       "default": "1000",
       "choices": "",
       "new_question": true,
