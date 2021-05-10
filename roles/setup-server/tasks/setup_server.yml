@@ -47,15 +47,15 @@
          dump=0
          state=present
 
-- name: Set swappiness to 80
+- name: Set swappiness to 20
   delegate_to: "{{ server_ip_final }}"
-  shell: sysctl vm.swappiness=80
+  shell: sysctl vm.swappiness=20
 
-- name: Set swappiness to 80 on reboot
+- name: Set swappiness to 20 on reboot
   delegate_to: "{{ server_ip_final }}"
   lineinfile:
     path: /etc/sysctl.conf
-    line: vm.swappiness=80
+    line: vm.swappiness=20
     owner: root
     group: root
     mode: '0644'
