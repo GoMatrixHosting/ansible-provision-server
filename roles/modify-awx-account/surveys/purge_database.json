@@ -3,27 +3,15 @@
   "description": "Attempts to shrink the Synapse database, useful if the purge media tool isn't reclaiming enough space.",
   "spec": [
     {
-      "question_name": "Purge Rooms",
-      "question_description": "Choose if you would also like to purge rooms. WARNING: This makes the process significantly longer and can slow down your server in the meantime. But it will increase the amount of disk space saved.",
-      "required": true,
-      "min": null,
-      "max": null,
-      "default": "false",
-      "choices": "true\nfalse",
-      "new_question": true,
-      "variable": "purge_rooms",
-      "type": "multiplechoice"
-    },
-    {
-      "question_name": "Purge Metric",
-      "question_description": "If purging rooms this decides whether you'll be purging rooms based on the number of users, or the number of events.",
+      "question_name": "Purge Mode",
+      "question_description": "This decides how aggressively your database will be purged. It also allows you to run the final shrink action, when you're ready to experience downtime.",
       "required": false,
       "min": null,
       "max": null,
-      "default": "Just no local users",
-      "choices": "Number of users\nNumber of events\nJust no local users",
+      "default": "No local users [recommended]",
+      "choices": "No local users [recommended]\nNumber of users [slower]\nNumber of events [slower]\nSkip purging rooms [faster]\nPerform final shrink",
       "new_question": true,
-      "variable": "purge_metric",
+      "variable": "purge_mode",
       "type": "multiplechoice"
     },
     {
