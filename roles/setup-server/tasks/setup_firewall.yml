@@ -54,6 +54,13 @@
     port: '10000'
     proto: udp
     
+- name: Allow all access to TCP port 25 with UFW for SMTP
+  delegate_to: "{{ server_ip_final }}"
+  ufw:
+    rule: allow
+    port: '25'
+    proto: tcp
+    
 - name: Allow all access to TCP port 9100 with UFW for Synapse metrics
   delegate_to: "{{ server_ip_final }}"
   ufw:
