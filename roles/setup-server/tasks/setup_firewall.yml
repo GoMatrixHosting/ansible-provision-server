@@ -5,35 +5,35 @@
     pkg:
     - ufw
 
-- name: Allow all access to TCP port 22 with UFW for SSH
+- name: Allow all access to TCP port 22 for SSH
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '22'
     proto: tcp
 
-- name: Allow all access to TCP port 80 with UFW for HTTP
+- name: Allow all access to TCP port 80 for HTTP
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '80'
     proto: tcp
 
-- name: Allow all access to TCP port 443 with UFW for HTTPS
+- name: Allow all access to TCP port 443 for HTTPS
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '443'
     proto: tcp
 
-- name: Allow all access to TCP/UDP port 5349 with UFW for TURN
+- name: Allow all access to TCP/UDP port 5349 for TURN
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '5349'
     proto: any
 
-- name: Allow all access to TCP port 8448 with UFW for Matrix Federation
+- name: Allow all access to TCP port 8448 for Matrix Federation
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
@@ -54,21 +54,28 @@
     port: '10000'
     proto: udp
     
-- name: Allow all access to TCP port 25 with UFW for SMTP
+- name: Allow all access to TCP port 25 for SMTP
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '25'
     proto: tcp
-    
-- name: Allow all access to TCP port 9100 with UFW for Synapse metrics
+
+- name: Allow all access to TCP port 587 for SMTP
+  delegate_to: "{{ server_ip_final }}"
+  ufw:
+    rule: allow
+    port: '587'
+    proto: tcp
+
+- name: Allow all access to TCP port 9100 for Synapse metrics
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
     port: '9000'
     proto: tcp
     
-- name: Allow all access to TCP port 9100 with UFW for Node-Exporter metrics
+- name: Allow all access to TCP port 9100 for Node-Exporter metrics
   delegate_to: "{{ server_ip_final }}"
   ufw:
     rule: allow
