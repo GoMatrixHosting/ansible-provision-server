@@ -321,7 +321,6 @@
     extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
     job_type: run
     job_tags: "backup-server,use-survey"
-    ask_tags_on_launch: yes
     inventory: "{{ member_id }}"
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
@@ -385,6 +384,50 @@
   awx.awx.tower_role:
     team: "{{ member_id }}"
     job_template: "{{ matrix_domain }} - 1 - Configure Element"
+    role: execute
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
+- name: Save new 'Configure Element Subdomain' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/configure_element_subdomain.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element_subdomain.json'
+
+- name: Copy 'Configure Element Subdomain' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element_subdomain.json'
+    dest: /matrix/awx/configure_element_subdomain.json
+    mode: '0660'
+
+- name: Create 'Configure Element Subdomain' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Element Subdomain"
+    description: "Configure Element clients subdomain location. (Eg: 'element' for element.example.org)"
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "start,setup-all,setup-client-element-subdomain"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element_subdomain.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
+- name: Allow team to use 'Configure Element Subdomain' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Element Subdomain"
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
