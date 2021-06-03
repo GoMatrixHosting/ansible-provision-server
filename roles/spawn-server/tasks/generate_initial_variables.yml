@@ -182,7 +182,7 @@
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
-    line: "  {{ item.key }}: {{ item.value }}"
+    line: "{{ item.key }}: {{ item.value }}"
     insertafter: '# Email Settings Start'
     mode: '0600'
     state: present
