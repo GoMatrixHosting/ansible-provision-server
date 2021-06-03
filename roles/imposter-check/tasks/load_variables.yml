@@ -15,7 +15,7 @@
     - files:
         - /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
       skip: true
-  no_log: True
+#  no_log: True
 
 - name: Include organisation variables from organisation.yml
   include_vars:
