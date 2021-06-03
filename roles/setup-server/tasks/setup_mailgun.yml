@@ -8,6 +8,6 @@
   delegate_to: 127.0.0.1
   shell: |
     curl -s --user 'api:{{ mg_private_api_key }}' -G https://{{ mg_api_url }}/v3/domains/{{ mg_sender_domain }}/credentials -F login='{{ matrix_domain }}@{{ mg_sender_domain }}' -F password='{{ matrix_mailer_relay_auth_password }}'
-#  no_log: True
+  no_log: True
 
 
