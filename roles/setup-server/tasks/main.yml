@@ -16,3 +16,6 @@
   when: backup_server_enabled|bool
   tags: setup-backup
 
+# Setup MailGun service
+- import_tasks: "{{ role_path }}/tasks/setup_mailgun.yml"
+  tags: setup-mailgun

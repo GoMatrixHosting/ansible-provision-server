@@ -13,6 +13,9 @@ matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/wDTXQt
 matrix_client_element_registration_enabled: false
 element_subdomain: 'element'
 
+# Configure SMTP Relay
+matrix_mailer_relay_use: false
+
 # Configure Jitsi
 matrix_jitsi_enabled: true
 matrix_jitsi_web_config_defaultLanguage: 'en'
