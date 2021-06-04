@@ -177,6 +177,20 @@
     'admin_contact': "'mailto:{{ client_email }}'"
   when: varsfile.stat.exists == true
 
+- name: Add matrix_mailer values
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Email Settings Start'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_mailer_relay_auth_username': '{{ matrix_domain }}@{{ mg_sender_domain }}'
+    'matrix_mailer_sender_address': '{{ mg_sender_email_address }}'
+    'matrix_mailer_relay_host_name': '{{ mg_relay_host_name }}'
+
 - name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
