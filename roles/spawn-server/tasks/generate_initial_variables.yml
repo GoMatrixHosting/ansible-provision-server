@@ -187,7 +187,7 @@
     mode: '0600'
     state: present
   with_dict:
-    'matrix_mailer_relay_auth_username': '"{{ matrix_domain }}@{{ mg_sender_domain }}"'
+    'matrix_mailer_relay_auth_username': '{{ matrix_domain }}@{{ mg_sender_domain }}'
     'matrix_mailer_sender_address': '{{ mg_sender_email_address }}'
     'matrix_mailer_relay_host_name': '{{ mg_relay_host_name }}'
 
