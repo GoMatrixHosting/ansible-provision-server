@@ -82,11 +82,3 @@
     group: root
     mode: '0644'
 
-#- name: Creates a crontab entry for export.sh
-#  delegate_to: "{{ server_ip_final }}"
-#  cron:
-#    name: "Snapshot database and run export"
-#    user: root
-#    special_time: daily
-#    job: "/bin/sh /root/export.sh"
-
