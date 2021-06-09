@@ -69,8 +69,8 @@
 - name: Install export.sh script is installed
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: ./roles/setup-server/scripts/export.sh
-    dest: /root/export.sh
+    src: ./roles/setup-server/scripts/awx-export-service.sh
+    dest: /usr/local/bin/awx-export-service.sh
     mode: '0700'
 
 - name: Touch the export.log file
@@ -82,11 +82,11 @@
     group: root
     mode: '0644'
 
-- name: Creates a crontab entry for export.sh
-  delegate_to: "{{ server_ip_final }}"
-  cron:
-    name: "Snapshot database and run export"
-    user: root
-    special_time: daily
-    job: "/bin/sh /root/export.sh"
+#- name: Creates a crontab entry for export.sh
+#  delegate_to: "{{ server_ip_final }}"
+#  cron:
+#    name: "Snapshot database and run export"
+#    user: root
+#    special_time: daily
+#    job: "/bin/sh /root/export.sh"
 

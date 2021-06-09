@@ -8,10 +8,20 @@
   apt:
     name: borgmatic
 
-- name: Ensure client backup location exists
+- name: Ensure client backup location exists 1
   delegate_to: 'Backup Server'
   file:
-    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
+    owner: '{{ backup_server_user }}'
+    group: '{{ backup_server_user }}'
+    state: directory
+    mode: '0755'
+    recurse: yes
+    
+- name: Ensure client backup location exists 2
+  delegate_to: 'Backup Server'
+  file:
+    path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
     owner: '{{ backup_server_user }}'
     group: '{{ backup_server_user }}'
     state: directory
@@ -85,17 +95,30 @@
     file: /var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml
   no_log: True
 
-- name: Save borgmatic config file, template
+- name: Save borgmatic config file, template 1
   delegate_to: "{{ server_ip_final }}"
   template:
-    src: '{{ role_path }}/templates/borg_config.yaml.j2'
-    dest: '/root/.config/borgmatic/config.yaml'
+    src: '{{ role_path }}/templates/borg_config_1.yaml.j2'
+    dest: '/root/.config/borgmatic/config_1.yaml'
 
-- name: Initialise borg repo, perform init
+- name: Save borgmatic config file, template 2
+  delegate_to: "{{ server_ip_final }}"
+  template:
+    src: '{{ role_path }}/templates/borg_config_2.yaml.j2'
+    dest: '/root/.config/borgmatic/config_2.yaml'
+
+- name: Initialise borg repo, perform init 1
   delegate_to: 'Backup Server'
-  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}'
+  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
   args:
-    creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/nonce'
+    creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix/nonce'
+  no_log: True
+  
+- name: Initialise borg repo, perform init 2
+  delegate_to: 'Backup Server'
+  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
+  args:
+    creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/database/nonce'
   no_log: True
 
 - name: Recursively change ownership of files in backup location
