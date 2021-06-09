@@ -211,6 +211,35 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
+- name: Create 'Export Server' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 0 - Export Server"
+    description: "Perform basic diagnostics on the matrix server."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "export-server"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+    
+- name: Allow team to use 'Export Server' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 0 - Export Server"
+    role: execute
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+
 - name: Create 'Self-Check' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
