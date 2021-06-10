@@ -31,6 +31,8 @@ DOCKER_ETIME="$(date +%s)"
 DOCKER_ELAPSED="$(($DOCKER_ETIME - $STIME))"
 
 if [ "$TARIT" = 1 ]; then
+  rm -f /chroot/export/matrix*
+  DATE=$(date '+%F')
   tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/export/matrix_$DATE.tar.gz ./awx ./synapse
 fi
 

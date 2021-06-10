@@ -66,7 +66,7 @@
     group: sftp
     mode: '0700'
 
-- name: Install export.sh script is installed
+- name: Install awx-export-service.sh script is installed
   delegate_to: "{{ server_ip_final }}"
   copy:
     src: ./roles/setup-server/scripts/awx-export-service.sh
