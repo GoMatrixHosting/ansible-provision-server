@@ -4,6 +4,7 @@
   apt:
     pkg:
      - pigz
+     - at
 
 - name: Ensure group "sftp" exists
   delegate_to: "{{ server_ip_final }}"
