@@ -46,12 +46,12 @@ matrix_client_element_configuration_extension_json: |
   }
 # Element Extension End
 # Email Settings Start
-matrix_mailer_sender_address: "verify@mail.example.org"
+matrix_mailer_sender_address: verify@mail.example.org
 matrix_mailer_relay_use: false
-matrix_mailer_relay_host_name: "smtp.mailgun.org"
+matrix_mailer_relay_host_name: smtp.mailgun.org
 matrix_mailer_relay_host_port: 587
 matrix_mailer_relay_auth: true
-matrix_mailer_relay_auth_username: "postmaster@mail.example.org"
+matrix_mailer_relay_auth_username: user@mail.example.org
 matrix_mailer_relay_auth_password: $(generatePassword) 
 # Email Settings End
 # ma1sd Settings Start

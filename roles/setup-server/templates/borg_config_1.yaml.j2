@@ -1,13 +1,17 @@
 location:
     source_directories:
-        - /chroot/
+        - /matrix/awx/
+        - /matrix/synapse/
 
     one_file_system: true
 
     repositories:
-        - {{ backup_server_hostname }}:{{ backup_server_directory }}/Clients/{{ matrix_domain }}/
+        - {{ backup_server_hostname }}:{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix/
 
     exclude_caches: true
+    
+    exclude_patterns:
+        - '/matrix/synapse/storage/media-store/remote_content'
 
 storage:
     compression: auto,zstd
