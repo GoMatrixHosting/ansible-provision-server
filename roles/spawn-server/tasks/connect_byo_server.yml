@@ -58,21 +58,21 @@
   when: subscription_type == "on_premises"
 
 - name: Disable password authentication
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   lineinfile:
     path: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
   when: subscription_type == "on_premises"
 
 - name: Restart SSH
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   service:
     name: ssh
     state: restarted
   when: subscription_type == "on_premises"
 
 - name: Collect timezone of connected server (Debian and derivatives only) 
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   command: cat /etc/timezone
   register: timezone_output
   when: subscription_type == "on_premises"

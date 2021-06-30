@@ -70,7 +70,7 @@
   when: subscription_type == "digitalocean"
 
 - name: Copy provision_survey_digitalocean.json survey file to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json'
     dest: /matrix/awx/provision_survey_digitalocean.json
@@ -107,7 +107,7 @@
   when: subscription_type == "on_premises"
 
 - name: Copy provision_survey_on-premises.json survey file to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premises.json'
     dest: /matrix/awx/provision_survey_on-premises.json
@@ -337,7 +337,7 @@
   when: backup_server_enabled|bool
 
 - name: Copy 'Backup Server' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/backup_server.json'
     dest: /matrix/awx/backup_server.json
@@ -384,7 +384,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
 
 - name: Copy 'Configure Element' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element.json'
     dest: /matrix/awx/configure_element.json
@@ -428,7 +428,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element_subdomain.json'
 
 - name: Copy 'Configure Element Subdomain' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_element_subdomain.json'
     dest: /matrix/awx/configure_element_subdomain.json
@@ -472,7 +472,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_email_relay.json'
 
 - name: Copy 'Configure Email Relay' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_email_relay.json'
     dest: /matrix/awx/configure_email_relay.json
@@ -516,7 +516,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
 
 - name: Copy 'Configure Synapse' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse.json'
     dest: /matrix/awx/configure_synapse.json
@@ -560,7 +560,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json'
 
 - name: Copy 'Configure Jitsi' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_jitsi.json'
     dest: /matrix/awx/configure_jitsi.json
@@ -604,7 +604,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
 
 - name: Copy 'Configure ma1sd (Advanced)' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_ma1sd.json'
     dest: /matrix/awx/configure_ma1sd.json
@@ -656,7 +656,7 @@
   when: base_domain_used == 'true'
 
 - name: Copy 'Configure Website + Access Export' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_website_access_export.json'
     dest: /matrix/awx/configure_website_access_export.json
@@ -664,7 +664,7 @@
   when: base_domain_used == 'false'
 
 - name: Remove 'Configure Website + Access Export' survey.json from the target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   file:
     path: '/matrix/awx/configure_website_access_export.json'
     state: absent
@@ -731,7 +731,7 @@
   when: base_domain_used == 'false'
 
 - name: Copy 'Access Export' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/access_export.json'
     dest: /matrix/awx/access_export.json
@@ -739,7 +739,7 @@
   when: base_domain_used == 'true'
 
 - name: Remove 'Access Export' survey.json from the target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   file:
     path: '/matrix/awx/access_export.json'
     state: absent
@@ -798,7 +798,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json'
 
 - name: Copy 'Configure Synapse Admin' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_synapse_admin.json'
     dest: /matrix/awx/configure_synapse_admin.json
@@ -842,7 +842,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
 
 - name: Copy 'Configure Corporal (Advanced)' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_corporal.json'
     dest: /matrix/awx/configure_corporal.json
@@ -886,7 +886,7 @@
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_dimension.json'
 
 - name: Copy 'Configure Dimension' survey.json to target
-  delegate_to: "{{ server_ip_final }}"
+  delegate_to: "matrix.{{ matrix_domain }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_dimension.json'
     dest: /matrix/awx/configure_dimension.json
