@@ -31,5 +31,4 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Reload the organisations inventory
-  meta: refresh_inventory
+- meta: refresh_inventory
