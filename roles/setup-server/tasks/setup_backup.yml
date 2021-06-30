@@ -51,6 +51,7 @@
 
 - name: Add client backup public keys spacer to authorized_keys of backup server
   delegate_to: '{{ backup_server_ip }}'
+  ansible_port: 2222
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
     line: '# Client Backups'
