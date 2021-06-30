@@ -9,7 +9,7 @@
     name: borgmatic
 
 - name: Ensure client backup location exists 1
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
     owner: '{{ backup_server_user }}'
@@ -19,7 +19,7 @@
     recurse: yes
     
 - name: Ensure client backup location exists 2
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
     owner: '{{ backup_server_user }}'
@@ -50,7 +50,7 @@
   register: backup_public_key
 
 - name: Add client backup public keys spacer to authorized_keys of backup server
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
     line: '# Client Backups'
@@ -59,7 +59,7 @@
     mode: '0600'
 
 - name: Add client backup public key to authorized_keys of backup server
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
     insertafter: '# Client backups'
@@ -108,21 +108,21 @@
     dest: '/root/.config/borgmatic/config_2.yaml'
 
 - name: Initialise borg repo, perform init 1
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix/nonce'
   no_log: True
   
 - name: Initialise borg repo, perform init 2
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/database/nonce'
   no_log: True
 
 - name: Recursively change ownership of files in backup location
-  delegate_to: '{{ backup_server_ip }}:{{ backup_server_ssh_port }}'
+  delegate_to: '{{ backup_server_ip }}'
   file:
     path: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}'
     owner: '{{ backup_server_user }}'
