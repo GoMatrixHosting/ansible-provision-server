@@ -75,8 +75,8 @@
     mode: '0600'
     state: present
   with_dict:
-    'ansible_port': '"{{ ansible_port }}"'
-  when: ansible_port is defined
+    'server_ssh_port': '"{{ server_ssh_port }}"'
+  when: server_ssh_port is defined
 
 - name: Add plan_title line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1

@@ -4,5 +4,3 @@
 
 ssh_key_id_array: []
 
-ansible_port: "22"
-
