@@ -24,6 +24,8 @@
     description: "{{ matrix_domain }} Matrix Server"
     inventory: "{{ member_id }}"
     state: present
+    variables:
+      ansible_port: "{{ ansible_port }}"
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes

@@ -26,6 +26,13 @@
     port: '443'
     proto: tcp
 
+- name: Allow all access to TCP/UDP port 3478 for TURN
+  delegate_to: "{{ server_ip_final }}"
+  ufw:
+    rule: allow
+    port: '3478'
+    proto: any
+    
 - name: Allow all access to TCP/UDP port 5349 for TURN
   delegate_to: "{{ server_ip_final }}"
   ufw:

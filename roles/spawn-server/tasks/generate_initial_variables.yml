@@ -66,6 +66,18 @@
     'server_ipv6': '"{{ server_ipv6 }}"'
   when: server_ipv6|length > 0
 
+- name: Add server_ssh_port line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    mode: '0600'
+    state: present
+  with_dict:
+    'ansible_port': '"{{ ansible_port }}"'
+  when: ansible_port is defined
+
 - name: Add plan_title line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:

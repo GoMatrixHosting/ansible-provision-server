@@ -1,15 +1,8 @@
   
-
 # Use localhost instead
 # hosts: "{{ target if target is defined else 'matrix_servers' }}"
 
-
-#vars:
 ssh_key_id_array: []
 
-server_ip4: 0.0.0.0
+ansible_port: "22"
 
-#these dont work :O
-#target: localhost
-
-#hosts: "{{ target }}"
