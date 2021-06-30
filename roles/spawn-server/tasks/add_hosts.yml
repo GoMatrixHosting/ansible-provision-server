@@ -31,5 +31,36 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
+- name: Create 'matrix_servers' group
+  delegate_to: 127.0.0.1
+  awx.awx.tower_group:
+    name: matrix_servers
+    description: "Matrix servers to deploy/configure."
+    inventory: "{{ member_id }}"
+    state: present
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
+  register: fs_group
+
+- name: Configure awx-cli 1
+  delegate_to: 127.0.0.1
+  shell: awx-cli config username "{{ tower_username }}"
+  no_log: True
+
+- name: Configure awx-cli 2
+  delegate_to: 127.0.0.1
+  shell: awx-cli config password "{{ tower_password }}"
+  no_log: True
+
+- name: Configure awx-cli 3
+  delegate_to: 127.0.0.1
+  shell: awx-cli config host "{{ tower_host }}"
+  no_log: True
+
+- name: Associate host group
+  delegate_to: 127.0.0.1
+  shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
+
 - name: Refresh inventory to ensure new instances exist in inventory
   meta: refresh_inventory

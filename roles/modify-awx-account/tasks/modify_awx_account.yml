@@ -17,51 +17,6 @@
   register: tower_token
   no_log: True
 
-- name: Add new host to organisations inventory
-  delegate_to: 127.0.0.1
-  awx.awx.tower_host:
-    name: "matrix.{{ matrix_domain }}"
-    description: "{{ matrix_domain }} Matrix Server"
-    inventory: "{{ member_id }}"
-    state: present
-    variables:
-      ansible_port: "{{ ansible_port }}"
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-  register: fs_host
-
-- name: Create 'matrix_servers' group
-  delegate_to: 127.0.0.1
-  awx.awx.tower_group:
-    name: matrix_servers
-    description: "Matrix servers to deploy/configure."
-    inventory: "{{ member_id }}"
-    state: present
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-  register: fs_group
-
-- name: Configure awx-cli 1
-  delegate_to: 127.0.0.1
-  shell: awx-cli config username "{{ tower_username }}"
-  no_log: True
-
-- name: Configure awx-cli 2
-  delegate_to: 127.0.0.1
-  shell: awx-cli config password "{{ tower_password }}"
-  no_log: True
-
-- name: Configure awx-cli 3
-  delegate_to: 127.0.0.1
-  shell: awx-cli config host "{{ tower_host }}"
-  no_log: True
-
-- name: Associate host group
-  delegate_to: 127.0.0.1
-  shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
-
 - name: Save new 'Provision Server' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
