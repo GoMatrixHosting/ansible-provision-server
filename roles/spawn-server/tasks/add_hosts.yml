@@ -31,4 +31,5 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- meta: refresh_inventory
+- name: Refresh inventory to ensure new instances exist in inventory
+  meta: refresh_inventory
