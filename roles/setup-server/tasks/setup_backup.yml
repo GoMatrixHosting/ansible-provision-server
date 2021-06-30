@@ -50,8 +50,8 @@
   register: backup_public_key
 
 - name: set ansible_ssh_port to default
-    set_fact: 
-      ansible_port: 22
+  set_fact: 
+    ansible_port: 22
 
 - name: Add client backup public keys spacer to authorized_keys of backup server
   delegate_to: '{{ backup_server_ip }}'
