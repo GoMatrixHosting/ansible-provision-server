@@ -1,25 +1,25 @@
 
 - name: Install necessary utils on target machine
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     pkg:
      - pigz
      - at
 
 - name: Ensure group "sftp" exists
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   group:
     name: sftp
     state: present
 
 - name: Ensure group "matrix" exists
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   group:
     name: matrix
     state: present
 
 - name: If user account doesn't exist, create a disabled account for SFTP user 'sftp', with a primary group of 'sftp', and a shell of /bin/false
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   user:
     name: sftp
     comment: SFTP user to set custom web files
@@ -30,7 +30,7 @@
     update_password: on_create
 
 - name: If user account doesn't exist, create a disabled account for Matrix user 'matrix', with a primary group of 'matrix', and a shell of /bin/false
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   user:
     name: matrix
     comment: Matrix user, initialised early incase of /chroot/export/ recovery.
@@ -40,7 +40,7 @@
     update_password: on_create
 
 - name: Create the ro /chroot directory with sticky bit if it doesn't exist. (/chroot/website has matrix:matrix permissions and is mounted to nginx container)
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot
     state: directory
@@ -49,7 +49,7 @@
     mode: '1755'
 
 - name: Create the rw /chroot/website directory if it doesn't exist.
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/website
     state: directory
@@ -59,7 +59,7 @@
   when: base_domain_used == 'false'
 
 - name: Ensure /chroot/export/ location exists
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /chroot/export
     state: directory
@@ -68,14 +68,14 @@
     mode: '0700'
 
 - name: Install awx-export-service.sh script is installed
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   copy:
     src: ./roles/setup-server/scripts/awx-export-service.sh
     dest: /usr/local/bin/awx-export-service.sh
     mode: '0700'
 
 - name: Touch the export.log file
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /matrix/awx/export.log
     state: touch

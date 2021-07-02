@@ -91,12 +91,12 @@
   when: plan_title is defined
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   wait_for_connection:
     sleep: 5
 
 - name: Create /matrix/awx config directory
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: /matrix/awx
     state: directory
@@ -622,28 +622,28 @@
 # Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
 
 - name: Copy organisation.yml variables file to target
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/organisation.yml'
     dest: /matrix/awx/organisation.yml
     mode: '0660'
 
 - name: Copy server_vars.yml variables file to target
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
     dest: /matrix/awx/server_vars.yml
     mode: '0660'
 
 - name: Copy extra_vars.json variables file to target
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     dest: /matrix/awx/extra_vars.json
     mode: '0660'
 
 - name: Copy matrix_vars.yml variables file to target
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   copy:
     src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
     dest: /matrix/awx/matrix_vars.yml

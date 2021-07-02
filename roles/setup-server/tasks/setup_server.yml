@@ -1,12 +1,12 @@
 
 - name: Update repositories and all packages on target machine
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     name: "*"
     update_cache: yes
 
 - name: Install necessary utils on target machine
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   apt:
     pkg:
      - ansible
@@ -16,29 +16,29 @@
      - prometheus-node-exporter
       
 - name: Create swapfile with the right permissions
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   command: 'fallocate -l {{ swap_size }} /swapfile'
   register: swapfile_new
   args:
     creates: /swapfile
     
 - name: Set correct permissions on swapfile
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   command: 'chmod 600 /swapfile'
   when: swapfile_new.delta is defined
 
 - name: Make swapfile
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   command: 'mkswap /swapfile'
   when: swapfile_new.delta is defined
   
 - name: Make swapfile
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   command: 'swapon /swapfile'
   when: swapfile_new.delta is defined
 
 - name: Make swapfile permanent in /etc/fstab
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   mount: name=none
          src=/swapfile
          fstype=swap
@@ -48,11 +48,11 @@
          state=present
 
 - name: Set swappiness to 20
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   shell: sysctl vm.swappiness=20
 
 - name: Set swappiness to 20 on reboot
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   lineinfile:
     path: /etc/sysctl.conf
     line: vm.swappiness=20
@@ -61,14 +61,14 @@
     mode: '0644'
 
 - name: Examine if docker is already installed
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   shell: apt list docker-ce
   register: docker_installed
 
 # Docker logs pruning, only applied if docker is already installed
 
 - name: Ensure docker config folder exists
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   file:
     path: '/etc/docker/'
     owner: root
@@ -78,14 +78,14 @@
   when: '"installed" in docker_installed.stdout'
 
 - name: Save docker config file, template
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   template:
     src: '{{ role_path }}/templates/daemon.json.j2'
     dest: '/etc/docker/daemon.json'
   when: '"installed" in docker_installed.stdout'
 
 - name: Creates a crontab entry for trimming systemd logs
-  delegate_to: "server_ip_final"
+  delegate_to: "{{ server_ip_final }}"
   cron:
     name: "Trim Systemd Logs"
     user: root
