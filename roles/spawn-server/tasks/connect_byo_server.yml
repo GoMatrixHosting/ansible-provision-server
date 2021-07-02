@@ -48,7 +48,7 @@
   when: (subscription_type == "on_premises" and plan_title == "Jumbo 5000 On-Premises Server")
 
 - name: Test if SSH is possible with ipv4
-  delegate_to: "matrix.{{ matrix_domain }}"
+  delegate_to: "server_ip_final"
   command: echo success
   register: echo_output
   when: subscription_type == "on_premises"
@@ -58,21 +58,21 @@
   when: subscription_type == "on_premises"
 
 - name: Disable password authentication
-  delegate_to: "matrix.{{ matrix_domain }}"
+  delegate_to: "server_ip_final"
   lineinfile:
     path: /etc/ssh/sshd_config
     line: 'PasswordAuthentication no'
   when: subscription_type == "on_premises"
 
 - name: Restart SSH
-  delegate_to: "matrix.{{ matrix_domain }}"
+  delegate_to: "server_ip_final"
   service:
     name: ssh
     state: restarted
   when: subscription_type == "on_premises"
 
 - name: Collect timezone of connected server (Debian and derivatives only) 
-  delegate_to: "matrix.{{ matrix_domain }}"
+  delegate_to: "server_ip_final"
   command: cat /etc/timezone
   register: timezone_output
   when: subscription_type == "on_premises"

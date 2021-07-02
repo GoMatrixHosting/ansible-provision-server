@@ -1,4 +1,9 @@
 
+- name: Install tower dep
+  delegate_to: 127.0.0.1
+  pip:
+      name: ansible-tower-cli
+
 - name: Install jq in AWX
   delegate_to: 127.0.0.1
   yum:
@@ -26,7 +31,6 @@
     state: present
     variables:
       ansible_host: "{{ server_ip_final }}"
-      ansible_port: "{{ server_ssh_port }}"
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
@@ -63,5 +67,3 @@
   delegate_to: 127.0.0.1
   shell: awx-cli host associate --host "{{ fs_host.id }}" --group "{{ fs_group.id }}"
 
-- name: Refresh inventory to ensure new instances exist in inventory
-  meta: refresh_inventory

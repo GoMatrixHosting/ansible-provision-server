@@ -10,10 +10,6 @@
 - import_tasks: "{{ role_path }}/tasks/save_server_ips.yml"
   tags: always
 
-# Add the new host to AWX
-- import_tasks: "{{ role_path }}/tasks/add_hosts.yml"
-  tags: always
-
 # Connects an existing BYO server
 - import_tasks: "{{ role_path }}/tasks/connect_byo_server.yml"
   tags: always
