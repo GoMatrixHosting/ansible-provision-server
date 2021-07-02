@@ -49,6 +49,7 @@
   register: fs_group
 
 - name: Add the host to a Tower Inventory group via API
+  delegate_to: 127.0.0.1
   uri:
     url: "https://{{ tower_host }}/api/v2/groups/{{ fs_group.id }}/hosts/"
     body:
