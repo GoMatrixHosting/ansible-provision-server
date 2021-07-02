@@ -1,4 +1,8 @@
 
+# Add host to AWX inventory
+- import_tasks: "{{ role_path }}/tasks/add_host.yml"
+  tags: always
+
 # Modified existing AWX organisation
 - import_tasks: "{{ role_path }}/tasks/modify_awx_account.yml"
   tags: always

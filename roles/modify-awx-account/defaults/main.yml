@@ -64,4 +64,3 @@ sftp_auth_method: 'Disabled'
 sftp_password: ''
 sftp_public_key: ''
 ext_dimension_users_raw: []
-

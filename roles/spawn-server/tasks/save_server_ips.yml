@@ -30,4 +30,3 @@
   set_fact:
     server_ip_final: '{{ server_ipv6 }}'
   when: server_ipv4|length == 0 and server_ipv6|length > 0
-  

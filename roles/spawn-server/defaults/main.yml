@@ -1,15 +1,6 @@
   
-
 # Use localhost instead
 # hosts: "{{ target if target is defined else 'matrix_servers' }}"
 
-
-#vars:
 ssh_key_id_array: []
 
-server_ip4: 0.0.0.0
-
-#these dont work :O
-#target: localhost
-
-#hosts: "{{ target }}"
