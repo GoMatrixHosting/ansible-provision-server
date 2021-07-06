@@ -19,5 +19,3 @@
 - meta: end_play
   when: impostercheck.stdout|bool == true
 
-
-
