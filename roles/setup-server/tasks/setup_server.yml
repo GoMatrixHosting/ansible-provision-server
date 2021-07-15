@@ -14,7 +14,39 @@
      - git
      - openssl
      - prometheus-node-exporter
-      
+     - unattended-upgrades
+     - apt-listchanges
+
+- name: Configure unattended-upgrades 1
+  delegate_to: "{{ server_ip_final }}"
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^\/\/      "origin=Debian,codename=\$\{distro_codename}-updates\";$'
+    line: '        "origin=Debian,codename=${distro_codename}-updates";'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Configure unattended-upgrades 2
+  delegate_to: "{{ server_ip_final }}"
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^\/\/      "origin=Debian,codename=\$\{distro_codename}-proposed-updates\";$'
+    line: '        "origin=Debian,codename=${distro_codename}-proposed-updates";'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Configure unattended-upgrades 3
+  delegate_to: "{{ server_ip_final }}"
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^\/\/      "o=Debian Backports,a=\$\{distro_codename}-backports,l=Debian Backports";$'
+    line: '        "o=Debian Backports,a=${distro_codename}-backports,l=Debian Backports";'
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Create swapfile with the right permissions
   delegate_to: "{{ server_ip_final }}"
   command: 'fallocate -l {{ swap_size }} /swapfile'

@@ -7,7 +7,7 @@
 # Run both postgresql dump and tar.gz of /matrix/
 #/bin/sh /usr/local/bin/awx-export-service.sh 1 1
 
-cd /matrix || exit 1
+cd / || exit 1
 STIME="$(date +%s)"
 
 DUMPIT=$1; TARIT=$2;
@@ -33,7 +33,7 @@ DOCKER_ELAPSED="$(($DOCKER_ETIME - $STIME))"
 if [ "$TARIT" = 1 ]; then
   rm -f /chroot/export/matrix*
   DATE=$(date '+%F')
-  tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/export/matrix_$DATE.tar.gz ./awx ./synapse
+  tar --exclude='./synapse/storage/media-store/remote_content' -czf /chroot/export/matrix_$DATE.tar.gz /matrix/awx /matrix/synapse /chroot/website
 fi
 
 TARRC="$?";
