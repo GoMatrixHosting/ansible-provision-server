@@ -1,7 +1,6 @@
 location:
     source_directories:
-        - /matrix/awx/
-        - /matrix/synapse/
+        - /matrix/
         - /chroot/website/
 
     one_file_system: true
@@ -12,6 +11,7 @@ location:
     exclude_caches: true
     
     exclude_patterns:
+        - '/matrix/postgres/data'
         - '/matrix/synapse/storage/media-store/remote_content'
 
 storage:

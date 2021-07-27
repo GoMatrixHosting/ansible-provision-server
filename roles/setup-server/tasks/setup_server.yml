@@ -1,4 +1,8 @@
 
+- name: Change server locale
+  delegate_to: "{{ server_ip_final }}"
+  shell: update-locale LANG="C.UTF-8"
+
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ip_final }}"
   apt:
@@ -123,4 +127,3 @@
     user: root
     special_time: daily
     job: "sudo journalctl --vacuum-time=28d"
-
