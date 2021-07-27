@@ -1,7 +1,7 @@
 
 - name: Change server locale
   delegate_to: "{{ server_ip_final }}"
-  shell: sudo update-locale LANG="C.UTF-8"
+  shell: update-locale LANG="C.UTF-8"
 
 - name: Update repositories and all packages on target machine
   delegate_to: "{{ server_ip_final }}"
