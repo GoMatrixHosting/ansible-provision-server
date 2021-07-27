@@ -131,4 +131,3 @@
 - name: Change server locale 2
   delegate_to: "{{ server_ip_final }}"
   shell: sudo update-locale LANG="C"
-
