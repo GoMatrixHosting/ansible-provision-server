@@ -124,3 +124,11 @@
     special_time: daily
     job: "sudo journalctl --vacuum-time=28d"
 
+- name: Change server locale 1
+  delegate_to: "{{ server_ip_final }}"
+  shell: sudo locale-gen en_US
+
+- name: Change server locale 2
+  delegate_to: "{{ server_ip_final }}"
+  shell: sudo update-locale LANG="C"
+
