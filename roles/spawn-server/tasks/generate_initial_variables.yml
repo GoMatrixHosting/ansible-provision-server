@@ -108,11 +108,11 @@
     insertafter: '{'
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     regexp: "^#? *{{ item.key | regex_escape() }}:"
-    line: "{{ item.key }}: {{ item.value }}"
+    line: "  {{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
   with_dict:
-    'plan_title': '"{{ plan_title }}"'
+    '"plan_title"': '"{{ plan_title }}",'
   register: set_plan_title
 
 - name: Add target line to extra_vars.json file locally on AWX
@@ -656,7 +656,7 @@
     dest: '/var/lib/awx/projects/backups/{{ matrix_domain }}-borg_backup.yml'
     mode: '0660'
 
-# Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
+# Copy organisation.yml, server_vars.yml, extra_vars.json, matrix_vars.yml
 
 - name: Copy organisation.yml variables file to target
   delegate_to: "{{ server_ip_final }}"
