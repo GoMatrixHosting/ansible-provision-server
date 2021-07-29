@@ -176,7 +176,7 @@
     seconds: 10
   when: subscription_type == "digitalocean"
 
-- name: Re-spawn the Droplet, collect the IPv4+IPv6, re-size it if needed, then turn it on
+- name: Re-spawn the Droplet, re-size it if needed, then turn it on
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
     state: active
@@ -187,6 +187,21 @@
     region: '{{ do_droplet_region }}'
     image: '{{ do_image }}'
     resize_disk: yes
+    ipv6: yes
+    wait: yes
+    unique_name: yes
+  when: subscription_type == "digitalocean"
+
+- name: Re-spawn the Droplet, collect the IPv4+IPv6 addresses
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: present
+    name: '{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+    size: '{{ new_slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
     ipv6: yes
     wait: yes
     unique_name: yes
