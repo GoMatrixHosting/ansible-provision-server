@@ -169,6 +169,7 @@
     ssh_keys: '{{ ssh_key_id_array }}'
     region: '{{ do_droplet_region }}'
     image: '{{ do_image }}'
+    resize_disk: yes
     ipv6: yes
     wait: yes
     unique_name: yes
@@ -189,6 +190,7 @@
     ssh_keys: '{{ ssh_key_id_array }}'
     region: '{{ do_droplet_region }}'
     image: '{{ do_image }}'
+    resize_disk: yes
     ipv6: yes
     wait: yes
     unique_name: yes
