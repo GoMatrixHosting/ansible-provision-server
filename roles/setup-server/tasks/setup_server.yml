@@ -51,15 +51,20 @@
     group: root
     mode: '0644'
 
+- name: Check if the swapfile exists
+  stat:
+    path: /swapfile
+  register: swapfile_result
+
 - name: Disable existing swap if plan_title has changed
   delegate_to: "{{ server_ip_final }}"
   command: 'swapoff /swapfile'
-  when: set_plan_title.changed
+  when: set_plan_title.changed and swapfile_result.stat.exists
 
 - name: Delete existing swap file if plan_title has changed
   delegate_to: "{{ server_ip_final }}"
   command: 'rm /swapfile'
-  when: set_plan_title.changed
+  when: set_plan_title.changed and swapfile_result.stat.exists
 
 - name: Create swapfile with the right permissions
   delegate_to: "{{ server_ip_final }}"
