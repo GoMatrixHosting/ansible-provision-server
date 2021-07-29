@@ -121,14 +121,11 @@
     swap_size: "256G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 5000 DigitalOcean Server")
 
-- name: do_droplet_region line to server_vars.yml file locally on AWX
+- name: Define slug_size if undefined (first run)
   delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'do_droplet_region: {{ do_droplet_region }}'
-    mode: '0600'
-    state: present
-  when: subscription_type == "digitalocean"
+  set_fact:
+    slug_size: "{{ new_slug_size }}"
+  when: slug_size is undefined
 
 - name: Record the public SSH key into a variable
   set_fact:

@@ -30,6 +30,15 @@
 
 # Append to server_vars.yml variable file (updatable)
 
+- name: Add do_droplet_region line to server_vars.yml file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+    line: 'do_droplet_region: {{ do_droplet_region }}'
+    mode: '0600'
+    state: present
+  when: subscription_type == "digitalocean"
+
 - name: Add slug_size line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
