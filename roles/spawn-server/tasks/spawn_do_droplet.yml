@@ -159,17 +159,16 @@
     msg: "{{ ssh_key_id_array }}"
   when: subscription_type == "digitalocean"
 
-- name: Spawn a new Digital Ocean Droplet
+- name: Spawn a new Digital Ocean Droplet, ensure it is off
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
-    state: present
+    state: inactive
     name: '{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
     size: '{{ slug_size }}'
     ssh_keys: '{{ ssh_key_id_array }}'
     region: '{{ do_droplet_region }}'
     image: '{{ do_image }}'
-    resize_disk: yes
     ipv6: yes
     wait: yes
     unique_name: yes
@@ -180,10 +179,10 @@
     seconds: 10
   when: subscription_type == "digitalocean"
 
-- name: Re-spawn the Droplet to collect the IP
+- name: Re-spawn the Droplet, collect the IPv4+IPv6, re-size it if needed, then turn it on
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
-    state: present
+    state: active
     name: '{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
     size: '{{ slug_size }}'
