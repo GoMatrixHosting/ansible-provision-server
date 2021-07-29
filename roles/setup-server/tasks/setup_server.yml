@@ -52,6 +52,7 @@
     mode: '0644'
 
 - name: Check if the swapfile exists
+  delegate_to: "{{ server_ip_final }}"
   stat:
     path: /swapfile
   register: swapfile_result
