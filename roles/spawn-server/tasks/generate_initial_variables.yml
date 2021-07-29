@@ -39,7 +39,7 @@
     mode: '0600'
     state: present
   with_dict:
-    'slug_size': '"{{ slug_size }}"'
+    'slug_size': '"{{ new_slug_size }}"'
   when: subscription_type == "digitalocean"
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
