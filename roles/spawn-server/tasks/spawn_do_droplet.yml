@@ -169,6 +169,15 @@
     ipv6: yes
     wait: yes
     unique_name: yes
+  register: old_server_info
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ old_server_info }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ old_server_info.data.droplet }}"
   when: subscription_type == "digitalocean"
 
 - name: Re-spawn the Droplet, re-size it if needed, then turn it on
