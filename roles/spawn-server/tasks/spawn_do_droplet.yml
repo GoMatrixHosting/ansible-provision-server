@@ -172,13 +172,13 @@
   register: old_server_info
   when: subscription_type == "digitalocean"
 
-- debug:
-    msg: "{{ old_server_info }}"
-  when: subscription_type == "digitalocean"
+#- debug:
+#    msg: "{{ old_server_info }}"
+#  when: subscription_type == "digitalocean"
 
-- debug:
-    msg: "{{ old_server_info.data.droplet }}"
-  when: subscription_type == "digitalocean"
+#- debug:
+#    msg: "{{ old_server_info.data.droplet }}"
+#  when: subscription_type == "digitalocean"
 
 - name: Re-spawn the Droplet, re-size it if needed, then turn it on
   delegate_to: 127.0.0.1
@@ -196,26 +196,26 @@
     unique_name: yes
   when: subscription_type == "digitalocean"
 
-- name: Wait 10 seconds because DigitalOcean is slow
-  pause:
-    seconds: 10
-  when: subscription_type == "digitalocean"
+#- name: Wait 10 seconds because DigitalOcean is slow
+#  pause:
+#    seconds: 10
+#  when: subscription_type == "digitalocean"
 
-- name: Re-spawn the Droplet, collect the IPv4+IPv6 addresses
-  delegate_to: 127.0.0.1
-  community.digitalocean.digital_ocean_droplet:
-    state: present
-    name: '{{ matrix_domain }}'
-    oauth_token: '{{ do_api_token }}'
-    size: '{{ new_slug_size }}'
-    ssh_keys: '{{ ssh_key_id_array }}'
-    region: '{{ do_droplet_region }}'
-    image: '{{ do_image }}'
-    ipv6: yes
-    wait: yes
-    unique_name: yes
-  register: new_server_info
-  when: subscription_type == "digitalocean"
+#- name: Re-spawn the Droplet, collect the IPv4+IPv6 addresses
+#  delegate_to: 127.0.0.1
+#  community.digitalocean.digital_ocean_droplet:
+#    state: present
+#    name: '{{ matrix_domain }}'
+#    oauth_token: '{{ do_api_token }}'
+#    size: '{{ new_slug_size }}'
+#    ssh_keys: '{{ ssh_key_id_array }}'
+#    region: '{{ do_droplet_region }}'
+#    image: '{{ do_image }}'
+#    ipv6: yes
+#    wait: yes
+#    unique_name: yes
+#  register: new_server_info
+#  when: subscription_type == "digitalocean"
 
 - debug:
     msg: "{{ new_server_info }}"
