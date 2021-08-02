@@ -207,6 +207,13 @@
     state: active
     name: '{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
+    size: '{{ new_slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
+    ipv6: yes
+    wait: yes
+    unique_name: yes
   when: subscription_type == "digitalocean"
 
 - debug:
