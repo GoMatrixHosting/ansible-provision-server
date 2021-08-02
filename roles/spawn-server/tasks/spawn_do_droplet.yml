@@ -156,7 +156,7 @@
     msg: "{{ ssh_key_id_array }}"
   when: subscription_type == "digitalocean"
 
-- name: Spawn a new Digital Ocean Droplet, ensure it is off
+- name: Spawn a new Digital Ocean Droplet, ensure it is off, collect the IPv4+IPv6 addresses
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
     state: inactive
