@@ -201,21 +201,13 @@
 #    seconds: 10
 #  when: subscription_type == "digitalocean"
 
-#- name: Re-spawn the Droplet, collect the IPv4+IPv6 addresses
-#  delegate_to: 127.0.0.1
-#  community.digitalocean.digital_ocean_droplet:
-#    state: present
-#    name: '{{ matrix_domain }}'
-#    oauth_token: '{{ do_api_token }}'
-#    size: '{{ new_slug_size }}'
-#    ssh_keys: '{{ ssh_key_id_array }}'
-#    region: '{{ do_droplet_region }}'
-#    image: '{{ do_image }}'
-#    ipv6: yes
-#    wait: yes
-#    unique_name: yes
-#  register: new_server_info
-#  when: subscription_type == "digitalocean"
+- name: Try turn the droplet on AGAIN! See https://github.com/ansible-collections/community.digitalocean/issues/140
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: active
+    name: '{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+  when: subscription_type == "digitalocean"
 
 - debug:
     msg: "{{ new_server_info }}"
