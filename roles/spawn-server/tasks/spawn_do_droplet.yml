@@ -169,7 +169,7 @@
     ipv6: yes
     wait: yes
     unique_name: yes
-  register: old_server_info
+  register: new_server_info
   when: subscription_type == "digitalocean"
 
 #- debug:
