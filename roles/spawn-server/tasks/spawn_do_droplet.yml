@@ -196,9 +196,9 @@
     unique_name: yes
   when: subscription_type == "digitalocean"
 
-- name: Wait 10 seconds because DigitalOcean is slow
+- name: Wait 30 seconds because DigitalOcean is slow
   pause:
-    seconds: 10
+    seconds: 30
   when: subscription_type == "digitalocean"
 
 - name: Try turn the droplet on AGAIN! See https://github.com/ansible-collections/community.digitalocean/issues/140
