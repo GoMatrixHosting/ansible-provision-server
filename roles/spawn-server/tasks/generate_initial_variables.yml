@@ -75,18 +75,18 @@
     'server_ipv6': '"{{ server_ipv6 }}"'
   when: server_ipv6|length > 0
 
-- name: Add plan_title line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    regexp: "^#? *{{ item.key | regex_escape() }}:"
-    line: "{{ item.key }}: {{ item.value }}"
-    mode: '0600'
-    state: present
-  with_dict:
-    'plan_title': '"{{ plan_title }}"'
-  register: set_plan_title
-  when: plan_title is defined
+#- name: Add plan_title line to server_vars.yml file locally on AWX
+#  delegate_to: 127.0.0.1
+#  lineinfile:
+#    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
+#    regexp: "^#? *{{ item.key | regex_escape() }}:"
+#    line: "{{ item.key }}: {{ item.value }}"
+#    mode: '0600'
+#    state: present
+#  with_dict:
+#    'plan_title': '"{{ plan_title }}"'
+#  register: set_plan_title
+#  when: plan_title is defined
 
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ip_final }}"
