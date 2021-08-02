@@ -102,17 +102,17 @@
 
 # Append to extra_vars.json variable file for launching deploy scripts
 
-- name: Add plan_title line to extra_vars.json file locally on AWX
+- name: Update plan_title line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
     insertafter: '{'
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
-    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    regexp: "^  {{ item.key | regex_escape() }}:"
     line: "  {{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
   with_dict:
-    '"plan_title"': '"{{ plan_title }}",'
+    '"plan_title"': '"{{ plan_title }}"'
   register: set_plan_title
 
 - name: Add target line to extra_vars.json file locally on AWX
