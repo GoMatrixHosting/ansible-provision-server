@@ -64,7 +64,9 @@
 
 - name: Delete existing swap file if plan_title has changed
   delegate_to: "{{ server_ip_final }}"
-  command: 'rm /swapfile'
+  file:
+    path: '/swapfile'
+    state: absent
   when: set_plan_title.changed and swapfile_result.stat.exists
 
 - name: Create swapfile with the right permissions
@@ -76,7 +78,11 @@
     
 - name: Set correct permissions on swapfile
   delegate_to: "{{ server_ip_final }}"
-  command: 'chmod 600 /swapfile'
+  file:
+    path: '/swapfile'
+    owner: root
+    group: root
+    mode: '0600'
   when: swapfile_new.delta is defined
 
 - name: Make swapfile
