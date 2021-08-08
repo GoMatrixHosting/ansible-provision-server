@@ -78,7 +78,7 @@
     state: directory
     mode: '0700'
 
-# Append to extra_vars.json variable file for launching deploy scripts
+# Append to extra_vars.json variable file for launching deploy scripts (updatable)
 
 - name: Update plan_title line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
@@ -92,6 +92,8 @@
   with_dict:
     '"plan_title"': '"{{ plan_title }}"'
   register: set_plan_title
+
+# Append to extra_vars.json variable file for launching deploy scripts (non-updatable)
 
 - name: Add target line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
