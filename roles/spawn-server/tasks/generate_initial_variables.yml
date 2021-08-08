@@ -42,15 +42,6 @@
 
 # Append to server_vars.yml variable file (updatable)
 
-- name: Add do_droplet_region line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'do_droplet_region: {{ do_droplet_region }}'
-    mode: '0600'
-    state: present
-  when: subscription_type == "digitalocean"
-
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
@@ -95,7 +86,7 @@
     insertafter: '{'
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
     regexp: "^  {{ item.key | regex_escape() }}:"
-    line: "  {{ item.key }}: {{ item.value }}"
+    line: "  {{ item.key }}: {{ item.value }},"
     mode: '0600'
     state: present
   with_dict:
