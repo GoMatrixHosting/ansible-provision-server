@@ -29,7 +29,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_digitalocean.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, setup-firewall, setup-export, setup-backup
+    job_tags: imposter-check, setup-firewall, setup-mailgun, setup-export, setup-backup
     skip_tags: digitalocean-space
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"
@@ -66,7 +66,7 @@
     survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/provision_survey_on-premises.json') }}"
     state: present
     verbosity: 1
-    job_tags: imposter-check, setup-firewall, setup-export, setup-backup
+    job_tags: imposter-check, setup-firewall, setup-mailgun, setup-export, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "https://{{ tower_host }}"
     tower_oauthtoken: "{{ tower_token.stdout }}"

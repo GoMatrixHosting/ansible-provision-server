@@ -12,7 +12,7 @@
   tags: always
 
 # Connects an existing BYO server
-- import_tasks: "{{ role_path }}/tasks/connect_byo_server.yml"
+- import_tasks: "{{ role_path }}/tasks/connect_on-premises_server.yml"
   tags: always
 
 # Create initial variable files

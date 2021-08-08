@@ -51,6 +51,24 @@
     group: root
     mode: '0644'
 
+- name: Check if the swapfile exists
+  delegate_to: "{{ server_ip_final }}"
+  stat:
+    path: /swapfile
+  register: swapfile_result
+
+- name: Disable existing swap if plan_title has changed
+  delegate_to: "{{ server_ip_final }}"
+  command: 'swapoff /swapfile'
+  when: set_plan_title.changed and swapfile_result.stat.exists
+
+- name: Delete existing swap file if plan_title has changed
+  delegate_to: "{{ server_ip_final }}"
+  file:
+    path: '/swapfile'
+    state: absent
+  when: set_plan_title.changed and swapfile_result.stat.exists
+
 - name: Create swapfile with the right permissions
   delegate_to: "{{ server_ip_final }}"
   command: 'fallocate -l {{ swap_size }} /swapfile'
@@ -60,7 +78,11 @@
     
 - name: Set correct permissions on swapfile
   delegate_to: "{{ server_ip_final }}"
-  command: 'chmod 600 /swapfile'
+  file:
+    path: '/swapfile'
+    owner: root
+    group: root
+    mode: '0600'
   when: swapfile_new.delta is defined
 
 - name: Make swapfile
@@ -68,7 +90,7 @@
   command: 'mkswap /swapfile'
   when: swapfile_new.delta is defined
   
-- name: Make swapfile
+- name: Enable swapfile
   delegate_to: "{{ server_ip_final }}"
   command: 'swapon /swapfile'
   when: swapfile_new.delta is defined

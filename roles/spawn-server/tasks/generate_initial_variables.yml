@@ -28,19 +28,19 @@
     mode: '0600'
     state: present
 
-# Append to server_vars.yml variable file (updatable)
-
 - name: Add slug_size line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    regexp: "^{{ item.key | regex_escape() }}:"
     line: "{{ item.key }}: {{ item.value }}"
     mode: '0600'
     state: present
   with_dict:
-    'slug_size': '"{{ slug_size }}"'
+    'slug_size': '"{{ new_slug_size }}"'
   when: subscription_type == "digitalocean"
+
+# Append to server_vars.yml variable file (updatable)
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
@@ -66,18 +66,6 @@
     'server_ipv6': '"{{ server_ipv6 }}"'
   when: server_ipv6|length > 0
 
-- name: Add plan_title line to server_vars.yml file locally on AWX
-  delegate_to: 127.0.0.1
-  lineinfile:
-    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    regexp: "^#? *{{ item.key | regex_escape() }}:"
-    line: "{{ item.key }}: {{ item.value }}"
-    mode: '0600'
-    state: present
-  with_dict:
-    'plan_title': '"{{ plan_title }}"'
-  when: plan_title is defined
-
 - name: Wait for ssh connection to become available, with 5 seconds between checks
   delegate_to: "{{ server_ip_final }}"
   wait_for_connection:
@@ -90,7 +78,22 @@
     state: directory
     mode: '0700'
 
-# Append to extra_vars.json variable file for launching deploy scripts
+# Append to extra_vars.json variable file for launching deploy scripts (updatable)
+
+- name: Update plan_title line to extra_vars.json file locally on AWX
+  delegate_to: 127.0.0.1
+  lineinfile:
+    insertafter: '{'
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json'
+    regexp: "^  {{ item.key | regex_escape() }}:"
+    line: "  {{ item.key }}: {{ item.value }},"
+    mode: '0600'
+    state: present
+  with_dict:
+    '"plan_title"': '"{{ plan_title }}"'
+  register: set_plan_title
+
+# Append to extra_vars.json variable file for launching deploy scripts (non-updatable)
 
 - name: Add target line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
@@ -101,7 +104,7 @@
     mode: '0600'
     state: present
 
-- name: Add target line to extra_vars.json file locally on AWX
+- name: Add matrix_domain line to extra_vars.json file locally on AWX
   delegate_to: 127.0.0.1
   lineinfile:
     insertafter: '{'
@@ -484,8 +487,21 @@
         "-c synchronous_commit=off"
       ]
   when: (plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
+
+- name: Disable Synapse workers if plan_title is medium or smaller
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings Start'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_synapse_workers_enabled': 'false'
+  when: (plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server" or plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server" or plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server")
      
-- name: Overwrite worker settings if plan_title is large or greater
+- name: Enable Synapse workers settings if plan_title is large or greater
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -497,8 +513,21 @@
   with_dict:
     'matrix_synapse_workers_enabled': 'true'
   when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server" or plan_title == "Jumbo 500 DigitalOcean Server" or plan_title == "Jumbo 500 On-Premises Server" or plan_title == "Jumbo 1000 DigitalOcean Server" or plan_title == "Jumbo 1000 On-Premises Server" or plan_title == "Jumbo 2000 DigitalOcean Server" or plan_title == "Jumbo 2000 On-Premises Server" or plan_title == "Jumbo 5000 DigitalOcean Server" or plan_title == "Jumbo 5000 On-Premises Server")
-  
-- name: Overwrite worker settings if plan_title is jumbo or greater
+
+- name: Set 'little-federation-helper' worker setting if plan_title is large
+  delegate_to: 127.0.0.1
+  lineinfile:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
+    regexp: "^#? *{{ item.key | regex_escape() }}:"
+    line: "{{ item.key }}: {{ item.value }}"
+    insertafter: '# Synapse Settings Start'
+    mode: '0600'
+    state: present
+  with_dict:
+    'matrix_synapse_workers_preset': 'little-federation-helper'
+  when: (plan_title == "Large DigitalOcean Server" or plan_title == "Large On-Premises Server")
+
+- name: Set 'one-of-each' worker setting if plan_title is jumbo or greater
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -607,7 +636,7 @@
     dest: '/var/lib/awx/projects/backups/{{ matrix_domain }}-borg_backup.yml'
     mode: '0660'
 
-# Copy organisation.yml, server_vars.yml, extra_vars.yml, matrix_vars.yml
+# Copy organisation.yml, server_vars.yml, extra_vars.json, matrix_vars.yml
 
 - name: Copy organisation.yml variables file to target
   delegate_to: "{{ server_ip_final }}"

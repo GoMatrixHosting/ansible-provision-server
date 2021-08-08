@@ -68,67 +68,64 @@
 - name: Set swap size for Micro DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-1vcpu-2gb"
+    new_slug_size: "s-1vcpu-2gb"
     swap_size: "2G"
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
 - name: Set swap size for Small DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-2vcpu-4gb"
+    new_slug_size: "s-2vcpu-4gb"
     swap_size: "4G"
   when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
 
 - name: Set swap size for Medium DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-4vcpu-8gb"
+    new_slug_size: "s-4vcpu-8gb"
     swap_size: "8G"
   when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
 
 - name: Set swap size for Large DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "s-8vcpu-16gb"
+    new_slug_size: "s-8vcpu-16gb"
     swap_size: "16G"
   when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
 
 - name: Set swap size for Jumbo 500 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so-8vcpu-64gb"
+    new_slug_size: "so-8vcpu-64gb"
     swap_size: "64G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 500 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 1000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so-16vcpu-128gb"
+    new_slug_size: "so-16vcpu-128gb"
     swap_size: "128G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 1000 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 2000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so-24vcpu-192gb"
+    new_slug_size: "so-24vcpu-192gb"
     swap_size: "192G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 2000 DigitalOcean Server")
 
 - name: Set swap size for Jumbo 5000 DigitalOcean Server
   delegate_to: 127.0.0.1
   set_fact:
-    slug_size: "so-32vcpu-256gb"
+    new_slug_size: "so-32vcpu-256gb"
     swap_size: "256G"
   when: (subscription_type == "digitalocean" and plan_title == "Jumbo 5000 DigitalOcean Server")
 
-- name: do_droplet_region line to server_vars.yml file locally on AWX
+- name: Define slug_size if undefined (first run)
   delegate_to: 127.0.0.1
-  lineinfile:
-    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'do_droplet_region: {{ do_droplet_region }}'
-    mode: '0600'
-    state: present
-  when: subscription_type == "digitalocean"
+  set_fact:
+    slug_size: "{{ new_slug_size }}"
+  when: slug_size is undefined
 
 - name: Record the public SSH key into a variable
   set_fact:
@@ -159,30 +156,10 @@
     msg: "{{ ssh_key_id_array }}"
   when: subscription_type == "digitalocean"
 
-- name: Spawn a new Digital Ocean Droplet
+- name: Spawn a new Digital Ocean Droplet, collect the IPv4+IPv6 addresses, then turn it off
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
-    state: present
-    name: '{{ matrix_domain }}'
-    oauth_token: '{{ do_api_token }}'
-    size: '{{ slug_size }}'
-    ssh_keys: '{{ ssh_key_id_array }}'
-    region: '{{ do_droplet_region }}'
-    image: '{{ do_image }}'
-    ipv6: yes
-    wait: yes
-    unique_name: yes
-  when: subscription_type == "digitalocean"
-
-- name: Wait 10 seconds because DigitalOcean is slow
-  pause:
-    seconds: 10
-  when: subscription_type == "digitalocean"
-
-- name: Re-spawn the Droplet to collect the IP
-  delegate_to: 127.0.0.1
-  community.digitalocean.digital_ocean_droplet:
-    state: present
+    state: inactive
     name: '{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
     size: '{{ slug_size }}'
@@ -193,6 +170,22 @@
     wait: yes
     unique_name: yes
   register: new_server_info
+  when: subscription_type == "digitalocean"
+
+- name: Re-spawn the Droplet, re-size it if needed, then turn it on (broken)
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: active
+    name: '{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+    size: '{{ new_slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
+    resize_disk: yes
+    ipv6: yes
+    wait: yes
+    unique_name: yes
   when: subscription_type == "digitalocean"
 
 - debug:
