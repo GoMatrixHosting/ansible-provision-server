@@ -256,7 +256,7 @@
     state: present
   when: matrix_jitsi_timezone is defined
 
-- name: Disable Jitsi by default if Micro to Medium Server
+- name: Disable Jitsi by default if Micro to Medium Server, only on the first run
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -266,7 +266,7 @@
     state: present
   when: (varsfile.stat.exists == false) and (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server" or plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server" or plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server")
 
-- name: Enable Jitsi by default if Large to Jumbo 5000 Server
+- name: Enable Jitsi by default if Large to Jumbo 5000 Server, only on the first run
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
