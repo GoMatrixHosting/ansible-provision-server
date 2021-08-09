@@ -207,7 +207,7 @@
     'matrix_nginx_proxy_base_domain_serving_enabled': 'false'
   when: base_domain_used|bool == true
 
-- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_serving_enabled line to matrix_vars.yml file, only on the first run
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -218,9 +218,9 @@
     state: present
   with_dict:
     'matrix_nginx_proxy_base_domain_serving_enabled': 'true'
-  when: base_domain_used|bool == false
+  when: (base_domain_used|bool == false) and (varsfile.stat.exists == false)
 
-- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file, only on the first run
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
@@ -231,9 +231,9 @@
     state: present
   with_dict:
     'matrix_nginx_proxy_base_domain_homepage_enabled': 'true'
-  when: base_domain_used|bool == false
+  when: (base_domain_used|bool == false) and (varsfile.stat.exists == false)
   
-- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file locally on AWX
+- name: Add matrix_nginx_proxy_base_domain_homepage_enabled line to matrix_vars.yml file
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/matrix_vars.yml'
