@@ -499,7 +499,7 @@
     state: present
   with_dict:
     'matrix_synapse_workers_enabled': 'false'
-  when: (plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server" or plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server" or plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server")
+  when: (plan_title == "Micro DigitalOcean Server" or plan_title == "Micro On-Premises Server" or plan_title == "Small DigitalOcean Server" or plan_title == "Small On-Premises Server" or plan_title == "Medium DigitalOcean Server" or plan_title == "Medium On-Premises Server")
      
 - name: Enable Synapse workers settings if plan_title is large or greater
   delegate_to: 127.0.0.1
