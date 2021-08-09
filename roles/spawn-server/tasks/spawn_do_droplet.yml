@@ -125,7 +125,7 @@
   delegate_to: 127.0.0.1
   set_fact:
     slug_size: "{{ new_slug_size }}"
-  when: slug_size is undefined
+  when: (subscription_type == "digitalocean and slug_size is undefined)
 
 - name: Record the public SSH key into a variable
   set_fact:
