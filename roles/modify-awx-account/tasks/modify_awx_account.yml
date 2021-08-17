@@ -126,30 +126,6 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
-- name: Create an rrule string for a schedule for every day
-  delegate_to: 127.0.0.1
-  set_fact:
-    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA"
-  when: deploy_branch == "testing"
-
-- name: Create an rrule string for a schedule for every Sunday
-  delegate_to: 127.0.0.1
-  set_fact:
-    rrule_line: "DTSTART;TZID={{ matrix_jitsi_timezone }}:20200101T000000 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU"
-  when: deploy_branch == "master"
-
-- name: Build a schedule for 'Deploy/Update a Server' job template
-  delegate_to: 127.0.0.1
-  awx.awx.tower_schedule:
-    name: "{{ matrix_domain }} - 0 - Update Server Schedule"
-    enabled: yes
-    state: present
-    unified_job_template: "{{ matrix_domain }} - 0 - Deploy/Update a Server"
-    rrule: "{{ rrule_line }}"
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
-    validate_certs: yes
-
 - name: Create 'Export Server' job template
   delegate_to: 127.0.0.1
   awx.awx.tower_job_template:
