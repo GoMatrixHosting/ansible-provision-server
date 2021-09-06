@@ -69,7 +69,7 @@
   delegate_to: 127.0.0.1
   set_fact:
     new_slug_size: "s-1vcpu-2gb"
-    swap_size: "2G"
+    swap_size: "4G"
   when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
 
 - name: Set swap size for Small DigitalOcean Server

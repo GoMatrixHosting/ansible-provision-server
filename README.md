@@ -1,6 +1,8 @@
 # Ansible Provision Server
 
-The provision stage configures the environment that a subscription and Matrix service can exist in. Allows user to select their base URL, element client URL, the DigitalOcean droplet location or to connect their own On-Premises server.
+The provision stage configures the environment that a subscription and Matrix service can exist in. 
+
+Allows the client to select their base URL, element client URL, the DigitalOcean droplet location or to connect their own On-Premises server.
 
 
 # Prerequisites
