@@ -2,7 +2,7 @@
 - name: Set swap size for Micro On-Premises Server
   delegate_to: 127.0.0.1
   set_fact:
-    swap_size: "2G"
+    swap_size: "4G"
   when: (subscription_type == "on_premises" and plan_title == "Micro On-Premises Server")
 
 - name: Set swap size for Small On-Premises Server
