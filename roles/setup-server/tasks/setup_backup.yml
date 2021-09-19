@@ -49,6 +49,7 @@
 # collect new public key, overwrite old entry
 
 - name: Generate OpenSSH key on AWX system
+  delegate_to: 127.0.0.1
   community.crypto.openssh_keypair:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup_ed25519'
     comment: 'Borg ssh key for {{ matrix_domain }}'
