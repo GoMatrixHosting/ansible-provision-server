@@ -962,8 +962,6 @@
     project: "{{ member_id }} - Matrix Docker Ansible Deploy"
     playbook: setup.yml
     credential: "{{ member_id }} - AWX SSH Key"
-#    survey_enabled: true
-#    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/rotate_ssh.json') }}"
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
