@@ -45,6 +45,18 @@
     group: root
     mode: '0644'
 
+- name: Generate OpenSSH key on AWX system for client backup if it doesn't exist
+  delegate_to: 127.0.0.1
+  community.crypto.openssh_keypair:
+    path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup_ed25519'
+    comment: 'Borg ssh key for {{ matrix_domain }}'
+    type: ed25519
+
+- name: Collect current SSH public key value
+  delegate_to: 127.0.0.1
+  shell: cat '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup_ed25519.pub'
+  register: borg_public_key
+
 - name: Ensure client backup location exists 1
   delegate_to: 'backup.{{ hosting_url }}'
   file:
@@ -77,14 +89,9 @@
 - name: Copy backup SSH key to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/hosting/backup_private.key'
-    dest: /root/.ssh/backup_private.key
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/borg_backup_ed25519'
+    dest: /root/.ssh/borg_backup_ed25519
     mode: '0600'
-
-- name: Collect SSH public key value
-  delegate_to: 127.0.0.1
-  shell: cat '/var/lib/awx/projects/hosting/backup_public.key'
-  register: backup_public_key
 
 - name: Add client backup public keys spacer to authorized_keys of backup server
   delegate_to: 'backup.{{ hosting_url }}'
@@ -95,12 +102,14 @@
     group: '{{ backup_server_user }}'
     mode: '0600'
 
-- name: Add client backup public key to authorized_keys of backup server
+- name: Add the new client backup public key to authorized_keys of backup server
   delegate_to: 'backup.{{ hosting_url }}'
   lineinfile:
     path: '/home/{{ backup_server_user }}/.ssh/authorized_keys'
-    insertafter: '# Client backups'
-    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients",restrict {{ backup_public_key.stdout }}'
+    state: present
+    regexp: '^command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict.*$'
+    insertafter: '# Client Backups'
+    line: 'command="borg serve --restrict-to-path {{ backup_server_directory }}/Clients/{{ matrix_domain }}",restrict {{ borg_public_key.stdout }}'
     owner: '{{ backup_server_user }}'
     group: '{{ backup_server_user }}'
     mode: '0600'
@@ -115,7 +124,7 @@
           HostName {{ backup_server_ip }}
           Port {{ backup_server_ssh_port }}
           User {{ backup_server_user }}
-          IdentityFile /root/.ssh/backup_private.key
+          IdentityFile /root/.ssh/borg_backup_ed25519
 
 - name: Ensure borgmatic config location exists
   delegate_to: "{{ server_ip_final }}"

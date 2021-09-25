@@ -950,3 +950,20 @@
     tower_oauthtoken: "{{ tower_token.stdout }}"
     validate_certs: yes
 
+- name: Create 'Rotate SSH Key' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 00 - Rotate SSH Key"
+    description: "Loads the new public client key into the server."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "rotate-ssh"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ tower_host }}"
+    tower_oauthtoken: "{{ tower_token.stdout }}"
+    validate_certs: yes
