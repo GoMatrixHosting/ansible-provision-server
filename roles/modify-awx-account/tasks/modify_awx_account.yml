@@ -32,7 +32,7 @@
     job_tags: imposter-check, setup-firewall, setup-mailgun, setup-export, setup-backup
     skip_tags: digitalocean-space
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: subscription_type == "digitalocean"
 
@@ -69,7 +69,7 @@
     job_tags: imposter-check, setup-firewall, setup-mailgun, setup-export, setup-backup
     skip_tags: digitalocean-space, digitalocean-droplet
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: subscription_type == "on_premises"
 
@@ -81,7 +81,7 @@
     role: execute
     state: absent
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   ignore_errors: yes
 
@@ -93,7 +93,7 @@
     role: read
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   ignore_errors: yes
 
@@ -112,7 +112,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Deploy/Update a Server' job template
@@ -123,7 +123,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Create 'Export Server' job template
@@ -141,7 +141,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
     
 - name: Allow team to use 'Export Server' job template
@@ -152,7 +152,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Create 'Self-Check' job template
@@ -170,7 +170,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
     
 - name: Allow team to use 'Self-Check' job template
@@ -181,7 +181,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Create 'Start/Restart all Services' job template
@@ -199,7 +199,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Start/Restart all Services' job template
@@ -210,7 +210,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Create 'Stop all Services' job template
@@ -228,7 +228,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Stop all Services' job template
@@ -239,7 +239,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
     
 - name: Save new 'Backup Server' survey.json to the AWX tower, template
@@ -274,7 +274,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: backup_server_enabled|bool
 
@@ -286,7 +286,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: backup_server_enabled|bool
 
@@ -320,7 +320,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Element' job template
@@ -331,7 +331,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Element Subdomain' survey.json to the AWX tower, template
@@ -364,7 +364,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Element Subdomain' job template
@@ -375,7 +375,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Email Relay' survey.json to the AWX tower, template
@@ -408,7 +408,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Email Relay' job template
@@ -419,7 +419,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Synapse' survey.json to the AWX tower, template
@@ -452,7 +452,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Synapse' job template
@@ -463,7 +463,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Jitsi' survey.json to the AWX tower, template
@@ -496,7 +496,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Jitsi' job template
@@ -507,7 +507,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure ma1sd (Advanced)' survey.json to the AWX tower, template
@@ -540,7 +540,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure ma1sd (Advanced)' job template
@@ -551,7 +551,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Website + Access Export' survey.json to the AWX tower, template
@@ -600,7 +600,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'false'
   
@@ -613,7 +613,7 @@
     playbook: setup.yml
     state: absent
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'true'
 
@@ -625,7 +625,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'false'
 
@@ -675,7 +675,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'true'
 
@@ -688,7 +688,7 @@
     playbook: setup.yml
     state: absent
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'false'
 
@@ -700,7 +700,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   when: base_domain_used == 'true'
 
@@ -734,7 +734,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Synapse Admin' job template
@@ -745,7 +745,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Corporal (Advanced)' survey.json to the AWX tower, template
@@ -778,7 +778,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Corporal (Advanced)' job template
@@ -789,7 +789,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save new 'Configure Dimension' survey.json to the AWX tower, template
@@ -822,7 +822,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Configure Dimension' job template
@@ -833,7 +833,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save initial 'Create User' survey.json to the AWX tower
@@ -860,7 +860,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Create User' job template
@@ -871,7 +871,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
     
 - name: Save initial 'Purge Media (Advanced)' survey.json to the AWX tower
@@ -898,7 +898,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Purge Media (Advanced)' job template
@@ -909,7 +909,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Save initial 'Purge Database (Advanced)' survey.json to the AWX tower
@@ -936,7 +936,7 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Allow team to use 'Purge Database (Advanced)' job template
@@ -947,7 +947,7 @@
     role: execute
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
 - name: Create 'Rotate SSH Key' job template
@@ -965,5 +965,14 @@
     state: present
     verbosity: 1
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
+
+- name: Delete the Session Token for executing AWX modules
+  awx.awx.tower_token:
+    description: 'AWX Session Token'
+    scope: "write"
+    state: absent
+    existing_token_id: "{{ awx_session_token.ansible_facts.tower_token.id }}"
+    tower_host: "https://{{ awx_url }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"

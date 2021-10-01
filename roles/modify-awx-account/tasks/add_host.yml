@@ -4,12 +4,21 @@
     name: jq
     state: latest
 
-- name: Collect AWX admin token the hard way!
-  delegate_to: 127.0.0.1
-  shell: |
-      curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
-  register: tower_token
-  no_log: True
+#- name: Collect AWX admin token the hard way!
+#  delegate_to: 127.0.0.1
+#  shell: |
+#      curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
+#  register: tower_token
+#  no_log: True
+
+- name: Create a Session Token for executing AWX modules
+  awx.awx.tower_token:
+    description: 'AWX Session Token'
+    scope: "write"
+    state: present
+    tower_host: "https://{{ awx_url }}"
+    tower_oauthtoken: "{{ awx_master_token }}"
+  register: awx_session_token
 
 - name: Define server_ssh_port if not specified
   set_fact:
@@ -26,7 +35,7 @@
     variables:
       ansible_host: "{{ server_ip_final }}"
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   register: fs_host
 
@@ -38,7 +47,7 @@
     inventory: "{{ member_id }}"
     state: present
     tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   register: fs_group
 
