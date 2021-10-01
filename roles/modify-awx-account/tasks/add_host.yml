@@ -48,13 +48,13 @@
 - name: Add the host to a Tower Inventory group via API
   delegate_to: 127.0.0.1
   uri:
-    url: "https://{{ tower_host }}/api/v2/groups/{{ fs_group.id }}/hosts/"
+    url: "https://{{ awx_host }}/api/v2/groups/{{ fs_group.id }}/hosts/"
     body:
       name: "matrix.{{ matrix_domain }}"
       inventory: "{{ member_id }}"
     body_format: json
     headers:
       Content-Type: application/json
-      Authorization: "Bearer {{ tower_token.stdout }}"
+      Authorization: "Bearer {{ awx_session_token.ansible_facts.tower_token.token }}"
     method: POST
     status_code: 204
