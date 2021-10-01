@@ -969,6 +969,7 @@
     validate_certs: yes
 
 - name: Delete the AWX session token for executing modules
+  delegate_to: 127.0.0.1
   awx.awx.tower_token:
     description: 'AWX Session Token'
     scope: "write"
