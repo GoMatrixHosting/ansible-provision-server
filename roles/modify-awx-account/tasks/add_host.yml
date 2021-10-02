@@ -1,8 +1,3 @@
-- name: Install jq in AWX
-  delegate_to: 127.0.0.1
-  yum:
-    name: jq
-    state: latest
 
 - name: Create a AWX session token for executing modules
   delegate_to: 127.0.0.1
@@ -13,6 +8,7 @@
     tower_host: "https://{{ awx_host }}"
     tower_oauthtoken: "{{ awx_master_token }}"
   register: awx_session_token
+  no_log: True
 
 - name: Define server_ssh_port if not specified
   set_fact:
