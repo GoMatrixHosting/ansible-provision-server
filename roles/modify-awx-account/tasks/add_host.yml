@@ -1,14 +1,13 @@
-- name: Install jq in AWX
-  delegate_to: 127.0.0.1
-  yum:
-    name: jq
-    state: latest
 
-- name: Collect AWX admin token the hard way!
+- name: Create a AWX session token for executing modules
   delegate_to: 127.0.0.1
-  shell: |
-      curl -sku {{ tower_username }}:{{ tower_password }} -H "Content-Type: application/json" -X POST -d '{"description":"Tower CLI", "application":null, "scope":"write"}' https://{{ tower_host }}/api/v2/users/1/personal_tokens/ | jq '.token' | sed -r 's/\"//g'
-  register: tower_token
+  awx.awx.tower_token:
+    description: 'AWX Session Token'
+    scope: "write"
+    state: present
+    tower_host: "https://{{ awx_host }}"
+    tower_oauthtoken: "{{ awx_master_token }}"
+  register: awx_session_token
   no_log: True
 
 - name: Define server_ssh_port if not specified
@@ -25,8 +24,8 @@
     state: present
     variables:
       ansible_host: "{{ server_ip_final }}"
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_host: "https://{{ awx_host }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   register: fs_host
 
@@ -37,21 +36,21 @@
     description: "Matrix servers to deploy/configure."
     inventory: "{{ member_id }}"
     state: present
-    tower_host: "https://{{ tower_host }}"
-    tower_oauthtoken: "{{ tower_token.stdout }}"
+    tower_host: "https://{{ awx_host }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
   register: fs_group
 
 - name: Add the host to a Tower Inventory group via API
   delegate_to: 127.0.0.1
   uri:
-    url: "https://{{ tower_host }}/api/v2/groups/{{ fs_group.id }}/hosts/"
+    url: "https://{{ awx_host }}/api/v2/groups/{{ fs_group.id }}/hosts/"
     body:
       name: "matrix.{{ matrix_domain }}"
       inventory: "{{ member_id }}"
     body_format: json
     headers:
       Content-Type: application/json
-      Authorization: "Bearer {{ tower_token.stdout }}"
+      Authorization: "Bearer {{ awx_session_token.ansible_facts.tower_token.token }}"
     method: POST
     status_code: 204
