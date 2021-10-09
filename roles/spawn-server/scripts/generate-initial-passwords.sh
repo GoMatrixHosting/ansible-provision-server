@@ -7,7 +7,7 @@ generatePassword() {
 }
 
 usage() {
-  echo "Usage: $0 matrix_domain element_subdomain client_email output_file"
+  echo "Usage: $0 matrix_domain awx_element_subdomain client_email output_file"
 }
 DOMAIN="$1"; shift
 if [ "" = "$DOMAIN" ]; then usage 2>&1; exit 1; fi

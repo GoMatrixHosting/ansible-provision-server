@@ -1,17 +1,17 @@
 
 target: localhost
 
-# Configure Website + Access Backup
-customise_base_domain_website: false
-sftp_password: ""
-
 # Configure Element
 matrix_client_element_enabled: true
 matrix_client_element_brand: 'Element'
 matrix_client_element_default_theme: 'light'
 matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/wDTXQtz.jpg'
 matrix_client_element_registration_enabled: false
-element_subdomain: 'element'
+awx_matrix_client_element_welcome_logo: ''
+awx_matrix_client_element_welcome_logo_link: ''
+awx_matrix_client_element_welcome_headline: ''
+awx_matrix_client_element_welcome_text: ''
+awx_element_subdomain: 'element'
 
 # Configure SMTP Relay
 matrix_mailer_relay_use: false
@@ -22,6 +22,9 @@ matrix_jitsi_web_config_defaultLanguage: 'en'
 
 # Configure Ma1sd
 matrix_ma1sd_enabled: true
+# https://github.com/ma1uta/ma1sd/blob/master/docs/stores/README.md
+awx_matrix_ma1sd_auth_store: 'Synapse Internal'
+awx_matrix_ma1sd_configuration_extension_yaml: ["matrix_ma1sd_configuration_extension_yaml: |", "  ldap:", "    enabled: true", "    connection:", "      host: ldapHostnameOrIp", "      tls: false", "      port: 389", "      baseDNs: [\'OU=Users,DC=example,DC=org\']", "      bindDn: CN=My ma1sd User,OU=Users,DC=example,DC=org", "      bindPassword: TheUserPassword"]
 
 # Configure Synapse
 matrix_synapse_enable_registration: false
@@ -32,10 +35,13 @@ matrix_synapse_presence_enabled: false
 matrix_synapse_url_preview_enabled: true
 matrix_synapse_allow_guest_access: false
 matrix_synapse_max_upload_size_mb: 10
-ext_registrations_require_3pid: false
-ext_enable_registration_captcha: false
-ext_recaptcha_public_key: public-key
-ext_recaptcha_private_key: private-key
+awx_registrations_require_3pid: false
+awx_enable_registration_captcha: false
+awx_recaptcha_public_key: public-key
+awx_recaptcha_private_key: private-key
+awx_matrix_synapse_auto_join_rooms: []
+awx_federation_whitelist_raw: []
+awx_url_preview_accept_language_default: ["en"]
 
 # Configure Synapse Admin
 matrix_synapse_admin_enabled: false
@@ -52,19 +58,10 @@ matrix_corporal_http_api_auth_token: ''
 # Configure Dimension
 matrix_dimension_enabled: false
 matrix_dimension_access_token: ''
+awx_dimension_users_raw: []
 
 # Custom Variables
-awx_matrix_client_element_welcome_logo: ''
-awx_matrix_client_element_welcome_logo_link: ''
-awx_matrix_client_element_welcome_headline: ''
-awx_matrix_client_element_welcome_text: ''
-matrix_synapse_auto_join_rooms: []
-ext_federation_whitelist_raw: []
-ext_url_preview_accept_language_default: ["en"]
-# https://github.com/ma1uta/ma1sd/blob/master/docs/stores/README.md
-ext_matrix_ma1sd_auth_store: 'Synapse Internal'
-ext_matrix_ma1sd_configuration_extension_yaml: ["matrix_ma1sd_configuration_extension_yaml: |", "  ldap:", "    enabled: true", "    connection:", "      host: ldapHostnameOrIp", "      tls: false", "      port: 389", "      baseDNs: [\'OU=Users,DC=example,DC=org\']", "      bindDn: CN=My ma1sd User,OU=Users,DC=example,DC=org", "      bindPassword: TheUserPassword"]
-sftp_auth_method: 'Disabled'
-sftp_password: ''
-sftp_public_key: ''
-ext_dimension_users_raw: []
+awx_customise_base_domain_website: false
+awx_sftp_auth_method: 'Disabled'
+awx_sftp_password: ''
+awx_sftp_public_key: ''
