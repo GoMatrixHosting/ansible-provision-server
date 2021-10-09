@@ -54,10 +54,10 @@ matrix_dimension_enabled: false
 matrix_dimension_access_token: ''
 
 # Custom Variables
-ext_matrix_client_element_welcome_logo: ''
-ext_matrix_client_element_welcome_logo_link: ''
-ext_matrix_client_element_welcome_headline: ''
-ext_matrix_client_element_welcome_text: ''
+awx_matrix_client_element_welcome_logo: ''
+awx_matrix_client_element_welcome_logo_link: ''
+awx_matrix_client_element_welcome_headline: ''
+awx_matrix_client_element_welcome_text: ''
 matrix_synapse_auto_join_rooms: []
 ext_federation_whitelist_raw: []
 ext_url_preview_accept_language_default: ["en"]
