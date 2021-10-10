@@ -132,8 +132,8 @@ matrix_dimension_enabled: false
 matrix_vars_yml_snapshotting_enabled: false
 # Extra Settings End
 # Custom Settings Start
-ext_federation_whitelist_raw: []
-ext_url_preview_accept_language_default: ['en']
+awx_federation_whitelist_raw: []
+awx_url_preview_accept_language_default: ['en']
 # Custom Settings End
 VAREND
 
