@@ -11,7 +11,7 @@
       "default": "",
       "choices": "",
       "new_question": true,
-      "variable": "new_username",
+      "variable": "awx_new_username",
       "type": "text"
     },
     {
@@ -23,7 +23,7 @@
       "default": "",
       "choices": "",
       "new_question": true,
-      "variable": "new_password",
+      "variable": "awx_new_password",
       "type": "password"
     },
     {
@@ -35,7 +35,7 @@
       "default": "false",
       "choices": "true\nfalse",
       "new_question": true,
-      "variable": "admin_access",
+      "variable": "awx_admin_access",
       "type": "multiplechoice"
     }
   ]

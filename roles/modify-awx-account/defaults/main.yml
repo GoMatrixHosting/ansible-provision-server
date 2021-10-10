@@ -27,6 +27,7 @@ awx_matrix_ma1sd_auth_store: 'Synapse Internal'
 awx_matrix_ma1sd_configuration_extension_yaml: ["matrix_ma1sd_configuration_extension_yaml: |", "  ldap:", "    enabled: true", "    connection:", "      host: ldapHostnameOrIp", "      tls: false", "      port: 389", "      baseDNs: [\'OU=Users,DC=example,DC=org\']", "      bindDn: CN=My ma1sd User,OU=Users,DC=example,DC=org", "      bindPassword: TheUserPassword"]
 
 # Configure Synapse
+matrix_synapse_auto_join_rooms: []
 matrix_synapse_enable_registration: false
 matrix_synapse_federation_enabled: false
 matrix_synapse_allow_public_rooms_over_federation: false
@@ -39,7 +40,6 @@ awx_registrations_require_3pid: false
 awx_enable_registration_captcha: false
 awx_recaptcha_public_key: public-key
 awx_recaptcha_private_key: private-key
-awx_matrix_synapse_auto_join_rooms: []
 awx_federation_whitelist_raw: []
 awx_url_preview_accept_language_default: ["en"]
 

@@ -21,13 +21,13 @@ if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 cat <<VAREND > "$VARFILE"
 # AWX Settings Start
 matrix_awx_enabled: true
-matrix_awx_janitor_user_password: $(generatePassword)
-matrix_awx_janitor_user_created: false
-matrix_awx_dimension_user_password: $(generatePassword)
-matrix_awx_dimension_user_created: false
-matrix_awx_mjolnir_user_password: $(generatePassword)
-matrix_awx_mjolnir_user_created: false
-matrix_awx_backup_enabled: false
+awx_janitor_user_password: $(generatePassword)
+awx_janitor_user_created: false
+awx_dimension_user_password: $(generatePassword)
+awx_dimension_user_created: false
+awx_mjolnir_user_password: $(generatePassword)
+awx_mjolnir_user_created: false
+awx_backup_enabled: false
 # AWX Settings End
 # Basic Settings Start
 matrix_domain: $DOMAIN
