@@ -40,7 +40,7 @@ awx_registrations_require_3pid: false
 awx_enable_registration_captcha: false
 awx_recaptcha_public_key: public-key
 awx_recaptcha_private_key: private-key
-awx_federation_whitelist_raw: []
+awx_federation_whitelist: []
 awx_url_preview_accept_language_default: ["en"]
 
 # Configure Synapse Admin
@@ -58,7 +58,7 @@ matrix_corporal_http_api_auth_token: ''
 # Configure Dimension
 matrix_dimension_enabled: false
 matrix_dimension_access_token: ''
-awx_dimension_users_raw: []
+awx_dimension_users: []
 
 # Custom Variables
 awx_customise_base_domain_website: false
