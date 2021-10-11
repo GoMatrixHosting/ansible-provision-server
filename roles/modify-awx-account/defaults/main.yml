@@ -12,7 +12,7 @@ matrix_client_element_welcome_logo: 'welcome/images/logo.svg'
 matrix_client_element_welcome_logo_link: 'https://element.io'
 awx_matrix_client_element_welcome_headline: ''
 awx_matrix_client_element_welcome_text: ''
-element_subdomain: 'element'
+awx_element_subdomain: 'element'
 
 # Configure SMTP Relay
 matrix_mailer_relay_use: false
