@@ -3,7 +3,6 @@ target: localhost
 
 # Configure Element
 matrix_client_element_enabled: true
-matrix_client_element_brand: 'Element'
 matrix_client_element_default_theme: 'light'
 matrix_client_element_branding_welcomeBackgroundUrl: ''
 matrix_client_element_registration_enabled: false
@@ -11,8 +10,8 @@ matrix_client_element_brand: 'Element'
 matrix_client_element_branding_welcomeBackgroundUrl: ~
 matrix_client_element_welcome_logo: 'welcome/images/logo.svg'
 matrix_client_element_welcome_logo_link: 'https://element.io'
-matrix_client_element_welcome_headline: '_t('Welcome to Element')'
-matrix_client_element_welcome_text: '_t('Decentralised, encrypted chat &amp; collaboration powered by [matrix]')'
+matrix_client_element_welcome_headline: "_t('Welcome to Element')"
+matrix_client_element_welcome_text: "_t('Decentralised, encrypted chat &amp; collaboration powered by [matrix]')"
 element_subdomain: 'element'
 
 # Configure SMTP Relay
