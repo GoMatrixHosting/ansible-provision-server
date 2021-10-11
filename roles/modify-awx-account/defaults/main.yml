@@ -10,8 +10,8 @@ matrix_client_element_brand: 'Element'
 matrix_client_element_branding_welcomeBackgroundUrl: ~
 matrix_client_element_welcome_logo: 'welcome/images/logo.svg'
 matrix_client_element_welcome_logo_link: 'https://element.io'
-matrix_client_element_welcome_headline: "_t('Welcome to Element')"
-matrix_client_element_welcome_text: "_t('Decentralised, encrypted chat &amp; collaboration powered by [matrix]')"
+awx_matrix_client_element_welcome_headline: ''
+awx_matrix_client_element_welcome_text: ''
 element_subdomain: 'element'
 
 # Configure SMTP Relay
