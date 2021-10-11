@@ -5,7 +5,7 @@ target: localhost
 matrix_client_element_enabled: true
 matrix_client_element_brand: 'Element'
 matrix_client_element_default_theme: 'light'
-matrix_client_element_branding_welcomeBackgroundUrl: 'https://i.imgur.com/wDTXQtz.jpg'
+matrix_client_element_branding_welcomeBackgroundUrl: ''
 matrix_client_element_registration_enabled: false
 awx_matrix_client_element_welcome_logo: ''
 awx_matrix_client_element_welcome_logo_link: ''
