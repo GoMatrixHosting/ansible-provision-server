@@ -7,6 +7,7 @@ matrix_client_element_brand: 'Element'
 matrix_client_element_default_theme: 'light'
 matrix_client_element_branding_welcomeBackgroundUrl: ''
 matrix_client_element_registration_enabled: false
+awx_matrix_client_element_brand: ''
 awx_matrix_client_element_welcome_logo: ''
 awx_matrix_client_element_welcome_logo_link: ''
 awx_matrix_client_element_welcome_headline: ''
