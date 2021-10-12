@@ -11,7 +11,7 @@
       "default": "Remote Media",
       "choices": "Local Media\nRemote Media",
       "new_question": true,
-      "variable": "matrix_purge_media_type",
+      "variable": "awx_purge_media_type",
       "type": "multiplechoice"
     },
     {
@@ -22,7 +22,7 @@
       "max": 10,
       "default": "",
       "new_question": true,
-      "variable": "matrix_purge_from_date",
+      "variable": "awx_purge_from_date",
       "type": "text"
     },
     {
@@ -33,7 +33,7 @@
       "max": 10,
       "default": "",
       "new_question": true,
-      "variable": "matrix_purge_to_date",
+      "variable": "awx_purge_to_date",
       "type": "text"
     }
   ]

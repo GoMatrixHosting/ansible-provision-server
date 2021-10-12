@@ -11,7 +11,7 @@
       "default": "No local users [recommended]",
       "choices": "No local users [recommended]\nNumber of users [slower]\nNumber of events [slower]\nSkip purging rooms [faster]\nPerform final shrink",
       "new_question": true,
-      "variable": "purge_mode",
+      "variable": "awx_purge_mode",
       "type": "multiplechoice"
     },
     {
@@ -23,7 +23,7 @@
       "default": "1000",
       "choices": "",
       "new_question": true,
-      "variable": "purge_metric_value",
+      "variable": "awx_purge_metric_value",
       "type": "text"
     },
     {
@@ -35,7 +35,7 @@
       "default": "1984-01-01",
       "choices": "",
       "new_question": true,
-      "variable": "purge_date",
+      "variable": "awx_purge_date",
       "type": "text"
     }
   ]

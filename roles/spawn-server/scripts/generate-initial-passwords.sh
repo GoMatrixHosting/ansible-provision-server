@@ -7,7 +7,7 @@ generatePassword() {
 }
 
 usage() {
-  echo "Usage: $0 matrix_domain element_subdomain client_email output_file"
+  echo "Usage: $0 matrix_domain awx_element_subdomain client_email output_file"
 }
 DOMAIN="$1"; shift
 if [ "" = "$DOMAIN" ]; then usage 2>&1; exit 1; fi
@@ -21,13 +21,13 @@ if [ "" = "$VARFILE" ]; then usage 2>&1; exit 1; fi
 cat <<VAREND > "$VARFILE"
 # AWX Settings Start
 matrix_awx_enabled: true
-matrix_awx_janitor_user_password: $(generatePassword)
-matrix_awx_janitor_user_created: false
-matrix_awx_dimension_user_password: $(generatePassword)
-matrix_awx_dimension_user_created: false
-matrix_awx_mjolnir_user_password: $(generatePassword)
-matrix_awx_mjolnir_user_created: false
-matrix_awx_backup_enabled: false
+awx_janitor_user_password: $(generatePassword)
+awx_janitor_user_created: false
+awx_dimension_user_password: $(generatePassword)
+awx_dimension_user_created: false
+awx_mjolnir_user_password: $(generatePassword)
+awx_mjolnir_user_created: false
+awx_backup_enabled: false
 # AWX Settings End
 # Basic Settings Start
 matrix_domain: $DOMAIN
@@ -132,8 +132,8 @@ matrix_dimension_enabled: false
 matrix_vars_yml_snapshotting_enabled: false
 # Extra Settings End
 # Custom Settings Start
-ext_federation_whitelist_raw: []
-ext_url_preview_accept_language_default: ['en']
+awx_federation_whitelist_raw: []
+awx_url_preview_accept_language_default: ['en']
 # Custom Settings End
 VAREND
 

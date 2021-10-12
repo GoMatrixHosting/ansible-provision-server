@@ -155,14 +155,14 @@
 
 - name: Initialise borg repo, perform init 1
   delegate_to: 'backup.{{ hosting_url }}'
-  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
+  shell: ' export BORG_PASSPHRASE={{ awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/matrix/nonce'
   no_log: True
   
 - name: Initialise borg repo, perform init 2
   delegate_to: 'backup.{{ hosting_url }}'
-  shell: ' export BORG_PASSPHRASE={{ matrix_awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
+  shell: ' export BORG_PASSPHRASE={{ awx_backup_encryption_passphrase }}; borg init --encryption=repokey {{ backup_server_directory }}/Clients/{{ matrix_domain }}/database'
   args:
     creates: '{{ backup_server_directory }}/Clients/{{ matrix_domain }}/database/nonce'
   no_log: True
