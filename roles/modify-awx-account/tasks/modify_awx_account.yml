@@ -959,7 +959,7 @@
 - name: Copy 'Bridge Discord AppService' survey.json to target
   delegate_to: "{{ server_ip_final }}"
   copy:
-    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/bridge_discord_appservice.json.j2'
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/bridge_discord_appservice.json'
     dest: /matrix/awx/bridge_discord_appservice.json
     mode: '0660'
 
