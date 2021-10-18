@@ -8,12 +8,13 @@
       "required": true,
       "min": null,
       "max": null,
-      "default": "{{ matrix_appservice_discord_enabled | string | lower }}",
+      "default": "{{ matrix_appservice_discord_enabled }}",
       "choices": "true\nfalse",
       "new_question": true,
       "variable": "matrix_appservice_discord_enabled",
       "type": "multiplechoice"
     },
+    {
       "question_name": "Discord Client ID",
       "question_description": "The OAuth2 'CLIENT ID' which can be found in the 'OAuth2' tab of your new discord application https//discord.com/developers/applications",
       "required": true,
