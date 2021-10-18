@@ -128,6 +128,8 @@ matrix_corporal_corporal_user_id_local_part: "matrix-corporal"
 # Dimension Settings Start
 matrix_dimension_enabled: false
 # Dimension Settings End
+# Bridge Discord AppService Start
+# Bridge Discord AppService End
 # Extra Settings Start
 matrix_vars_yml_snapshotting_enabled: false
 # Extra Settings End
