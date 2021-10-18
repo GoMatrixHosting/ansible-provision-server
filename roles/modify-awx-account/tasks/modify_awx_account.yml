@@ -953,7 +953,7 @@
 - name: Save initial 'Bridge Discord AppService' survey.json to the AWX tower
   delegate_to: 127.0.0.1
   copy:
-    src: './roles/modify-awx-account/surveys/bridge_discord_appservice.json'
+    src: './roles/modify-awx-account/surveys/bridge_discord_appservice.json.j2'
     dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/bridge_discord_appservice.json'
     mode: '0660'
 
