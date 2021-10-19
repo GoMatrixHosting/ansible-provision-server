@@ -37,6 +37,30 @@
       "new_question": true,
       "variable": "matrix_appservice_discord_bot_token",
       "type": "password"
+    },
+    {
+      "question_name": "Auto-Admin Matrix User",
+      "question_description": "The username you would like to be automatically joined and promoted to administrator (PL100) in bridged rooms. Exclude the '@' and server name postfix. So to create @stevo:example.org just enter 'stevo'.",
+      "required": false,
+      "min": 0,
+      "max": 1024,
+      "default": "",
+      "choices": "",
+      "new_question": true,
+      "variable": "awx_appservice_discord_admin_user",
+      "type": "text"
+    },
+    {
+      "question_name": "Auto-Admin Rooms",
+      "question_description": "A list of rooms you want the user to be automatically joined and promoted to administrator (PL100) in. These should be the internal IDs (for example '!axfBUsKhfAjSMBdjKX:example.org') seperated by newlines.",
+      "required": false,
+      "min": 0,
+      "max": 4096,
+      "default": "",
+      "choices": "",
+      "new_question": true,
+      "variable": "awx_appservice_discord_admin_rooms",
+      "type": "textarea"
     }
   ]
 }
