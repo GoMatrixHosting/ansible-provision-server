@@ -1012,24 +1012,6 @@
     tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
-- name: Create 'Upgrade Distribution' job template
-  delegate_to: 127.0.0.1
-  awx.awx.tower_job_template:
-    name: "{{ matrix_domain }} - 00 - Upgrade Distribution"
-    description: "Upgrades a client server from Debian 10 to 11."
-    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
-    job_type: run
-    job_tags: "upgrade-distro,setup-all,start"
-    inventory: "{{ member_id }}"
-    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
-    playbook: setup.yml
-    credential: "{{ member_id }} - AWX SSH Key"
-    state: present
-    verbosity: 1
-    tower_host: "https://{{ awx_host }}"
-    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
-    validate_certs: yes
-
 - name: Delete the AWX session token for executing modules
   delegate_to: 127.0.0.1
   awx.awx.tower_token:
