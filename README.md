@@ -37,3 +37,21 @@ Allows a user to connect their own hardware, it must be a Debian 10 server and i
 - awx_element_subdomain - see above.
 - server_ipv4 - the IPv4 address of the server to connect to AWX, at least one IP address must be defined.
 - server_ipv6 - the IPv6 address of the server to connect to AWX, at least one IP address must be defined.
+
+
+## License
+
+    Copyright (C) 2021 GoMatrixHosting.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
