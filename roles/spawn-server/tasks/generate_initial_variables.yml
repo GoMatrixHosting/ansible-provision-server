@@ -62,7 +62,6 @@
     state: present
   with_dict:
     'base_domain_used': '"{{ base_domain_used }}"'
-  when: subscription_type == "digitalocean"
 
 - name: Add server_ipv4 line to server_vars.yml file locally on AWX
   delegate_to: 127.0.0.1
