@@ -211,7 +211,7 @@
 - name: Assign server IPs to variables
   delegate_to: 127.0.0.1
   set_fact:
-    server_ipv4: "{{ new_server_info.data.networks.v4.ip_address }}"
+    server_ipv4: "{{ new_server_info.data.networks.v4.0.ip_address }}"
     server_ipv6: "{{ new_server_info.data.networks.v6.ip_address }}"
   when: subscription_type == "digitalocean"
 
