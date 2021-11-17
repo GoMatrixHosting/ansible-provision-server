@@ -193,7 +193,7 @@
   when: subscription_type == "digitalocean"
 
 - debug:
-    msg: "{{ new_server_info.data.droplet }}"
+    msg: "{{ new_server_info.data }}"
   when: subscription_type == "digitalocean"
 
 - name: Assign server IPs to variables
