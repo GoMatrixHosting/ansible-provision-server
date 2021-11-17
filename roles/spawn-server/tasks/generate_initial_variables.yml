@@ -15,7 +15,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'do_droplet_region_long: {{ do_droplet_region_long }}'
+    line: 'do_droplet_region_long: "{{ do_droplet_region_long }}"'
     mode: '0600'
     state: present
     create: yes
