@@ -196,8 +196,15 @@
     msg: "{{ new_server_info.data.networks }}"
   when: subscription_type == "digitalocean"
 
-- debug:
     msg: "{{ new_server_info.data.networks.v4 }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks.v4.0 }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks.v6 }}"
   when: subscription_type == "digitalocean"
 
 - name: Assign server IPs to variables
