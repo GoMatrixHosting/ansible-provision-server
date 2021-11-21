@@ -25,7 +25,7 @@
   delegate_to: 127.0.0.1
   lineinfile:
     path: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/server_vars.yml'
-    line: 'do_droplet_id: {{ new_server_info.data.droplet.id }}'
+    line: 'do_droplet_id: {{ new_server_info.data.id }}'
     mode: '0600'
     state: present
   when: subscription_type == "digitalocean"
