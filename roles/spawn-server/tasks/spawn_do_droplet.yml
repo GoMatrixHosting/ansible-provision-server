@@ -160,7 +160,7 @@
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
     state: inactive
-    name: '{{ matrix_domain }}'
+    name: '{{ subscription_id | replace("_", "-") }}-{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
     size: '{{ slug_size }}'
     ssh_keys: '{{ ssh_key_id_array }}'
@@ -172,11 +172,11 @@
   register: new_server_info
   when: subscription_type == "digitalocean"
 
-- name: Re-spawn the Droplet, re-size it if needed, then turn it on (broken)
+- name: Re-spawn the Droplet, re-size it if needed, then turn it on (broken?)
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_droplet:
     state: active
-    name: '{{ matrix_domain }}'
+    name: '{{ subscription_id | replace("_", "-") }}-{{ matrix_domain }}'
     oauth_token: '{{ do_api_token }}'
     size: '{{ new_slug_size }}'
     ssh_keys: '{{ ssh_key_id_array }}'
