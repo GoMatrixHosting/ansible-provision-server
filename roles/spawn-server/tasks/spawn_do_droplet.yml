@@ -1,0 +1,225 @@
+
+# Need section to convert do_droplet_region_long to a valid shortcode:
+# New York City (USA) = nyc1, nyc3
+# San Francisco (USA) = sfo3
+# Amsterdam (NLD) = ams3
+# Frankfurt (DEU) = fra1
+# Singapore (SGP) = sgp1
+# London (GBR) = lon1
+# Toronto (CAN) = tor1
+# Balgalore (IND) = blr1
+
+- name: Set valid digitalocean area code for New York City.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "nyc1"
+    matrix_jitsi_timezone: "America/New_York"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "New York City (USA)")
+
+- name: Set valid digitalocean area code for San Francisco.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "sfo3"
+    matrix_jitsi_timezone: "America/Los_Angeles"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "San Francisco (USA)")
+
+- name: Set valid digitalocean area code for Amsterdam.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "ams3"
+    matrix_jitsi_timezone: "Europe/Amsterdam"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "Amsterdam (NLD)")
+
+- name: Set valid digitalocean area code for Frankfurt.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "fra1"
+    matrix_jitsi_timezone: "Europe/Berlin"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "Frankfurt (DEU)")
+
+- name: Set valid digitalocean area code for Singapore.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "sgp1"
+    matrix_jitsi_timezone: "Singapore"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "Singapore (SGP)")
+
+- name: Set valid digitalocean area code for London.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "lon1"
+    matrix_jitsi_timezone: "Europe/London"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "London (GBR)")
+
+- name: Set valid digitalocean area code for Toronto.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "tor1"
+    matrix_jitsi_timezone: "America/Toronto"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "Toronto (CAN)")
+
+- name: Set valid digitalocean area code for Balgalore.
+  delegate_to: 127.0.0.1
+  set_fact:
+    do_droplet_region: "blr1"
+    matrix_jitsi_timezone: "Asia/Kolkata"
+  when: (subscription_type == "digitalocean" and do_droplet_region_long == "Balgalore (IND)")
+
+- name: Set swap size for Micro DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "s-1vcpu-2gb"
+    swap_size: "4G"
+  when: (subscription_type == "digitalocean" and plan_title == "Micro DigitalOcean Server")
+
+- name: Set swap size for Small DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "s-2vcpu-4gb"
+    swap_size: "4G"
+  when: (subscription_type == "digitalocean" and plan_title == "Small DigitalOcean Server")
+
+- name: Set swap size for Medium DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "s-4vcpu-8gb"
+    swap_size: "8G"
+  when: (subscription_type == "digitalocean" and plan_title == "Medium DigitalOcean Server")
+
+- name: Set swap size for Large DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "s-8vcpu-16gb"
+    swap_size: "16G"
+  when: (subscription_type == "digitalocean" and plan_title == "Large DigitalOcean Server")
+
+- name: Set swap size for Jumbo 500 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "so-8vcpu-64gb"
+    swap_size: "64G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 500 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 1000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "so-16vcpu-128gb"
+    swap_size: "128G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 1000 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 2000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "so-24vcpu-192gb"
+    swap_size: "192G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 2000 DigitalOcean Server")
+
+- name: Set swap size for Jumbo 5000 DigitalOcean Server
+  delegate_to: 127.0.0.1
+  set_fact:
+    new_slug_size: "so-32vcpu-256gb"
+    swap_size: "256G"
+  when: (subscription_type == "digitalocean" and plan_title == "Jumbo 5000 DigitalOcean Server")
+
+- name: Define slug_size if undefined (first run)
+  delegate_to: 127.0.0.1
+  set_fact:
+    slug_size: "{{ new_slug_size }}"
+  when: (subscription_type == "digitalocean" and slug_size is undefined)
+
+- name: Record the public SSH key into a variable
+  set_fact:
+    public_ssh_key: "{{ lookup('file', '/var/lib/awx/projects/hosting/client_public.key') }}"
+
+- debug:
+    msg: "The public SSH key to check for: {{ public_ssh_key }}"
+
+- name: 
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_sshkey_info:
+    oauth_token: '{{ do_api_token }}'
+  register: ssh_keys
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ ssh_keys }}"
+  when: subscription_type == "digitalocean"
+
+- name: Build an array with the correct SSH ID
+  delegate_to: 127.0.0.1
+  set_fact:
+    ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
+  when: (subscription_type == "digitalocean") and (item.public_key == public_ssh_key)
+  loop: "{{ ssh_keys.data|flatten(levels=1) }}"
+
+- debug:
+    msg: "{{ ssh_key_id_array }}"
+  when: subscription_type == "digitalocean"
+
+- name: Spawn a new Digital Ocean Droplet, collect the IPv4+IPv6 addresses, then turn it off
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: inactive
+    name: '{{ subscription_id | replace("_", "-") }}-{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+    size: '{{ slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
+    ipv6: yes
+    wait: yes
+    unique_name: yes
+  register: new_server_info
+  when: subscription_type == "digitalocean"
+
+- name: Re-spawn the Droplet, re-size it if needed, then turn it on (broken?)
+  delegate_to: 127.0.0.1
+  community.digitalocean.digital_ocean_droplet:
+    state: active
+    name: '{{ subscription_id | replace("_", "-") }}-{{ matrix_domain }}'
+    oauth_token: '{{ do_api_token }}'
+    size: '{{ new_slug_size }}'
+    ssh_keys: '{{ ssh_key_id_array }}'
+    region: '{{ do_droplet_region }}'
+    image: '{{ do_image }}'
+    resize_disk: yes
+    ipv6: yes
+    wait: yes
+    unique_name: yes
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks.v4 }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks.v4.0 }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ new_server_info.data.networks.v6 }}"
+  when: subscription_type == "digitalocean"
+
+- name: Assign server IPs to variables
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ipv4: "{{ new_server_info.data.networks.v4.0.ip_address }}"
+    server_ipv6: "{{ new_server_info.data.networks.v6.0.ip_address }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ server_ipv4 }}"
+  when: subscription_type == "digitalocean"
+
+- debug:
+    msg: "{{ server_ipv6 }}"
+  when: subscription_type == "digitalocean"
+
