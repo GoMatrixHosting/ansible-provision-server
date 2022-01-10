@@ -621,7 +621,8 @@
 
 - name: Generate borg backup password
   delegate_to: 127.0.0.1
-  shell: openssl rand -hex 16
+  command: |
+      openssl rand -hex 16
   register: borg_password
   no_log: True
 

@@ -32,7 +32,7 @@ awx_backup_enabled: false
 # Basic Settings Start
 matrix_domain: $DOMAIN
 matrix_coturn_turn_static_auth_secret: $(generatePassword)
-matrix_synapse_macaroon_secret_key: $(generatePassword)
+matrix_homeserver_generic_secret_key: $(generatePassword)
 # Basic Settings End
 # Element Settings Start
 matrix_client_element_enabled: true
