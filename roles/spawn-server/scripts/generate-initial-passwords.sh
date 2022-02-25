@@ -41,9 +41,7 @@ matrix_client_element_jitsi_preferredDomain: jitsi.$DOMAIN
 # Element Settings End
 # Element Extension Start
 matrix_client_element_configuration_extension_json: |
-  {
   "disable_3pid_login": true
-  }
 # Element Extension End
 # Email Settings Start
 matrix_mailer_sender_address: verify@mail.example.org
@@ -57,8 +55,16 @@ matrix_mailer_relay_auth_password: $(generatePassword)
 # ma1sd Settings Start
 matrix_ma1sd_enabled: true 
 # ma1sd Settings End
-# Start ma1sd Extension
-# End ma1sd Extension
+# ma1sd Extension Start
+# ma1sd Extension End
+# Mjolnir Settings Start
+matrix_bot_mjolnir_enabled: false
+# Mjolnir Settings End
+# Mjolnir Extension Start
+matrix_bot_mjolnir_configuration_extension_yaml: |
+  "homeserverUrl": "http://matrix-synapse:8008"
+  "rawHomeserverUrl": "http://matrix-synapse:8008"
+# Mjolnir Extension End
 # Jitsi Settings Start
 matrix_jitsi_jicofo_component_secret: $(generatePassword)
 matrix_jitsi_jicofo_auth_password: $(generatePassword)
@@ -138,5 +144,3 @@ awx_federation_whitelist_raw: []
 awx_url_preview_accept_language_default: ['en']
 # Custom Settings End
 VAREND
-
-
