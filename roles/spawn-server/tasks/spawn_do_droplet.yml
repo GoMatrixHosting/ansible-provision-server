@@ -134,7 +134,7 @@
 - debug:
     msg: "The public SSH key to check for: {{ public_ssh_key }}"
 
-- name: 
+- name: Collect list of DigitalOcean public SSH keys
   delegate_to: 127.0.0.1
   community.digitalocean.digital_ocean_sshkey_info:
     oauth_token: '{{ do_api_token }}'
@@ -145,7 +145,7 @@
     msg: "{{ ssh_keys }}"
   when: subscription_type == "digitalocean"
 
-- name: Build an array with the correct SSH ID
+- name: Build an array with the correct SSH key ID
   delegate_to: 127.0.0.1
   set_fact:
     ssh_key_id_array: "{{ ssh_key_id_array }} + [ '{{ item.id }}' ]"
@@ -192,28 +192,30 @@
     msg: "{{ new_server_info }}"
   when: subscription_type == "digitalocean"
 
-- debug:
-    msg: "{{ new_server_info.data.networks }}"
-  when: subscription_type == "digitalocean"
+#- name: Assign server IPs to variables
+#  delegate_to: 127.0.0.1
+#  set_fact:
+#    server_ipv4: "{{ new_server_info.data.networks.v4.0.ip_address }}"
+#    server_ipv6: "{{ new_server_info.data.networks.v6.0.ip_address }}"
+#  when: subscription_type == "digitalocean"
 
-- debug:
-    msg: "{{ new_server_info.data.networks.v4 }}"
-  when: subscription_type == "digitalocean"
-
-- debug:
-    msg: "{{ new_server_info.data.networks.v4.0 }}"
-  when: subscription_type == "digitalocean"
-
-- debug:
-    msg: "{{ new_server_info.data.networks.v6 }}"
-  when: subscription_type == "digitalocean"
-
-- name: Assign server IPs to variables
+- name: Assign server IPv4 to a variable
   delegate_to: 127.0.0.1
   set_fact:
-    server_ipv4: "{{ new_server_info.data.networks.v4.0.ip_address }}"
-    server_ipv6: "{{ new_server_info.data.networks.v6.0.ip_address }}"
-  when: subscription_type == "digitalocean"
+    server_ipv4: "{{ new_server_info.data.droplet.networks.v4[0].ip_address }}"
+  when: ( subscription_type == "digitalocean" ) and ( new_server_info.data.droplet.networks.v4[0].type == "public" )
+
+- name: Assign server IPv4 to a variable
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ipv4: "{{ new_server_info.data.droplet.networks.v4[1].ip_address }}"
+  when: ( subscription_type == "digitalocean" ) and ( new_server_info.data.droplet.networks.v4[1].type == "public" )
+
+- name: Assign server IPv6 to a variable
+  delegate_to: 127.0.0.1
+  set_fact:
+    server_ipv6: "{{ new_server_info.data.droplet.networks.v6[0].ip_address }}"
+  when: ( subscription_type == "digitalocean" ) and ( new_server_info.data.droplet.networks.v6[0].type == "public" )
 
 - debug:
     msg: "{{ server_ipv4 }}"
@@ -222,4 +224,3 @@
 - debug:
     msg: "{{ server_ipv6 }}"
   when: subscription_type == "digitalocean"
-
