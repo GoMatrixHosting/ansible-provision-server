@@ -554,6 +554,50 @@
     tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
     validate_certs: yes
 
+- name: Save new 'Configure Mjolnir Bot' survey.json to the AWX tower, template
+  delegate_to: 127.0.0.1
+  template:
+    src: './roles/modify-awx-account/surveys/configure_mjolnir.json.j2'
+    dest: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_mjolnir.json'
+
+- name: Copy 'Configure Mjolnir Bot' survey.json to target
+  delegate_to: "{{ server_ip_final }}"
+  copy:
+    src: '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_mjolnir.json'
+    dest: /matrix/awx/configure_mjolnir.json
+    mode: '0660'
+
+- name: Create 'Configure Mjolnir Bot' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_job_template:
+    name: "{{ matrix_domain }} - 1 - Configure Mjolnir Bot"
+    description: "Configure Mjolnir settings, Mjolnir is a moderation bot for Matrix."
+    extra_vars: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/extra_vars.json') }}"
+    job_type: run
+    job_tags: "start,setup-bot-mjolnir"
+    inventory: "{{ member_id }}"
+    project: "{{ member_id }} - Matrix Docker Ansible Deploy"
+    playbook: setup.yml
+    credential: "{{ member_id }} - AWX SSH Key"
+    survey_enabled: true
+    survey_spec: "{{ lookup('file', '/var/lib/awx/projects/clients/{{ member_id }}/{{ subscription_id }}/configure_mjolnir.json') }}"
+    state: present
+    verbosity: 1
+    tower_host: "https://{{ awx_host }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
+    validate_certs: yes
+
+- name: Allow team to use 'Configure Mjolnir Bot' job template
+  delegate_to: 127.0.0.1
+  awx.awx.tower_role:
+    team: "{{ member_id }}"
+    job_template: "{{ matrix_domain }} - 1 - Configure Mjolnir Bot"
+    role: execute
+    state: present
+    tower_host: "https://{{ awx_host }}"
+    tower_oauthtoken: "{{ awx_session_token.ansible_facts.tower_token.token }}"
+    validate_certs: yes
+
 - name: Save new 'Configure Website + Access Export' survey.json to the AWX tower, template
   delegate_to: 127.0.0.1
   template:
